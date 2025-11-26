@@ -42,38 +42,40 @@ O projeto foi construído com foco em performance, organização e escalabilidad
 
 ---
 
-# 🧱 3. Arquitetura do Projeto
+### 3. Arquitetura do Projeto
 
 A estrutura foi planejada para ser clara, limpa e escalável:
 
+````text
 /
 ├── src/
-│ ├── pages/
-│ │ ├── CoverPage.tsx # Introdução / Capa
-│ │ ├── PresentationLetterPage.tsx # Carta de apresentação
-│ │ ├── PracticeAreasPage.tsx # Áreas do Direito
-│ │ ├── EducationPage.tsx # Formação acadêmica
-│ │ ├── ExperiencePage.tsx # Experiência profissional
-│ │ ├── SkillsPage.tsx # Competências
-│ │ ├── DifferentialsPage.tsx # Qualidades e diferenciais
-│ │ └── ContactPage.tsx # Informações de contato
-│ │
-│ ├── components/
-│ │ └── ui/
-│ │ ├── PortfolioNavigation.tsx # Navegação lateral
-│ │ └── MobileMenu.tsx # Menu mobile responsivo
-│ │
-│ ├── styles/
-│ │ ├── globals.css # Estilos globais
-│ │ └── utilities.css # Ajustes adicionais
-│ │
-│ ├── App.tsx # Gerencia a troca das páginas
-│ └── main.tsx # Entrypoint da aplicação
+│   ├── pages/
+│   │   ├── CoverPage.tsx                 # Introdução / Capa
+│   │   ├── PresentationLetterPage.tsx     # Carta de apresentação
+│   │   ├── PracticeAreasPage.tsx          # Áreas do Direito
+│   │   ├── EducationPage.tsx              # Formação acadêmica
+│   │   ├── ExperiencePage.tsx             # Experiência profissional
+│   │   ├── SkillsPage.tsx                 # Competências
+│   │   ├── DifferentialsPage.tsx          # Qualidades e diferenciais
+│   │   └── ContactPage.tsx                # Informações de contato
+│   │
+│   ├── components/
+│   │   └── ui/
+│   │       ├── PortfolioNavigation.tsx    # Navegação lateral
+│   │       └── MobileMenu.tsx             # Menu mobile responsivo
+│   │
+│   ├── styles/
+│   │   ├── globals.css                    # Estilos globais
+│   │   └── utilities.css                  # Ajustes adicionais
+│   │
+│   ├── App.tsx                            # Gerencia a troca das páginas
+│   └── main.tsx                           # Entrypoint da aplicação
 │
 ├── public/
 ├── package.json
 ├── vite.config.ts
 └── README.md
+
 
 ---
 
@@ -114,7 +116,7 @@ Com ícones profissionais para Direito:
 - Empresarial
 - Trabalhista
 - Família
-- Tributário  
+- Tributário
   _(personalizável)_
 
 ### 🎓 **Formação Acadêmica**
@@ -164,7 +166,7 @@ git clone https://github.com/luc118i/Portifolio-advogado-Marlon.git
 cd Portifolio-advogado-Marlon
 npm install
 npm run dev
-```
+````
 
 Desenvolvido por Lucas Inácio
 GitHub: https://github.com/luc118i
