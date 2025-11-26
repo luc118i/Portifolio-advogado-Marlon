@@ -76,7 +76,7 @@ A estrutura foi planejada para ser clara, limpa e escalável:
 ├── vite.config.ts
 └── README.md
 
-
+```
 ---
 
 # 🎨 4. Identidade Visual
