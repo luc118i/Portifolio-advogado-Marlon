@@ -46,37 +46,36 @@ O projeto foi construído com foco em performance, organização e escalabilidad
 
 A estrutura foi planejada para ser clara, limpa e escalável:
 
-````text
+```text
 /
 ├── src/
-│   ├── pages/
-│   │   ├── CoverPage.tsx                 # Introdução / Capa
-│   │   ├── PresentationLetterPage.tsx     # Carta de apresentação
-│   │   ├── PracticeAreasPage.tsx          # Áreas do Direito
-│   │   ├── EducationPage.tsx              # Formação acadêmica
-│   │   ├── ExperiencePage.tsx             # Experiência profissional
-│   │   ├── SkillsPage.tsx                 # Competências
-│   │   ├── DifferentialsPage.tsx          # Qualidades e diferenciais
-│   │   └── ContactPage.tsx                # Informações de contato
-│   │
-│   ├── components/
-│   │   └── ui/
-│   │       ├── PortfolioNavigation.tsx    # Navegação lateral
-│   │       └── MobileMenu.tsx             # Menu mobile responsivo
-│   │
-│   ├── styles/
-│   │   ├── globals.css                    # Estilos globais
-│   │   └── utilities.css                  # Ajustes adicionais
-│   │
-│   ├── App.tsx                            # Gerencia a troca das páginas
-│   └── main.tsx                           # Entrypoint da aplicação
+│ ├── pages/
+│ │ ├── CoverPage.tsx # Introdução / Capa
+│ │ ├── PresentationLetterPage.tsx # Carta de apresentação
+│ │ ├── PracticeAreasPage.tsx # Áreas do Direito
+│ │ ├── EducationPage.tsx # Formação acadêmica
+│ │ ├── ExperiencePage.tsx # Experiência profissional
+│ │ ├── SkillsPage.tsx # Competências
+│ │ ├── DifferentialsPage.tsx # Qualidades e diferenciais
+│ │ └── ContactPage.tsx # Informações de contato
+│ │
+│ ├── components/
+│ │ └── ui/
+│ │ ├── PortfolioNavigation.tsx # Navegação lateral
+│ │ └── MobileMenu.tsx # Menu mobile responsivo
+│ │
+│ ├── styles/
+│ │ ├── globals.css # Estilos globais
+│ │ └── utilities.css # Ajustes adicionais
+│ │
+│ ├── App.tsx # Gerencia a troca das páginas
+│ └── main.tsx # Entrypoint da aplicação
 │
 ├── public/
 ├── package.json
 ├── vite.config.ts
 └── README.md
 
-```
 ---
 
 # 🎨 4. Identidade Visual
