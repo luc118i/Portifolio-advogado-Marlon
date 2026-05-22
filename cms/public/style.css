@@ -427,6 +427,161 @@ input, select, textarea { font-family: var(--font-sans); }
 .pc-article-meta-text { font-size: 0.62rem; color: rgba(255,255,255,0.35); }
 
 /* ═══════════════════════════════════════════════════════════
+   SELETOR DE LAYOUT
+   ═══════════════════════════════════════════════════════════ */
+.layout-picker { display: flex; flex-direction: column; gap: 6px; }
+.layout-picker-label { font-size: 0.68rem; font-weight: 700; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+.layout-picker-options { display: flex; gap: 6px; flex-wrap: wrap; }
+
+.layout-opt {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  cursor: pointer;
+  transition: all 0.15s;
+  min-width: 58px;
+}
+.layout-opt:hover  { border-color: var(--border2); }
+.layout-opt.active { border-color: var(--accent); background: rgba(201,169,110,0.08); }
+.layout-opt span   { font-size: 0.62rem; color: var(--muted); white-space: nowrap; }
+.layout-opt.active span { color: var(--accent); }
+
+.layout-mini {
+  width: 48px;
+  height: 36px;
+  background: #1A1A1A;
+  border-radius: 3px;
+  padding: 4px 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  overflow: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   PREVIEW — LAYOUTS DE COMPOSIÇÃO
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Dica da Semana ── */
+.pc-layout-dica {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 20px 18px;
+  text-align: center;
+  gap: 10px;
+}
+.pc-dica-badge {
+  font-size: 0.58rem; font-weight: 800; letter-spacing: 0.18em;
+  padding: 4px 12px; border-radius: 100px; color: #fff;
+  text-transform: uppercase;
+}
+.pc-dica-icon {
+  opacity: 0.9; filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+  display: flex; align-items: center; justify-content: center;
+}
+.pc-dica-headline {
+  font-family: var(--font-serif); font-size: 1.05rem; font-weight: 700;
+  color: #fff; line-height: 1.25; text-align: center;
+}
+.pc-dica-body {
+  font-size: 0.72rem; color: rgba(255,255,255,0.62);
+  line-height: 1.5; text-align: center;
+}
+
+/* ── Você Sabia? ── */
+.pc-layout-voce {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 24px 22px;
+  gap: 10px;
+}
+.pc-voce-eyebrow {
+  font-family: var(--font-serif); font-size: 1.6rem; font-weight: 700;
+  line-height: 1.1;
+}
+.pc-voce-line { height: 3px; width: 48px; border-radius: 2px; margin: 2px 0 4px; }
+.pc-voce-headline {
+  font-family: var(--font-serif); font-size: 0.95rem; font-weight: 700;
+  color: #fff; line-height: 1.3;
+}
+.pc-voce-body {
+  font-size: 0.72rem; color: rgba(255,255,255,0.6); line-height: 1.55;
+}
+
+/* ── Caso Real ── */
+.pc-layout-caso {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  padding: 20px 20px;
+  gap: 8px;
+}
+.pc-caso-top { display: flex; flex-direction: column; gap: 6px; margin-bottom: 4px; }
+.pc-caso-tag {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 0.62rem; font-weight: 700; letter-spacing: 0.1em;
+  border: 1px solid; padding: 3px 8px; border-radius: 100px;
+  width: fit-content;
+}
+.pc-caso-label { font-size: 0.62rem; color: rgba(255,255,255,0.4); letter-spacing: 0.06em; }
+.pc-caso-headline {
+  font-family: var(--font-serif); font-size: 1rem; font-weight: 700;
+  color: #fff; line-height: 1.3; flex: 1;
+}
+.pc-caso-body { font-size: 0.72rem; color: rgba(255,255,255,0.58); line-height: 1.5; }
+.pc-caso-bar  { height: 2px; border-radius: 1px; width: 40px; margin: 4px 0; }
+
+/* ── Mito ou Verdade? ── */
+.pc-layout-mito {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 22px 18px;
+  text-align: center; gap: 10px;
+}
+.pc-mito-eyebrow {
+  font-size: 0.6rem; font-weight: 800; color: rgba(255,255,255,0.45);
+  letter-spacing: 0.16em; text-transform: uppercase;
+}
+.pc-mito-box {
+  border: 1px solid; border-radius: 8px; padding: 14px 12px; width: 100%;
+}
+.pc-mito-headline {
+  font-family: var(--font-serif); font-size: 0.95rem; font-weight: 700;
+  color: #fff; line-height: 1.3;
+}
+.pc-mito-body { font-size: 0.7rem; color: rgba(255,255,255,0.55); line-height: 1.5; }
+.pc-mito-verdict {
+  font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em;
+  padding: 6px 16px; border-radius: 100px; color: #fff;
+}
+
+/* ── Direito em Foco ── */
+.pc-layout-foco {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  justify-content: center;
+  padding: 28px 24px;
+  gap: 12px;
+}
+.pc-foco-bar  { height: 3px; width: 36px; border-radius: 2px; }
+.pc-foco-bar2 { height: 1px; width: 100%; }
+.pc-foco-headline {
+  font-family: var(--font-serif); font-size: 1.35rem; font-weight: 700;
+  color: #fff; line-height: 1.2;
+}
+.pc-foco-body { font-size: 0.75rem; color: rgba(255,255,255,0.5); line-height: 1.6; }
+.pc-foco-footer { display: flex; align-items: center; gap: 8px; margin-top: auto; }
+.pc-foco-logo   { width: 22px; height: 22px; border-radius: 50%; object-fit: cover; }
+.pc-foco-name   { font-size: 0.65rem; font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════════
    EDITOR DE IMAGEM
    ═══════════════════════════════════════════════════════════ */
 .img-editor-wrap { display: flex; flex-direction: column; gap: 6px; }

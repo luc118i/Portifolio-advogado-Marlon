@@ -1,4 +1,57 @@
 // ═══════════════════════════════════════════════════════════════
+// LAYOUTS DE COMPOSIÇÃO
+// ═══════════════════════════════════════════════════════════════
+const LAYOUTS = [
+  {
+    id: 'default',
+    name: 'Padrão',
+    mini: `<div style="height:3px;background:rgba(255,255,255,0.15);margin-bottom:4px;width:40%"></div>
+           <div style="height:5px;background:rgba(255,255,255,0.5);margin-bottom:3px"></div>
+           <div style="height:3px;background:rgba(255,255,255,0.25);width:80%"></div>`,
+  },
+  {
+    id: 'dica-semana',
+    name: 'Dica',
+    mini: `<div style="text-align:center;font-size:6px;color:rgba(255,255,255,0.5);margin-bottom:3px">✦ DICA</div>
+           <div style="width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,0.1);margin:0 auto 3px;display:flex;align-items:center;justify-content:center;font-size:9px">💡</div>
+           <div style="height:4px;background:rgba(255,255,255,0.4);margin-bottom:2px;width:90%;margin-left:auto;margin-right:auto;border-radius:2px"></div>`,
+  },
+  {
+    id: 'voce-sabia',
+    name: 'Sabia?',
+    mini: `<div style="font-size:6px;font-weight:700;margin-bottom:3px;opacity:0.9">VOCÊ SABIA?</div>
+           <div style="height:1px;background:rgba(255,255,255,0.4);margin-bottom:4px"></div>
+           <div style="height:4px;background:rgba(255,255,255,0.5);margin-bottom:2px;border-radius:2px"></div>
+           <div style="height:3px;background:rgba(255,255,255,0.2);width:70%;border-radius:2px"></div>`,
+  },
+  {
+    id: 'caso-real',
+    name: 'Caso Real',
+    mini: `<div style="display:inline-block;font-size:5px;border:1px solid rgba(255,255,255,0.4);padding:1px 4px;border-radius:2px;margin-bottom:4px;opacity:0.8">⚖ CASO REAL</div>
+           <div style="height:4px;background:rgba(255,255,255,0.5);margin-bottom:2px;border-radius:2px"></div>
+           <div style="height:3px;background:rgba(255,255,255,0.3);width:85%;margin-bottom:2px;border-radius:2px"></div>
+           <div style="height:3px;background:rgba(255,255,255,0.15);width:60%;border-radius:2px"></div>`,
+  },
+  {
+    id: 'mito-verdade',
+    name: 'Mito?',
+    mini: `<div style="font-size:5px;font-weight:700;margin-bottom:3px;opacity:0.7">MITO OU VERDADE?</div>
+           <div style="border:1px solid rgba(255,255,255,0.3);padding:2px 3px;border-radius:2px;margin-bottom:4px">
+             <div style="height:3px;background:rgba(255,255,255,0.4);border-radius:1px"></div>
+           </div>
+           <div style="font-size:5px;font-weight:700;opacity:0.9">✓ VERDADE</div>`,
+  },
+  {
+    id: 'foco',
+    name: 'Foco',
+    mini: `<div style="height:2px;background:rgba(255,255,255,0.5);width:30%;margin-bottom:4px"></div>
+           <div style="height:7px;background:rgba(255,255,255,0.6);margin-bottom:2px;border-radius:1px"></div>
+           <div style="height:5px;background:rgba(255,255,255,0.4);width:80%;margin-bottom:4px;border-radius:1px"></div>
+           <div style="height:2px;background:rgba(255,255,255,0.3);width:40%"></div>`,
+  },
+];
+
+// ═══════════════════════════════════════════════════════════════
 // TEMPLATES POR ÁREA
 // ═══════════════════════════════════════════════════════════════
 const TEMPLATES = {
@@ -73,7 +126,7 @@ let publishedUrl = null;
 // HELPERS
 // ═══════════════════════════════════════════════════════════════
 function createEmptySlide() {
-  return { type: 'content', imagePath: null, imageX: 0, imageY: 0, imageScale: 1, headline: '', body: '' };
+  return { type: 'content', layout: 'default', imagePath: null, imageX: 0, imageY: 0, imageScale: 1, headline: '', body: '' };
 }
 function createCtaSlide() {
   return { type: 'cta', headline: 'Está com dúvidas jurídicas?', body: 'Fale comigo antes de tomar qualquer decisão.' };
@@ -223,6 +276,21 @@ function renderSlideForm(slide, index, container) {
            onchange="uploadSlideImage(this, ${index})" />
     ` : ''}
 
+    <!-- Layout picker -->
+    <div class="layout-picker" onclick="event.stopPropagation()">
+      <div class="layout-picker-label">LAYOUT</div>
+      <div class="layout-picker-options">
+        ${LAYOUTS.map(l => `
+          <button class="layout-opt${(slide.layout||'default') === l.id ? ' active' : ''}"
+                  onclick="setSlideLayout(${index},'${l.id}')"
+                  title="${l.name}">
+            <div class="layout-mini">${l.mini}</div>
+            <span>${l.name}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+
     <div onclick="event.stopPropagation()">
       <input id="headline-${index}" class="slide-input" type="text"
              placeholder="${isCta ? 'Headline do CTA' : 'Headline (título do slide)'}"
@@ -251,6 +319,12 @@ function renderSlideForm(slide, index, container) {
   `;
 
   container.appendChild(card);
+}
+
+function setSlideLayout(index, layoutId) {
+  state.slides[index].layout = layoutId;
+  renderSlidesForms();
+  selectSlide(index);
 }
 
 function clearSlideImage(index) {
@@ -358,36 +432,121 @@ function renderCarouselSlide(card, slide, index) {
   const hasBgImg   = !!slide.imagePath;
   const watermark  = lpos === 'watermark';
   const footerLogo = lpos === 'footer';
+  const layout     = slide.layout || 'default';
 
-  card.innerHTML = `
+  const bgHtml = `
     <div class="pc-bg" style="background:${tpl.bg}">
-      ${hasBgImg ? `
-        <img src="${slide.imagePath}"
-             style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;
-                    width:auto;height:auto;pointer-events:none;
-                    transform:translate(calc(-50% + ${slide.imageX||0}px), calc(-50% + ${slide.imageY||0}px)) scale(${slide.imageScale||1});
-                    transform-origin:center center;">
-      ` : ''}
-    </div>
-    <div class="pc-overlay"></div>
-    ${!hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : ''}
-    ${watermark ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : ''}
+      ${hasBgImg ? `<img src="${slide.imagePath}"
+        style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;
+               width:auto;height:auto;pointer-events:none;
+               transform:translate(calc(-50% + ${slide.imageX||0}px),calc(-50% + ${slide.imageY||0}px)) scale(${slide.imageScale||1});
+               transform-origin:center center;">` : ''}
+    </div>`;
 
-    <div class="pc-content">
-      <div class="pc-category" style="color:${tpl.accent}">${tpl.label}</div>
-      <div class="pc-headline">${escHtml(slide.headline || 'Headline do slide')}</div>
-      ${slide.body ? `<div class="pc-body">${escHtml(slide.body)}</div>` : ''}
-      ${footerLogo ? `
-        <div class="pc-footer">
-          <div class="pc-footer-logo">
-            <img src="/project-assets/favicon.png" alt="Logo" onerror="this.style.display='none'">
-            <span class="pc-footer-name">Dr. Marlon Inácio</span>
-          </div>
-          <span class="pc-footer-url">advogado-marlon.vercel.app</span>
+  const overlayHtml  = `<div class="pc-overlay"></div>`;
+  const iconBgHtml   = !hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : '';
+  const watermarkHtml= watermark  ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : '';
+
+  const footerHtml = footerLogo ? `
+    <div class="pc-footer">
+      <div class="pc-footer-logo">
+        <img src="/project-assets/favicon.png" alt="Logo" onerror="this.style.display='none'">
+        <span class="pc-footer-name">Dr. Marlon Inácio</span>
+      </div>
+      <span class="pc-footer-url">advogado-marlon.vercel.app</span>
+    </div>` : '';
+
+  const headline = escHtml(slide.headline || 'Headline do slide');
+  const body     = escHtml(slide.body     || '');
+
+  // ── LAYOUT: DEFAULT ──────────────────────────────────────────
+  if (layout === 'default') {
+    card.innerHTML = `${bgHtml}${overlayHtml}${iconBgHtml}${watermarkHtml}
+      <div class="pc-content">
+        <div class="pc-category" style="color:${tpl.accent}">${tpl.label}</div>
+        <div class="pc-headline">${headline}</div>
+        ${body ? `<div class="pc-body">${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  // ── LAYOUT: DICA DA SEMANA ────────────────────────────────────
+  } else if (layout === 'dica-semana') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:linear-gradient(to bottom,rgba(0,0,0,0.6) 0%,rgba(0,0,0,0.55) 100%)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-dica">
+        <div class="pc-dica-badge" style="background:${tpl.accent}">✦ DICA DA SEMANA</div>
+        <div class="pc-dica-icon">${tpl.icon.replace('width="180" height="180"','width="72" height="72"').replace('opacity:0.06','opacity:0.9')}</div>
+        <div class="pc-dica-headline">${headline}</div>
+        ${body ? `<div class="pc-dica-body">${body}</div>` : ''}
+        ${footerHtml ? `<div class="pc-footer" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:auto;padding-top:10px">${footerHtml.replace('<div class="pc-footer">','').replace('</div>','')}</div>` : ''}
+      </div>`;
+
+  // ── LAYOUT: VOCÊ SABIA? ───────────────────────────────────────
+  } else if (layout === 'voce-sabia') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:linear-gradient(160deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.5) 100%)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-voce">
+        <div class="pc-voce-eyebrow" style="color:${tpl.accent}">VOCÊ SABIA?</div>
+        <div class="pc-voce-line" style="background:${tpl.accent}"></div>
+        <div class="pc-voce-headline">${headline}</div>
+        ${body ? `<div class="pc-voce-body">${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  // ── LAYOUT: CASO REAL ─────────────────────────────────────────
+  } else if (layout === 'caso-real') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:linear-gradient(to bottom,rgba(0,0,0,0.82) 0%,rgba(0,0,0,0.45) 50%,rgba(0,0,0,0.82) 100%)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-caso">
+        <div class="pc-caso-top">
+          <div class="pc-caso-tag" style="border-color:${tpl.accent};color:${tpl.accent}">⚖ CASO REAL</div>
+          <div class="pc-caso-label">O que aconteceu:</div>
         </div>
-      ` : ''}
-    </div>
-  `;
+        <div class="pc-caso-headline">${headline}</div>
+        ${body ? `<div class="pc-caso-body">${body}</div>` : ''}
+        <div class="pc-caso-bar" style="background:${tpl.accent}"></div>
+        ${footerHtml}
+      </div>`;
+
+  // ── LAYOUT: MITO OU VERDADE? ──────────────────────────────────
+  } else if (layout === 'mito-verdade') {
+    const isVerdade = body.toLowerCase().includes('verdade');
+    const isMito    = body.toLowerCase().includes('mito');
+    const verdictColor  = isVerdade ? '#25D366' : isMito ? '#d44' : tpl.accent;
+    const verdictLabel  = isVerdade ? '✓ VERDADE' : isMito ? '✗ MITO' : '?';
+
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.78)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-mito">
+        <div class="pc-mito-eyebrow">MITO OU VERDADE?</div>
+        <div class="pc-mito-box" style="border-color:rgba(255,255,255,0.15)">
+          <div class="pc-mito-headline">${headline}</div>
+        </div>
+        ${body ? `<div class="pc-mito-body">${body}</div>` : ''}
+        <div class="pc-mito-verdict" style="background:${verdictColor}">${verdictLabel}</div>
+        ${footerHtml}
+      </div>`;
+
+  // ── LAYOUT: DIREITO EM FOCO ────────────────────────────────────
+  } else if (layout === 'foco') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.72)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-foco">
+        <div class="pc-foco-bar" style="background:${tpl.accent}"></div>
+        <div class="pc-foco-headline">${headline}</div>
+        <div class="pc-foco-bar2" style="background:rgba(255,255,255,0.12)"></div>
+        ${body ? `<div class="pc-foco-body">${body}</div>` : ''}
+        <div class="pc-foco-footer">
+          ${lpos !== 'watermark' ? `<img src="/project-assets/favicon.png" class="pc-foco-logo" alt="Logo" onerror="this.style.display='none'">` : ''}
+          <span class="pc-foco-name" style="color:${tpl.accent}">Dr. Marlon Inácio</span>
+        </div>
+      </div>`;
+  }
 }
 
 function renderArticlePreview(card) {
