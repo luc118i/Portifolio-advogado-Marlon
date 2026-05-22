@@ -1,203 +1,119 @@
-import { Phone, Mail, Linkedin, MapPin } from "lucide-react";
+import { Phone, Mail, Linkedin, Instagram, MapPin } from "lucide-react";
+
+const contacts = [
+  {
+    Icon: Phone,
+    label: "WHATSAPP",
+    value: "(61) 9 9913-8905",
+    href: "https://wa.me/5561999138905",
+  },
+  {
+    Icon: Mail,
+    label: "E-MAIL",
+    value: "marloninacio.adv@outlook.com",
+    href: "mailto:marloninacio.adv@outlook.com",
+  },
+  {
+    Icon: Instagram,
+    label: "INSTAGRAM",
+    value: "@marloninacio.adv",
+    href: "https://instagram.com/marloninacio.adv",
+  },
+  {
+    Icon: Linkedin,
+    label: "LINKEDIN",
+    value: "Marlon Silva",
+    href: "https://linkedin.com/in/marlon-silva-082b811a4",
+  },
+];
 
 export function ContactPage() {
   return (
-    <div className="min-h-screen w-full bg-[#F2F2F2] flex items-center justify-center px-6 md:px-12 lg:px-20 py-12 md:py-20">
-      <div className="max-w-5xl w-full space-y-12 md:space-y-16">
+    <div className="min-h-screen w-full bg-[#1C1C1C] flex items-center justify-center px-6 md:px-12 lg:px-20 py-12 md:py-20">
+      <div className="max-w-4xl w-full space-y-10 md:space-y-12">
         {/* Título */}
         <div className="text-center">
           <h2
-            className="text-[#0A0F24]"
+            className="text-white"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Libre Baskerville', serif",
               fontSize: "clamp(2rem, 6vw, 3rem)",
-              fontWeight: "600",
+              fontWeight: "700",
               letterSpacing: "-0.01em",
             }}
           >
-            Contato Profissional
+            Contato
           </h2>
-          <div className="w-20 md:w-24 h-0.5 bg-[#C2A14D] mx-auto mt-4 md:mt-6"></div>
+          <div className="w-20 md:w-24 h-0.5 bg-[#888888] mx-auto mt-4 md:mt-6"></div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
-          {/* Lado esquerdo - Informações de contato */}
-          <div className="space-y-6 md:space-y-8">
-            <div className="space-y-5 md:space-y-6">
-              <div className="flex items-start gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#0A0F24] flex items-center justify-center flex-shrink-0">
-                  <Phone className="w-5 h-5 md:w-6 md:h-6 text-[#C2A14D]" />
-                </div>
-                <div>
-                  <p
-                    className="text-[#0A0F24]/70 mb-1"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-                      fontWeight: "600",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    WHATSAPP
-                  </p>
-                  <p
-                    className="text-[#0A0F24]"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(1rem, 2.5vw, 1.125rem)",
-                      fontWeight: "500",
-                    }}
-                  >
-                    (61) 99138905
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#0A0F24] flex items-center justify-center flex-shrink-0">
-                  <Mail className="w-5 h-5 md:w-6 md:h-6 text-[#C2A14D]" />
-                </div>
-                <div>
-                  <p
-                    className="text-[#0A0F24]/70 mb-1"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-                      fontWeight: "600",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    E-MAIL
-                  </p>
-                  <p
-                    className="text-[#0A0F24] break-all"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.9375rem, 2.5vw, 1.125rem)",
-                      fontWeight: "500",
-                    }}
-                  >
-                    email Profissional@adv.oab.br
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#0A0F24] flex items-center justify-center flex-shrink-0">
-                  <Linkedin className="w-5 h-5 md:w-6 md:h-6 text-[#C2A14D]" />
-                </div>
-                <div>
-                  <p
-                    className="text-[#0A0F24]/70 mb-1"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-                      fontWeight: "600",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    LINKEDIN
-                  </p>
-                  <p
-                    className="text-[#0A0F24]"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(1rem, 2.5vw, 1.125rem)",
-                      fontWeight: "500",
-                    }}
-                  >
-                    /in/marlon-luiz
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-4">
-                <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-[#0A0F24] flex items-center justify-center flex-shrink-0">
-                  <MapPin className="w-5 h-5 md:w-6 md:h-6 text-[#C2A14D]" />
-                </div>
-                <div>
-                  <p
-                    className="text-[#0A0F24]/70 mb-1"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-                      fontWeight: "600",
-                      letterSpacing: "0.05em",
-                    }}
-                  >
-                    LOCALIZAÇÃO
-                  </p>
-                  <p
-                    className="text-[#0A0F24]"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(1rem, 2.5vw, 1.125rem)",
-                      fontWeight: "500",
-                    }}
-                  >
-                    Brasilia, DF
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Lado direito - QR Code */}
-          <div className="flex flex-col items-center justify-center gap-5 md:gap-6">
-            <div className="bg-white p-6 md:p-8 rounded-sm border-2 border-[#C2A14D] shadow-lg">
-              <div className="w-40 h-40 md:w-48 md:h-48 bg-[#F2F2F2] flex items-center justify-center">
-                <div className="text-center p-6">
-                  <p
-                    className="text-[#0A0F24] mb-2"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-                    }}
-                  >
-                    <img src="/qrCodeImg.png" alt="QR Code" />
-                  </p>
-                  <p
-                    className="text-[#0A0F24]/60"
-                    style={{
-                      fontFamily: "'Inter', sans-serif",
-                      fontSize: "clamp(0.6875rem, 1.5vw, 0.75rem)",
-                    }}
-                  >
-                    Meu Whatsapp
-                  </p>
-                </div>
-              </div>
-            </div>
-            <p
-              className="text-[#0A0F24]/70 text-center"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "clamp(0.8125rem, 2vw, 0.875rem)",
-              }}
+        {/* Grid de contatos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
+          {contacts.map(({ Icon, label, value, href }, i) => (
+            <a
+              key={i}
+              href={href}
+              target="_blank"
+              rel="noreferrer"
+              className="flex items-start gap-4 rounded-sm border border-[#888888]/30 hover:border-[#888888] transition-all hover:bg-white/10 group"
+              style={{ padding: "24px", backgroundColor: "rgba(255,255,255,0.05)" }}
             >
-              Escaneie para iniciar uma conversa
-              <br />e tirar dúvidas jurídicas.
-            </p>
-          </div>
+              <div
+                className="flex-shrink-0 rounded-full flex items-center justify-center group-hover:bg-[#888888] transition-colors"
+                style={{
+                  width: "44px",
+                  height: "44px",
+                  backgroundColor: "rgba(136,136,136,0.15)",
+                }}
+              >
+                <Icon
+                  style={{ width: "20px", height: "20px", color: "#888888" }}
+                  className="group-hover:text-[#1C1C1C]"
+                />
+              </div>
+              <div>
+                <p
+                  className="text-[#888888]"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "0.72rem",
+                    fontWeight: "600",
+                    letterSpacing: "0.14em",
+                    marginBottom: "5px",
+                  }}
+                >
+                  {label}
+                </p>
+                <p
+                  className="text-white break-all"
+                  style={{
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "clamp(0.875rem, 2vw, 1rem)",
+                    fontWeight: "500",
+                  }}
+                >
+                  {value}
+                </p>
+              </div>
+            </a>
+          ))}
         </div>
 
-        {/* Rodapé decorativo */}
-        <div className="flex items-center justify-center pt-6 md:pt-8">
-          <div className="flex items-center gap-3 md:gap-4">
-            <div className="w-12 md:w-16 h-0.5 bg-[#C2A14D]"></div>
-            <p
-              className="text-[#C2A14D] text-center whitespace-nowrap"
-              style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: "clamp(0.9375rem, 2vw, 1rem)",
-                fontWeight: "500",
-                fontStyle: "italic",
-              }}
-            >
-              Disponível para novos desafios
-            </p>
-            <div className="w-12 md:w-16 h-0.5 bg-[#C2A14D]"></div>
-          </div>
+        {/* Localização */}
+        <div
+          className="flex items-center justify-center gap-3"
+          style={{ paddingTop: "8px" }}
+        >
+          <MapPin style={{ width: "14px", height: "14px", color: "#888888" }} />
+          <p
+            className="text-[#888888]"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "0.875rem",
+            }}
+          >
+            Brasília, DF · Subseção OAB São Sebastião
+          </p>
         </div>
       </div>
     </div>

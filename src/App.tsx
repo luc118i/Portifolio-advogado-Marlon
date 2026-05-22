@@ -1,30 +1,23 @@
 import { useState, useEffect } from "react";
 
-// Páginas
 import { CoverPage } from "./pages/CoverPage";
-import { PresentationLetterPage } from "./pages/PresentationLetterPage";
+import { CredentialsPage } from "./pages/CredentialsPage";
 import { PracticeAreasPage } from "./pages/PracticeAreasPage";
-import { EducationPage } from "./pages/EducationPage";
-import { ExperiencePage } from "./pages/ExperiencePage";
-import { SkillsPage } from "./pages/SkillsPage";
-import { DifferentialsPage } from "./pages/DifferentialsPage";
+import { ConsultationPage } from "./pages/ConsultationPage";
 import { ContactPage } from "./pages/ContactPage";
 
 import { useSwipeNavigation } from "./hooks/useSwipeNavigation";
 
-// Componentes UI
 import { PortfolioNavigation } from "./components/PortfolioNavigation";
 import { MobileMenu } from "./components/MobileMenu";
 import { Footer } from "./components/Footer";
+import { WhatsAppCTA } from "./components/WhatsAppCTA";
 
 const pages = [
   CoverPage,
-  PresentationLetterPage,
   PracticeAreasPage,
-  EducationPage,
-  ExperiencePage,
-  SkillsPage,
-  DifferentialsPage,
+  CredentialsPage,
+  ConsultationPage,
   ContactPage,
 ];
 
@@ -42,7 +35,6 @@ export default function App() {
     }
   };
 
-  // Navegação por teclado
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "ArrowRight" || e.key === "ArrowDown") {
@@ -51,7 +43,6 @@ export default function App() {
         handlePageChange(currentPage - 1);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentPage]);
@@ -61,14 +52,12 @@ export default function App() {
   useSwipeNavigation(
     () => handlePageChange(currentPage + 1),
     () => handlePageChange(currentPage - 1),
-    { minDistance: 50 } // pode ajustar se quiser mais sensível
+    { minDistance: 50 }
   );
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Conteúdo principal */}
-      <div className="relative w-full flex-1 overflow-hidden">
-        {/* Página atual com transição */}
+    <div className="min-h-screen flex flex-col" style={{ minHeight: "-webkit-fill-available" }}>
+      <div className="relative w-full flex-1" style={{ overflow: "hidden" }}>
         <div
           className={`transition-opacity duration-300 ${
             isTransitioning ? "opacity-0" : "opacity-100"
@@ -77,7 +66,6 @@ export default function App() {
           <CurrentPageComponent />
         </div>
 
-        {/* Navegação Desktop - oculta no mobile */}
         <div className="hidden lg:block">
           <PortfolioNavigation
             currentPage={currentPage}
@@ -86,17 +74,17 @@ export default function App() {
           />
         </div>
 
-        {/* Menu Mobile - visível apenas no mobile e tablet */}
         <MobileMenu
           currentPage={currentPage}
           totalPages={pages.length}
           onPageChange={handlePageChange}
         />
 
-        {/* Indicador de página no canto superior esquerdo - responsivo */}
+        <WhatsAppCTA />
+
         <div className="fixed top-4 left-4 md:top-6 md:left-6 lg:top-8 lg:left-8 z-50">
           <div
-            className="text-[#C2A14D]"
+            className="text-[#888888]"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: "clamp(0.75rem, 2vw, 0.875rem)",
@@ -110,7 +98,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Rodapé com sua identificação */}
       <Footer />
     </div>
   );

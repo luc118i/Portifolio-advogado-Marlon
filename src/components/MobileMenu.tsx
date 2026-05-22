@@ -9,14 +9,11 @@ interface MobileMenuProps {
 }
 
 const pageNames = [
-  "Capa",
-  "Apresentação",
+  "Início",
   "Áreas de Atuação",
-  "Formação",
-  "Experiência",
-  "Competências",
-  "Diferenciais",
-  "Contatos"
+  "Credenciais",
+  "Solicitar Consulta",
+  "Contato",
 ];
 
 export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenuProps) {
@@ -34,12 +31,13 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
         variant="outline"
         size="icon"
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-6 right-6 z-[100] lg:hidden rounded-full bg-white shadow-lg border-[#C2A14D]/30 hover:bg-[#F2F2F2]"
+        className="fixed top-6 right-6 z-[100] lg:hidden rounded-full bg-white shadow-lg border-[#888888]/30 hover:bg-[#F2F2F2]"
+        style={{ cursor: "pointer" }}
       >
         {isOpen ? (
-          <X className="w-5 h-5 text-[#0A0F24]" />
+          <X className="w-5 h-5 text-[#1C1C1C]" />
         ) : (
-          <Menu className="w-5 h-5 text-[#0A0F24]" />
+          <Menu className="w-5 h-5 text-[#1C1C1C]" />
         )}
       </Button>
 
@@ -48,7 +46,7 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
         <>
           {/* Backdrop */}
           <div 
-            className="fixed inset-0 bg-[#0A0F24]/80 backdrop-blur-sm z-[90] lg:hidden"
+            className="fixed inset-0 bg-[#1C1C1C]/80 backdrop-blur-sm z-[90] lg:hidden"
             onClick={() => setIsOpen(false)}
           />
           
@@ -58,16 +56,16 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
               {/* Header */}
               <div className="mb-8">
                 <div 
-                  className="text-[#0A0F24] mb-2"
+                  className="text-[#1C1C1C] mb-2"
                   style={{
-                    fontFamily: "'Playfair Display', serif",
+                    fontFamily: "'Libre Baskerville', serif",
                     fontSize: '1.5rem',
                     fontWeight: '600'
                   }}
                 >
                   Navegação
                 </div>
-                <div className="w-16 h-0.5 bg-[#C2A14D]"></div>
+                <div className="w-16 h-0.5 bg-[#888888]"></div>
               </div>
 
               {/* Menu items */}
@@ -79,14 +77,15 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
                         onClick={() => handlePageChange(i)}
                         className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
                           i === currentPage
-                            ? 'bg-[#0A0F24] text-white'
-                            : 'text-[#0A0F24] hover:bg-[#F2F2F2]'
+                            ? 'bg-[#1C1C1C] text-white'
+                            : 'text-[#1C1C1C] hover:bg-[#F2F2F2]'
                         }`}
+                        style={{ cursor: "pointer" }}
                       >
                         <div className="flex items-center gap-3">
                           <span 
                             className={`${
-                              i === currentPage ? 'text-[#C2A14D]' : 'text-[#0A0F24]/40'
+                              i === currentPage ? 'text-[#888888]' : 'text-[#1C1C1C]/40'
                             }`}
                             style={{
                               fontFamily: "'Inter', sans-serif",
@@ -114,9 +113,9 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
               </nav>
 
               {/* Footer */}
-              <div className="mt-6 pt-6 border-t border-[#0A0F24]/10">
+              <div className="mt-6 pt-6 border-t border-[#1C1C1C]/10">
                 <p 
-                  className="text-[#0A0F24]/60 text-center"
+                  className="text-[#1C1C1C]/60 text-center"
                   style={{
                     fontFamily: "'Inter', sans-serif",
                     fontSize: '0.75rem'

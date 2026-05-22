@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
 
 @custom-variant dark (&:is(.dark *));
 
@@ -8,10 +8,10 @@
   --foreground: oklch(0.145 0 0);
   
   /* Portfolio Custom Colors */
-  --navy: #0A0F24;
+  --navy: #1C1C1C;
   --light-gray: #F2F2F2;
   --ice-white: #FFFFFF;
-  --matte-gold: #C2A14D;
+  --matte-gold: #888888;
   
   --card: #ffffff;
   --card-foreground: oklch(0.145 0 0);

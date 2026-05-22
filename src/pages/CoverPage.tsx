@@ -1,76 +1,112 @@
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
-
 export function CoverPage() {
   return (
-    <div className="h-screen w-full bg-[#0A0F24] flex items-center justify-center px-6 md:px-12 lg:px-16 relative overflow-hidden">
-      {/* Elemento decorativo dourado - responsivo */}
-      <div className="absolute top-6 left-6 md:top-12 md:left-12 lg:top-16 lg:left-16 w-16 md:w-20 lg:w-24 h-0.5 bg-[#C2A14D]"></div>
-      <div className="absolute bottom-6 right-6 md:bottom-12 md:right-12 lg:bottom-16 lg:right-16 w-20 md:w-24 lg:w-32 h-0.5 bg-[#C2A14D]"></div>
+    <div
+      className="h-screen w-full bg-[#1C1C1C] flex flex-col relative overflow-hidden"
+      style={{ minHeight: "-webkit-fill-available" }}
+    >
+      {/* Linhas decorativas — escondidas no mobile */}
+      <div className="hidden md:block absolute top-12 left-12 lg:top-16 lg:left-16 w-20 lg:w-24 h-0.5 bg-[#888888]"></div>
+      <div className="hidden md:block absolute bottom-12 right-12 lg:bottom-16 lg:right-16 w-24 lg:w-32 h-0.5 bg-[#888888]"></div>
 
-      <div className="max-w-7xl w-full flex flex-col lg:flex-row items-center justify-between gap-8 md:gap-12 lg:gap-16">
-        {/* Lado esquerdo - Informações */}
-        <div className="flex-1 w-full text-center lg:text-left">
-          <div className="space-y-6 md:space-y-8">
-            <div>
-              <h1
-                className="text-white mb-3 md:mb-4"
-                style={{
-                  fontFamily: "'Playfair Display', serif",
-                  fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
-                  lineHeight: "1.1",
-                  fontWeight: "600",
-                  letterSpacing: "-0.02em",
-                }}
-              >
-                Dr. Marlon inacio
-              </h1>
+      {/* Conteúdo central — ocupa o espaço disponível */}
+      <div className="flex-1 flex items-center justify-center px-6 md:px-12 lg:px-16">
+        <div className="max-w-3xl w-full flex flex-col items-center text-center gap-8 md:gap-10">
+        <div>
+          <h1
+            className="text-white mb-3 md:mb-4"
+            style={{
+              fontFamily: "'Libre Baskerville', serif",
+              fontSize: "clamp(2.5rem, 8vw, 4.5rem)",
+              lineHeight: "1.1",
+              fontWeight: "700",
+              letterSpacing: "-0.02em",
+            }}
+          >
+            Adv. Marlon Silva
+          </h1>
+          <div
+            className="text-[#888888]"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.9rem, 2.5vw, 1.1rem)",
+              letterSpacing: "0.08em",
+              fontWeight: "400",
+            }}
+          >
+            OAB/DF 87.696 · Advogado
+          </div>
+        </div>
 
-              <div
-                className="text-[#C2A14D] mb-6 md:mb-8"
-                style={{
-                  fontFamily: "'Inter', sans-serif",
-                  fontSize: "clamp(1rem, 3vw, 1.25rem)",
-                  letterSpacing: "0.05em",
-                  fontWeight: "400",
-                }}
-              >
-                OAB/DF 123.456
-              </div>
-            </div>
+        <div className="w-16 md:w-20 h-px bg-[#888888]"></div>
 
-            <div className="w-16 md:w-20 h-px bg-[#C2A14D] my-6 md:my-8 mx-auto lg:mx-0"></div>
+        <p
+          className="text-[#F2F2F2]"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
+            lineHeight: "1.8",
+            fontWeight: "300",
+            maxWidth: "600px",
+          }}
+        >
+          Advogado com experiência em processos administrativos e licitações,
+          atuando em instituições governamentais. Forte conhecimento nas áreas
+          penal e civil, com diferencial em tecnologias aplicadas ao Direito.
+        </p>
+        </div>
+      </div>
 
-            <p
-              className="text-[#F2F2F2] max-w-xl mx-auto lg:mx-0"
+      {/* Hint de swipe — fluxo natural no rodapé, só mobile */}
+      <div
+        className="lg:hidden flex flex-col items-center gap-2 pb-8"
+        style={{ pointerEvents: "none" }}
+      >
+        {/* Chevrons em cascata */}
+        <div style={{ display: "flex", alignItems: "center", marginBottom: "6px" }}>
+          {[0, 1, 2].map(i => (
+            <span
+              key={i}
+              className="swipe-chevron"
               style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "clamp(1rem, 2.5vw, 1.1rem)",
-                lineHeight: "1.6",
-                fontWeight: "300",
-                fontStyle: "italic",
+                fontSize: "1.4rem",
+                lineHeight: 1,
+                color: "#888888",
+                opacity: 0,
+                animationDelay: `${i * 0.18}s`,
               }}
             >
-              "Compromisso com ética, clareza e resultados."
-            </p>
-          </div>
+              ›
+            </span>
+          ))}
         </div>
 
-        {/* Lado direito - Foto */}
-        <div className="flex-shrink-0 w-full lg:w-auto flex justify-center">
-          <div className="relative w-full max-w-sm md:max-w-md lg:max-w-none">
-            {/* Moldura dourada */}
-            <div className="absolute -inset-2 md:-inset-3 border-2 border-[#C2A14D] rounded-sm"></div>
-
-            {/* Foto */}
-            <div className="relative w-full aspect-[3/4] lg:w-96 lg:h-[500px] overflow-hidden rounded-sm">
-              <ImageWithFallback
-                src="https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcQCGXUeymylpExgQGeXsLBr3NU3UtWwQnXtGoOP1sKGfelAVcMlMu6uSXFKPldjq-_TiqMsU2B7-76_qo-hIkT86NViAv9JXl6-bZ5tfGelEgZhdAs"
-                alt="Foto profissional do advogado"
-                className="w-full h-full object-cover grayscale-[30%] opacity-95"
-              />
-            </div>
-          </div>
+        {/* Dots indicadores */}
+        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+          {[0,1,2,3,4,5].map(i => (
+            <div
+              key={i}
+              style={{
+                width:  i === 0 ? "18px" : "5px",
+                height: "5px",
+                borderRadius: "100px",
+                backgroundColor: i === 0 ? "#888888" : "rgba(136,136,136,0.28)",
+              }}
+            />
+          ))}
         </div>
+
+        <p
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "0.62rem",
+            color: "rgba(136,136,136,0.45)",
+            letterSpacing: "0.14em",
+            fontWeight: "500",
+            marginTop: "2px",
+          }}
+        >
+          DESLIZE PARA NAVEGAR
+        </p>
       </div>
     </div>
   );

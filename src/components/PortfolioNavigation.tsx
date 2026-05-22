@@ -15,9 +15,10 @@ export function PortfolioNavigation({ currentPage, totalPages, onPageChange }: P
         size="icon"
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 0}
-        className="rounded-full bg-white shadow-lg border-[#C2A14D]/30 hover:bg-[#F2F2F2] disabled:opacity-30"
+        className="rounded-full bg-white shadow-lg border-[#888888]/30 hover:bg-[#F2F2F2] disabled:opacity-30"
+        style={{ cursor: "pointer" }}
       >
-        <ChevronLeft className="w-5 h-5 text-[#0A0F24]" />
+        <ChevronLeft className="w-5 h-5 text-[#1C1C1C]" />
       </Button>
       
       <div className="flex gap-2">
@@ -27,9 +28,10 @@ export function PortfolioNavigation({ currentPage, totalPages, onPageChange }: P
             onClick={() => onPageChange(i)}
             className={`w-2.5 h-2.5 rounded-full transition-all ${
               i === currentPage
-                ? 'bg-[#C2A14D] w-8'
-                : 'bg-[#0A0F24]/20 hover:bg-[#0A0F24]/40'
+                ? 'bg-[#888888] w-8'
+                : 'bg-[#1C1C1C]/20 hover:bg-[#1C1C1C]/40'
             }`}
+            style={{ cursor: "pointer" }}
             aria-label={`Ir para página ${i + 1}`}
           />
         ))}
@@ -40,9 +42,10 @@ export function PortfolioNavigation({ currentPage, totalPages, onPageChange }: P
         size="icon"
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages - 1}
-        className="rounded-full bg-white shadow-lg border-[#C2A14D]/30 hover:bg-[#F2F2F2] disabled:opacity-30"
+        className="rounded-full bg-white shadow-lg border-[#888888]/30 hover:bg-[#F2F2F2] disabled:opacity-30"
+        style={{ cursor: "pointer" }}
       >
-        <ChevronRight className="w-5 h-5 text-[#0A0F24]" />
+        <ChevronRight className="w-5 h-5 text-[#1C1C1C]" />
       </Button>
     </div>
   );

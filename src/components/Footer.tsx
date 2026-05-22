@@ -7,7 +7,7 @@ export function Footer() {
           href="https://github.com/luc118i"
           target="_blank"
           rel="noreferrer"
-          className="text-[#C2A14D] hover:underline"
+          className="text-[#888888] hover:underline"
         >
           Lucas Inácio
         </a>
