@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CMS — Dr. Marlon Inácio</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-left">
+      <img src="/project-assets/favicon.png" alt="Logo" class="header-logo" />
+      <div>
+        <div class="header-title">CMS — Dr. Marlon Inácio</div>
+        <div class="header-sub">Gerenciador de Publicações</div>
+      </div>
+    </div>
+    <button class="btn-posts-list" onclick="togglePostsList()">Ver posts publicados</button>
+  </header>
+
+  <!-- POSTS LIST MODAL -->
+  <div id="posts-modal" class="modal hidden">
+    <div class="modal-box">
+      <div class="modal-header">
+        <span>Posts publicados</span>
+        <button onclick="togglePostsList()">✕</button>
+      </div>
+      <div id="posts-list" class="posts-list">Carregando...</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── FORMULÁRIO ── -->
+    <section class="form-panel">
+
+      <!-- Tipo -->
+      <div class="field-group">
+        <label class="field-label">Tipo de publicação</label>
+        <div class="toggle-group">
+          <button id="btn-carousel" class="toggle-btn active" onclick="setType('carousel')">Carrossel</button>
+          <button id="btn-article"  class="toggle-btn"        onclick="setType('article')">Artigo</button>
+        </div>
+      </div>
+
+      <!-- Categoria -->
+      <div class="field-group">
+        <label class="field-label">Categoria</label>
+        <select id="category" class="field-select" onchange="onCategoryChange()">
+          <option value="Direito Penal">Direito Penal</option>
+          <option value="Direito Administrativo">Direito Administrativo</option>
+          <option value="Direito Civil">Direito Civil</option>
+          <option value="Consultoria Jurídica">Consultoria Jurídica</option>
+          <option value="Tecnologia e IA Jurídica">Tecnologia e IA Jurídica</option>
+        </select>
+      </div>
+
+      <!-- Título -->
+      <div class="field-group">
+        <label class="field-label">Título</label>
+        <input id="title" type="text" class="field-input" placeholder="Ex: O que fazer se a polícia bater na sua porta?" oninput="onTitleInput()" />
+        <div class="field-hint">Slug: <span id="slug-preview" class="slug-text">—</span></div>
+      </div>
+
+      <!-- Tempo de leitura -->
+      <div class="field-group">
+        <label class="field-label">Tempo de leitura</label>
+        <input id="readTime" type="text" class="field-input field-input-sm" placeholder="Ex: 3 min" value="3 min" oninput="updatePreview()" />
+      </div>
+
+      <!-- Posição do logo -->
+      <div class="field-group">
+        <label class="field-label">Posição do logo</label>
+        <div class="logo-pos-group">
+          <label class="logo-pos-opt">
+            <input type="radio" name="logoPos" value="footer" checked onchange="updatePreview()" />
+            <span class="logo-pos-label">
+              <span class="logo-pos-icon">⊟</span>
+              Rodapé de todos os slides
+            </span>
+          </label>
+          <label class="logo-pos-opt">
+            <input type="radio" name="logoPos" value="watermark" onchange="updatePreview()" />
+            <span class="logo-pos-label">
+              <span class="logo-pos-icon">◱</span>
+              Marca d'água (canto)
+            </span>
+          </label>
+          <label class="logo-pos-opt">
+            <input type="radio" name="logoPos" value="cta" onchange="updatePreview()" />
+            <span class="logo-pos-label">
+              <span class="logo-pos-icon">◎</span>
+              Apenas no slide final
+            </span>
+          </label>
+        </div>
+      </div>
+
+      <!-- ── SLIDES (carrossel) ── -->
+      <div id="slides-section">
+        <div class="slides-header">
+          <label class="field-label" style="margin:0">Slides</label>
+          <button class="btn-add-slide" onclick="addSlide()">+ Adicionar slide</button>
+        </div>
+        <div id="slides-container"></div>
+        <button class="btn-add-cta" onclick="addCtaSlide()">+ Adicionar slide de CTA final</button>
+      </div>
+
+      <!-- ── ARTIGO ── -->
+      <div id="article-section" class="hidden">
+        <div class="field-group">
+          <label class="field-label">Imagem de capa</label>
+          <div class="upload-area" id="cover-upload-area" onclick="document.getElementById('cover-file').click()">
+            <span id="cover-upload-text">Clique para enviar imagem de capa</span>
+            <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
+          </div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Resumo (aparece no card)</label>
+          <textarea id="excerpt" class="field-textarea" rows="2" placeholder="Uma frase curta que desperta curiosidade..." oninput="updatePreview()"></textarea>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Conteúdo completo</label>
+          <textarea id="content" class="field-textarea" rows="8" placeholder="Texto completo do artigo..." oninput="updatePreview()"></textarea>
+        </div>
+      </div>
+
+      <!-- Publicar -->
+      <div class="publish-area">
+        <button id="publish-btn" class="btn-publish" onclick="publish()">
+          <span id="publish-text">Publicar post</span>
+        </button>
+        <div id="publish-result" class="publish-result hidden"></div>
+      </div>
+
+    </section>
+
+    <!-- ── PREVIEW ── -->
+    <section class="preview-panel">
+      <div class="preview-header">
+        <span class="preview-label">Preview</span>
+        <span class="preview-nav">
+          <button onclick="prevSlide()" class="nav-arrow">‹</button>
+          <span id="slide-counter" class="slide-counter">1 / 1</span>
+          <button onclick="nextSlide()" class="nav-arrow">›</button>
+        </span>
+      </div>
+
+      <div class="preview-phone">
+        <div id="preview-card" class="preview-card"></div>
+        <div id="preview-dots" class="preview-dots"></div>
+      </div>
+
+      <div class="preview-url-box hidden" id="preview-url-box">
+        <div class="preview-url-label">Link gerado</div>
+        <div class="preview-url-row">
+          <span id="preview-url-text" class="preview-url-text"></span>
+          <button onclick="copyUrl()" class="btn-copy">Copiar</button>
+        </div>
+        <a id="whatsapp-share-btn" href="#" target="_blank" class="btn-whatsapp-share">
+          Compartilhar no WhatsApp
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
