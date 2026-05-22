@@ -5,6 +5,7 @@ import { CredentialsPage } from "./pages/CredentialsPage";
 import { PracticeAreasPage } from "./pages/PracticeAreasPage";
 import { ConsultationPage } from "./pages/ConsultationPage";
 import { ContactPage } from "./pages/ContactPage";
+import { PostsPage } from "./pages/PostsPage";
 
 import { useSwipeNavigation } from "./hooks/useSwipeNavigation";
 
@@ -19,6 +20,7 @@ const pages = [
   CredentialsPage,
   ConsultationPage,
   ContactPage,
+  PostsPage,
 ];
 
 export default function App() {

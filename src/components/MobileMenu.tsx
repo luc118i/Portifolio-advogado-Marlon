@@ -14,6 +14,7 @@ const pageNames = [
   "Credenciais",
   "Solicitar Consulta",
   "Contato",
+  "Publicações",
 ];
 
 export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenuProps) {
