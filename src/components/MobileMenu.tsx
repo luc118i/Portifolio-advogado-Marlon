@@ -55,7 +55,20 @@ export function MobileMenu({ currentPage, totalPages, onPageChange }: MobileMenu
             <div className="flex flex-col h-full pt-24 px-8 pb-8">
               {/* Header */}
               <div className="mb-8">
-                <div 
+                {/* Logo */}
+                <img
+                  src="/favicon.png"
+                  alt="Logo Dr. Marlon Inácio"
+                  style={{
+                    width: "48px",
+                    height: "48px",
+                    borderRadius: "50%",
+                    objectFit: "cover",
+                    marginBottom: "16px",
+                    display: "block",
+                  }}
+                />
+                <div
                   className="text-[#1C1C1C] mb-2"
                   style={{
                     fontFamily: "'Libre Baskerville', serif",

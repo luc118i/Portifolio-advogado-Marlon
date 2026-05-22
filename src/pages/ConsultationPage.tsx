@@ -222,7 +222,7 @@ export function ConsultationPage() {
               letterSpacing: "0.04em",
             }}
           >
-            Brasília, DF · Horário de Brasília (UTC−3)
+            Brasília, DF · Horário de Brasília
           </p>
         </div>
 
