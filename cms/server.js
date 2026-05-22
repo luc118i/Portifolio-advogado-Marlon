@@ -44,6 +44,9 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Serve assets do projeto (logo, etc.)
 app.use('/project-assets', express.static(path.join(PROJECT, 'public')));
 
+// Serve imagens dos posts (para o preview funcionar no CMS)
+app.use('/posts', express.static(POSTS_IMG));
+
 // ─── UPLOAD ──────────────────────────────────────────────────────────────────
 app.post('/api/upload', (req, res) => {
   upload.single('image')(req, res, (err) => {

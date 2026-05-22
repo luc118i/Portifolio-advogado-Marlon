@@ -73,7 +73,7 @@ let publishedUrl = null;
 // HELPERS
 // ═══════════════════════════════════════════════════════════════
 function createEmptySlide() {
-  return { type: 'content', imagePath: null, headline: '', body: '' };
+  return { type: 'content', imagePath: null, imageX: 0, imageY: 0, imageScale: 1, headline: '', body: '' };
 }
 function createCtaSlide() {
   return { type: 'cta', headline: 'Está com dúvidas jurídicas?', body: 'Fale comigo antes de tomar qualquer decisão.' };
@@ -191,14 +191,34 @@ function renderSlideForm(slide, index, container) {
     </div>
 
     ${!isCta ? `
-    <div class="slide-upload ${slide.imagePath ? 'has-image' : ''}"
-         id="upload-area-${index}"
-         onclick="document.getElementById('file-${index}').click(); event.stopPropagation()">
-      ${slide.imagePath
-        ? `<img src="${slide.imagePath}" alt="Imagem">
-           <button class="slide-upload-clear" onclick="clearSlideImage(${index}); event.stopPropagation()">✕</button>`
-        : '<span>Clique para enviar imagem (opcional)</span>'}
+    ${slide.imagePath ? `
+    <div class="img-editor-wrap" onclick="event.stopPropagation()">
+      <div class="img-canvas" id="img-canvas-${index}"
+           onmousedown="startImgDrag(event,${index})"
+           onwheel="wheelZoom(event,${index})">
+        <img id="editor-img-${index}"
+             src="${slide.imagePath}"
+             class="editor-img"
+             style="transform:translate(calc(-50% + ${slide.imageX||0}px), calc(-50% + ${slide.imageY||0}px)) scale(${slide.imageScale||1})"
+             draggable="false">
+        <div class="img-canvas-hint">Arraste para reposicionar · Scroll para zoom</div>
+      </div>
+      <div class="img-editor-controls">
+        <button class="img-ctrl-btn" onclick="zoomStep(${index},-0.1)" title="Diminuir zoom">−</button>
+        <input type="range" id="zoom-slider-${index}" class="zoom-slider"
+               min="30" max="300" value="${Math.round((slide.imageScale||1)*100)}"
+               oninput="setZoomSlider(this.value,${index})">
+        <button class="img-ctrl-btn" onclick="zoomStep(${index}, 0.1)" title="Aumentar zoom">+</button>
+        <button class="img-ctrl-btn img-fit-btn" onclick="fitImage(${index})">⊞ Enquadrar</button>
+        <button class="img-ctrl-btn img-rm-btn" onclick="clearSlideImage(${index})">✕ Remover</button>
+      </div>
     </div>
+    ` : `
+    <div class="slide-upload"
+         onclick="document.getElementById('file-${index}').click(); event.stopPropagation()">
+      <span>Clique para enviar imagem (opcional)</span>
+    </div>
+    `}
     <input type="file" id="file-${index}" accept="image/*" class="hidden"
            onchange="uploadSlideImage(this, ${index})" />
     ` : ''}
@@ -235,6 +255,9 @@ function renderSlideForm(slide, index, container) {
 
 function clearSlideImage(index) {
   state.slides[index].imagePath = null;
+  state.slides[index].imageX = 0;
+  state.slides[index].imageY = 0;
+  state.slides[index].imageScale = 1;
   renderSlidesForms();
   updatePreview();
 }
@@ -337,10 +360,15 @@ function renderCarouselSlide(card, slide, index) {
   const footerLogo = lpos === 'footer';
 
   card.innerHTML = `
-    <div class="pc-bg" style="${hasBgImg
-      ? `background-image:url(${slide.imagePath}); background-size:cover; background-position:center`
-      : `background:${tpl.bg}`
-    }"></div>
+    <div class="pc-bg" style="background:${tpl.bg}">
+      ${hasBgImg ? `
+        <img src="${slide.imagePath}"
+             style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;
+                    width:auto;height:auto;pointer-events:none;
+                    transform:translate(calc(-50% + ${slide.imageX||0}px), calc(-50% + ${slide.imageY||0}px)) scale(${slide.imageScale||1});
+                    transform-origin:center center;">
+      ` : ''}
+    </div>
     <div class="pc-overlay"></div>
     ${!hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : ''}
     ${watermark ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : ''}
@@ -519,6 +547,67 @@ async function deletePost(slug) {
 // ═══════════════════════════════════════════════════════════════
 function escHtml(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ═══════════════════════════════════════════════════════════════
+// EDITOR DE IMAGEM — DRAG & ZOOM
+// ═══════════════════════════════════════════════════════════════
+let imgDrag = null;
+
+function startImgDrag(e, index) {
+  e.preventDefault();
+  e.stopPropagation();
+  imgDrag = {
+    index,
+    startX:    e.clientX,
+    startY:    e.clientY,
+    startImgX: state.slides[index].imageX || 0,
+    startImgY: state.slides[index].imageY || 0,
+  };
+  const canvas = document.getElementById(`img-canvas-${index}`);
+  if (canvas) canvas.style.cursor = 'grabbing';
+}
+
+function wheelZoom(e, index) {
+  e.preventDefault();
+  e.stopPropagation();
+  const delta = e.deltaY < 0 ? 0.08 : -0.08;
+  const slide = state.slides[index];
+  slide.imageScale = Math.max(0.3, Math.min(3, (slide.imageScale || 1) + delta));
+  applyImgTransform(index);
+  const slider = document.getElementById(`zoom-slider-${index}`);
+  if (slider) slider.value = Math.round(slide.imageScale * 100);
+}
+
+function zoomStep(index, delta) {
+  const slide = state.slides[index];
+  slide.imageScale = Math.max(0.3, Math.min(3, (slide.imageScale || 1) + delta));
+  applyImgTransform(index);
+  const slider = document.getElementById(`zoom-slider-${index}`);
+  if (slider) slider.value = Math.round(slide.imageScale * 100);
+}
+
+function setZoomSlider(val, index) {
+  state.slides[index].imageScale = val / 100;
+  applyImgTransform(index);
+}
+
+function fitImage(index) {
+  state.slides[index].imageX    = 0;
+  state.slides[index].imageY    = 0;
+  state.slides[index].imageScale= 1;
+  applyImgTransform(index);
+  const slider = document.getElementById(`zoom-slider-${index}`);
+  if (slider) slider.value = 100;
+}
+
+function applyImgTransform(index) {
+  const slide = state.slides[index];
+  const img   = document.getElementById(`editor-img-${index}`);
+  if (img) {
+    img.style.transform = `translate(calc(-50% + ${slide.imageX}px), calc(-50% + ${slide.imageY}px)) scale(${slide.imageScale})`;
+  }
+  updatePreview();
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -702,8 +791,25 @@ function init() {
   renderSlidesForms();
   updatePreview();
   checkAiStatus();
+
   document.querySelectorAll('input[name="logoPos"]').forEach(el => {
     el.addEventListener('change', updatePreview);
+  });
+
+  // Drag global handlers
+  document.addEventListener('mousemove', (e) => {
+    if (!imgDrag) return;
+    const { index, startX, startY, startImgX, startImgY } = imgDrag;
+    state.slides[index].imageX = startImgX + (e.clientX - startX);
+    state.slides[index].imageY = startImgY + (e.clientY - startY);
+    applyImgTransform(index);
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (!imgDrag) return;
+    const canvas = document.getElementById(`img-canvas-${imgDrag.index}`);
+    if (canvas) canvas.style.cursor = 'grab';
+    imgDrag = null;
   });
 }
 
