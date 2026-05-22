@@ -19,8 +19,52 @@
         <div class="header-sub">Gerenciador de Publicações</div>
       </div>
     </div>
-    <button class="btn-posts-list" onclick="togglePostsList()">Ver posts publicados</button>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span id="ai-status-badge" class="ai-badge ai-badge-off">IA desativada</span>
+      <button class="btn-posts-list" onclick="openConfigModal()">✦ Configurar IA</button>
+      <button class="btn-posts-list" onclick="togglePostsList()">Ver posts</button>
+    </div>
   </header>
+
+  <!-- CONFIG IA MODAL -->
+  <div id="config-modal" class="modal hidden">
+    <div class="modal-box" style="max-width:460px">
+      <div class="modal-header">
+        <span>✦ Configurar Assistente IA</span>
+        <button onclick="document.getElementById('config-modal').classList.add('hidden')">✕</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
+        <p style="font-size:0.8rem;color:#888;line-height:1.6">
+          Cole sua chave da <strong style="color:#f0f0f0">OpenAI</strong> abaixo para ativar a geração de texto com IA.<br>
+          A chave fica salva localmente e nunca sai da sua máquina.
+        </p>
+        <a href="https://platform.openai.com/api-keys" target="_blank"
+           style="font-size:0.72rem;color:#C9A96E;text-decoration:none">
+          → Obter chave em platform.openai.com/api-keys
+        </a>
+        <input id="openai-key-input" type="password" class="field-input"
+               placeholder="sk-..." autocomplete="off" />
+        <button class="btn-publish" style="margin-top:4px" onclick="saveApiKey()">Salvar chave</button>
+        <div id="config-result" class="publish-result hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUGERIR IDEIAS MODAL -->
+  <div id="ideas-modal" class="modal hidden">
+    <div class="modal-box" style="max-width:500px">
+      <div class="modal-header">
+        <span>✦ Sugestões de Post</span>
+        <button onclick="document.getElementById('ideas-modal').classList.add('hidden')">✕</button>
+      </div>
+      <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+        <p style="font-size:0.75rem;color:#888">Categoria selecionada: <strong id="ideas-category" style="color:#C9A96E"></strong></p>
+        <div id="ideas-content" style="font-size:0.82rem;color:#f0f0f0;line-height:1.8;white-space:pre-line;min-height:80px">
+          Gerando ideias...
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- POSTS LIST MODAL -->
   <div id="posts-modal" class="modal hidden">
@@ -99,6 +143,11 @@
             </span>
           </label>
         </div>
+      </div>
+
+      <!-- IA — Sugerir ideias -->
+      <div id="ai-ideas-row" style="display:flex;gap:8px;align-items:center">
+        <button class="btn-ai-ideas" onclick="suggestIdeas()">✦ Sugerir ideias de post</button>
       </div>
 
       <!-- ── SLIDES (carrossel) ── -->

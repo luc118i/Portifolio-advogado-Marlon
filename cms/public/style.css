@@ -426,6 +426,76 @@ input, select, textarea { font-family: var(--font-sans); }
 .pc-article-meta-logo { width: 20px; height: 20px; border-radius: 50%; object-fit: cover; }
 .pc-article-meta-text { font-size: 0.62rem; color: rgba(255,255,255,0.35); }
 
+/* ═══════════════════════════════════════════════════════════
+   IA
+   ═══════════════════════════════════════════════════════════ */
+.ai-badge {
+  font-size: 0.65rem; font-weight: 700; padding: 4px 10px;
+  border-radius: 100px; letter-spacing: 0.06em;
+}
+.ai-badge-off { background: rgba(255,255,255,0.06); color: #555; }
+.ai-badge-on  { background: rgba(201,169,110,0.15); color: #C9A96E; }
+
+.btn-ai-ideas {
+  background: rgba(201,169,110,0.1);
+  border: 1px solid rgba(201,169,110,0.25);
+  color: var(--accent);
+  padding: 8px 14px;
+  border-radius: var(--radius);
+  font-size: 0.78rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  width: 100%;
+}
+.btn-ai-ideas:hover { background: rgba(201,169,110,0.18); border-color: var(--accent); }
+.btn-ai-ideas:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Botões IA inline nos slides */
+.slide-ai-row {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.btn-ai-inline {
+  background: rgba(201,169,110,0.08);
+  border: 1px solid rgba(201,169,110,0.2);
+  color: rgba(201,169,110,0.8);
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-ai-inline:hover    { background: rgba(201,169,110,0.16); color: var(--accent); border-color: var(--accent); }
+.btn-ai-inline:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Botão humanizar — aparece junto ao textarea */
+.btn-humanize {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: #888;
+  padding: 4px 10px;
+  border-radius: 100px;
+  font-size: 0.68rem;
+  font-weight: 600;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-humanize:hover    { background: rgba(255,255,255,0.1); color: #f0f0f0; border-color: rgba(255,255,255,0.2); }
+.btn-humanize:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 10px; height: 10px;
+  border: 2px solid rgba(201,169,110,0.3);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
 /* Scrollbar */
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }

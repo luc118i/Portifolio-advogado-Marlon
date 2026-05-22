@@ -203,15 +203,31 @@ function renderSlideForm(slide, index, container) {
            onchange="uploadSlideImage(this, ${index})" />
     ` : ''}
 
-    <input class="slide-input" type="text"
-           placeholder="${isCta ? 'Headline do CTA' : 'Headline (título do slide)'}"
-           value="${escHtml(slide.headline)}"
-           oninput="state.slides[${index}].headline = this.value; updatePreview()" />
+    <div onclick="event.stopPropagation()">
+      <input id="headline-${index}" class="slide-input" type="text"
+             placeholder="${isCta ? 'Headline do CTA' : 'Headline (título do slide)'}"
+             value="${escHtml(slide.headline)}"
+             oninput="state.slides[${index}].headline = this.value; updatePreview()" />
+      <div class="slide-ai-row" style="margin-top:5px">
+        <button id="btn-ai-headline-${index}" class="btn-ai-inline"
+                onclick="aiGenerateHeadline(${index})">✦ Gerar headline</button>
+        <button id="btn-humanize-headline-${index}" class="btn-humanize"
+                onclick="aiHumanize(${index}, 'headline')">◈ Humanizar</button>
+      </div>
+    </div>
 
-    <textarea class="slide-textarea" rows="2"
-              placeholder="${isCta ? 'Chamada para ação' : 'Texto do slide'}"
-              oninput="state.slides[${index}].body = this.value; updatePreview()"
-    >${escHtml(slide.body)}</textarea>
+    <div onclick="event.stopPropagation()">
+      <textarea id="body-${index}" class="slide-textarea" rows="2"
+                placeholder="${isCta ? 'Chamada para ação' : 'Texto do slide'}"
+                oninput="state.slides[${index}].body = this.value; updatePreview()"
+      >${escHtml(slide.body)}</textarea>
+      <div class="slide-ai-row" style="margin-top:5px">
+        <button id="btn-ai-body-${index}" class="btn-ai-inline"
+                onclick="aiGenerateBody(${index})">✦ Gerar texto</button>
+        <button id="btn-humanize-body-${index}" class="btn-humanize"
+                onclick="aiHumanize(${index}, 'body')">◈ Humanizar</button>
+      </div>
+    </div>
   `;
 
   container.appendChild(card);
@@ -504,12 +520,186 @@ function escHtml(str) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// IA — ESTADO
+// ═══════════════════════════════════════════════════════════════
+let aiConfigured = false;
+
+async function checkAiStatus() {
+  try {
+    const res  = await fetch('/api/config/status');
+    const data = await res.json();
+    aiConfigured = data.configured;
+    const badge = document.getElementById('ai-status-badge');
+    if (aiConfigured) {
+      badge.className = 'ai-badge ai-badge-on';
+      badge.textContent = '✦ IA ativa';
+    } else {
+      badge.className = 'ai-badge ai-badge-off';
+      badge.textContent = 'IA desativada';
+    }
+  } catch {}
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IA — CONFIG
+// ═══════════════════════════════════════════════════════════════
+function openConfigModal() {
+  document.getElementById('config-modal').classList.remove('hidden');
+  document.getElementById('config-result').classList.add('hidden');
+}
+
+async function saveApiKey() {
+  const key = document.getElementById('openai-key-input').value.trim();
+  const res = document.getElementById('config-result');
+  res.className = 'publish-result hidden';
+  if (!key) return;
+  try {
+    const r    = await fetch('/api/config', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ openai_api_key: key }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error);
+    res.className = 'publish-result success';
+    res.textContent = '✓ Chave salva! IA ativada.';
+    res.classList.remove('hidden');
+    await checkAiStatus();
+    setTimeout(() => document.getElementById('config-modal').classList.add('hidden'), 1500);
+  } catch (err) {
+    res.className = 'publish-result error';
+    res.textContent = '✕ ' + err.message;
+    res.classList.remove('hidden');
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IA — SUGERIR IDEIAS
+// ═══════════════════════════════════════════════════════════════
+async function suggestIdeas() {
+  if (!aiConfigured) { openConfigModal(); return; }
+  const modal    = document.getElementById('ideas-modal');
+  const content  = document.getElementById('ideas-content');
+  const catLabel = document.getElementById('ideas-category');
+  const category = document.getElementById('category').value;
+  catLabel.textContent = category;
+  content.innerHTML = '<span class="spinner"></span> Gerando ideias...';
+  modal.classList.remove('hidden');
+  try {
+    const res  = await fetch('/api/ai/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'idea', category }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    content.textContent = data.text;
+  } catch (err) {
+    content.innerHTML = `<span style="color:#d44">✕ ${err.message}</span>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IA — GERAR HEADLINE
+// ═══════════════════════════════════════════════════════════════
+async function aiGenerateHeadline(index) {
+  if (!aiConfigured) { openConfigModal(); return; }
+  const btn      = document.getElementById(`btn-ai-headline-${index}`);
+  const input    = document.getElementById(`headline-${index}`);
+  const category = document.getElementById('category').value;
+  const topic    = state.title || category;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res  = await fetch('/api/ai/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'headline', category, topic }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    input.value = data.text;
+    state.slides[index].headline = data.text;
+    updatePreview();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✦ Gerar headline';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IA — GERAR CORPO DO SLIDE
+// ═══════════════════════════════════════════════════════════════
+async function aiGenerateBody(index) {
+  if (!aiConfigured) { openConfigModal(); return; }
+  const btn      = document.getElementById(`btn-ai-body-${index}`);
+  const textarea = document.getElementById(`body-${index}`);
+  const category = document.getElementById('category').value;
+  const headline = state.slides[index].headline || state.title;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res  = await fetch('/api/ai/generate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ mode: 'body', category, headline }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    textarea.value = data.text;
+    state.slides[index].body = data.text;
+    updatePreview();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '✦ Gerar texto';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// IA — HUMANIZAR
+// ═══════════════════════════════════════════════════════════════
+async function aiHumanize(index, field) {
+  if (!aiConfigured) { openConfigModal(); return; }
+  const btnId = `btn-humanize-${field}-${index}`;
+  const btn   = document.getElementById(btnId);
+  const el    = document.getElementById(`${field}-${index}`);
+  const text  = el.value.trim();
+  if (!text) return;
+
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>';
+  try {
+    const res  = await fetch('/api/ai/humanize', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error);
+    el.value = data.text;
+    state.slides[index][field] = data.text;
+    updatePreview();
+  } catch (err) {
+    alert('Erro: ' + err.message);
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = '◈ Humanizar';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // INIT
 // ═══════════════════════════════════════════════════════════════
 function init() {
   renderSlidesForms();
   updatePreview();
-  // Atualiza preview quando mudar posição do logo
+  checkAiStatus();
   document.querySelectorAll('input[name="logoPos"]').forEach(el => {
     el.addEventListener('change', updatePreview);
   });

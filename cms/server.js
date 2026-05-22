@@ -9,6 +9,16 @@ const PORT       = 4000;
 const PROJECT    = path.resolve(__dirname, '..');
 const POSTS_JSON = path.join(PROJECT, 'src', 'data', 'posts');
 const POSTS_IMG  = path.join(PROJECT, 'public', 'posts');
+const CONFIG_FILE= path.join(__dirname, 'config.json');
+
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+function loadConfig() {
+  try { return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')); }
+  catch { return {}; }
+}
+function saveConfig(data) {
+  fs.writeFileSync(CONFIG_FILE, JSON.stringify(data, null, 2), 'utf8');
+}
 
 // Garante que as pastas existem
 fs.mkdirSync(POSTS_JSON, { recursive: true });
@@ -75,6 +85,126 @@ app.post('/api/publish', (req, res) => {
   } catch (err) {
     // Salvar o arquivo mesmo se o git falhar
     res.status(500).json({ error: err.message || 'Erro no git push.' });
+  }
+});
+
+// ─── CONFIG API ──────────────────────────────────────────────────────────────
+app.get('/api/config/status', (req, res) => {
+  const cfg = loadConfig();
+  res.json({ configured: !!cfg.openai_api_key });
+});
+
+app.post('/api/config', (req, res) => {
+  const { openai_api_key } = req.body;
+  if (!openai_api_key || !openai_api_key.startsWith('sk-')) {
+    return res.status(400).json({ error: 'Chave inválida. Deve começar com sk-' });
+  }
+  const cfg = loadConfig();
+  cfg.openai_api_key = openai_api_key;
+  saveConfig(cfg);
+  res.json({ success: true });
+});
+
+// ─── IA — GERAR TEXTO ─────────────────────────────────────────────────────────
+app.post('/api/ai/generate', async (req, res) => {
+  const cfg = loadConfig();
+  if (!cfg.openai_api_key) return res.status(401).json({ error: 'Configure a chave da OpenAI primeiro.' });
+
+  const { mode, category, headline, topic } = req.body;
+
+  const prompts = {
+    headline: `Você é um especialista em marketing jurídico brasileiro.
+Crie UM headline curto e impactante (máximo 10 palavras) para um slide de carrossel na área de ${category}.
+Assunto: "${topic || category}".
+O headline deve despertar curiosidade ou urgência no leitor leigo.
+Retorne APENAS o headline, sem aspas, sem explicações.`,
+
+    body: `Você é um especialista em marketing jurídico brasileiro.
+Escreva o texto de corpo para um slide jurídico. Máximo 2 frases curtas e diretas.
+Área: ${category}.
+Headline do slide: "${headline || topic}".
+Público: pessoas comuns sem conhecimento jurídico.
+Linguagem: simples, direta, levemente urgente.
+Retorne APENAS as 2 frases, sem explicações.`,
+
+    idea: `Você é um especialista em conteúdo jurídico digital brasileiro.
+Sugira 3 ideias criativas de post (carrossel) para um advogado na área de ${category}.
+Cada ideia deve ter: título gancho + 1 linha de descrição.
+Formato:
+1. [Título] — [descrição]
+2. [Título] — [descrição]
+3. [Título] — [descrição]
+Retorne APENAS as 3 ideias.`,
+  };
+
+  const prompt = prompts[mode];
+  if (!prompt) return res.status(400).json({ error: 'Modo inválido.' });
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cfg.openai_api_key}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 300,
+        temperature: 0.85,
+      }),
+    });
+    const data = await response.json();
+    if (data.error) return res.status(500).json({ error: data.error.message });
+    res.json({ text: data.choices[0].message.content.trim() });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao chamar a OpenAI: ' + err.message });
+  }
+});
+
+// ─── IA — HUMANIZAR ──────────────────────────────────────────────────────────
+app.post('/api/ai/humanize', async (req, res) => {
+  const cfg = loadConfig();
+  if (!cfg.openai_api_key) return res.status(401).json({ error: 'Configure a chave da OpenAI primeiro.' });
+
+  const { text } = req.body;
+  if (!text?.trim()) return res.status(400).json({ error: 'Texto vazio.' });
+
+  const prompt = `Você é um editor especializado em tornar textos mais humanos e naturais.
+Reescreva o texto abaixo removendo padrões típicos de IA:
+
+REGRAS:
+- Proibido usar: "fundamental", "crucial", "essencial", "primordial", "robusto", "eficaz", "garantir", "ressaltar", "destacar", "é importante salientar", "no contexto atual", "vale mencionar", "cabe destacar", "é válido", "em suma", "portanto,", "nesse sentido"
+- Evite estruturas simétricas demais (listas paralelas, frases do mesmo tamanho)
+- Escreva como um advogado experiente falando diretamente com seu cliente
+- Linguagem direta, sem rodeios, sem firula corporativa
+- Mantenha o mesmo tamanho aproximado e o mesmo significado
+- Sem formalidade excessiva — próximo, humano, confiante
+
+TEXTO:
+${text}
+
+Retorne APENAS o texto reescrito, sem explicações, sem aspas.`;
+
+  try {
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${cfg.openai_api_key}`,
+      },
+      body: JSON.stringify({
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
+        max_tokens: 500,
+        temperature: 0.75,
+      }),
+    });
+    const data = await response.json();
+    if (data.error) return res.status(500).json({ error: data.error.message });
+    res.json({ text: data.choices[0].message.content.trim() });
+  } catch (err) {
+    res.status(500).json({ error: 'Erro ao chamar a OpenAI: ' + err.message });
   }
 });
 

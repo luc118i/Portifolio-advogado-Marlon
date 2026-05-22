@@ -32,3 +32,6 @@ Thumbs.db
 # Optional caches
 .cache/
 .eslintcache
+
+# CMS — chave da API (nunca sobe para o GitHub)
+cms/config.json
