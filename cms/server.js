@@ -36,10 +36,6 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   limits: { fileSize: 10 * 1024 * 1024 }, // 10 MB
-  fileFilter: (req, file, cb) => {
-    if (/image\/(jpeg|png|webp|gif)/.test(file.mimetype)) cb(null, true);
-    else cb(new Error('Somente imagens são permitidas.'));
-  },
 });
 
 app.use(express.json({ limit: '2mb' }));
@@ -49,9 +45,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/project-assets', express.static(path.join(PROJECT, 'public')));
 
 // ─── UPLOAD ──────────────────────────────────────────────────────────────────
-app.post('/api/upload', upload.single('image'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'Nenhum arquivo recebido.' });
-  res.json({ path: `/posts/${req.file.filename}` });
+app.post('/api/upload', (req, res) => {
+  upload.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err.message);
+      return res.status(400).json({ error: err.message });
+    }
+    if (!req.file) {
+      return res.status(400).json({ error: 'Nenhum arquivo recebido.' });
+    }
+    res.json({ path: `/posts/${req.file.filename}` });
+  });
 });
 
 // ─── LISTAR POSTS ────────────────────────────────────────────────────────────
@@ -91,16 +95,16 @@ app.post('/api/publish', (req, res) => {
 // ─── CONFIG API ──────────────────────────────────────────────────────────────
 app.get('/api/config/status', (req, res) => {
   const cfg = loadConfig();
-  res.json({ configured: !!cfg.openai_api_key });
+  res.json({ configured: !!cfg.groq_api_key });
 });
 
 app.post('/api/config', (req, res) => {
-  const { openai_api_key } = req.body;
-  if (!openai_api_key || !openai_api_key.startsWith('sk-')) {
-    return res.status(400).json({ error: 'Chave inválida. Deve começar com sk-' });
+  const { groq_api_key } = req.body;
+  if (!groq_api_key || !groq_api_key.startsWith('gsk_')) {
+    return res.status(400).json({ error: 'Chave inválida. Deve começar com gsk_' });
   }
   const cfg = loadConfig();
-  cfg.openai_api_key = openai_api_key;
+  cfg.groq_api_key = groq_api_key;
   saveConfig(cfg);
   res.json({ success: true });
 });
@@ -108,7 +112,7 @@ app.post('/api/config', (req, res) => {
 // ─── IA — GERAR TEXTO ─────────────────────────────────────────────────────────
 app.post('/api/ai/generate', async (req, res) => {
   const cfg = loadConfig();
-  if (!cfg.openai_api_key) return res.status(401).json({ error: 'Configure a chave da OpenAI primeiro.' });
+  if (!cfg.groq_api_key) return res.status(401).json({ error: 'Configure a chave da Groq primeiro.' });
 
   const { mode, category, headline, topic } = req.body;
 
@@ -141,14 +145,14 @@ Retorne APENAS as 3 ideias.`,
   if (!prompt) return res.status(400).json({ error: 'Modo inválido.' });
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cfg.openai_api_key}`,
+        'Authorization': `Bearer ${cfg.groq_api_key}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 300,
         temperature: 0.85,
@@ -158,14 +162,14 @@ Retorne APENAS as 3 ideias.`,
     if (data.error) return res.status(500).json({ error: data.error.message });
     res.json({ text: data.choices[0].message.content.trim() });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao chamar a OpenAI: ' + err.message });
+    res.status(500).json({ error: 'Erro ao chamar a Groq: ' + err.message });
   }
 });
 
 // ─── IA — HUMANIZAR ──────────────────────────────────────────────────────────
 app.post('/api/ai/humanize', async (req, res) => {
   const cfg = loadConfig();
-  if (!cfg.openai_api_key) return res.status(401).json({ error: 'Configure a chave da OpenAI primeiro.' });
+  if (!cfg.groq_api_key) return res.status(401).json({ error: 'Configure a chave da Groq primeiro.' });
 
   const { text } = req.body;
   if (!text?.trim()) return res.status(400).json({ error: 'Texto vazio.' });
@@ -187,14 +191,14 @@ ${text}
 Retorne APENAS o texto reescrito, sem explicações, sem aspas.`;
 
   try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    const response = await fetch('https://api.groq.com/openai/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${cfg.openai_api_key}`,
+        'Authorization': `Bearer ${cfg.groq_api_key}`,
       },
       body: JSON.stringify({
-        model: 'gpt-4o-mini',
+        model: 'llama-3.3-70b-versatile',
         messages: [{ role: 'user', content: prompt }],
         max_tokens: 500,
         temperature: 0.75,
@@ -204,7 +208,7 @@ Retorne APENAS o texto reescrito, sem explicações, sem aspas.`;
     if (data.error) return res.status(500).json({ error: data.error.message });
     res.json({ text: data.choices[0].message.content.trim() });
   } catch (err) {
-    res.status(500).json({ error: 'Erro ao chamar a OpenAI: ' + err.message });
+    res.status(500).json({ error: 'Erro ao chamar a Groq: ' + err.message });
   }
 });
 

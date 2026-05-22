@@ -250,10 +250,11 @@ async function uploadSlideImage(input, index) {
   try {
     const res  = await fetch('/api/upload', { method: 'POST', body: fd });
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
     state.slides[index].imagePath = data.path;
     renderSlidesForms();
     selectSlide(index);
-  } catch { alert('Erro ao enviar imagem.'); }
+  } catch (err) { alert('Erro ao enviar imagem: ' + err.message); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -267,10 +268,11 @@ async function uploadCover(input) {
   try {
     const res  = await fetch('/api/upload', { method: 'POST', body: fd });
     const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Erro no servidor.');
     state.coverImagePath = data.path;
     document.getElementById('cover-upload-text').textContent = '✓ ' + data.path.split('/').pop();
     updatePreview();
-  } catch { alert('Erro ao enviar capa.'); }
+  } catch (err) { alert('Erro ao enviar capa: ' + err.message); }
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -557,7 +559,7 @@ async function saveApiKey() {
     const r    = await fetch('/api/config', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ openai_api_key: key }),
+      body: JSON.stringify({ groq_api_key: key }),
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error);
