@@ -16,9 +16,9 @@ export function DifferentialsPage() {
         {/* Título */}
         <div className="text-center">
           <h2 
-            className="text-[#0A0F24]"
+            className="text-[#1C1C1C]"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Libre Baskerville', serif",
               fontSize: 'clamp(2rem, 6vw, 3rem)',
               fontWeight: '600',
               letterSpacing: '-0.01em'
@@ -26,7 +26,7 @@ export function DifferentialsPage() {
           >
             Diferenciais Profissionais
           </h2>
-          <div className="w-20 md:w-24 h-0.5 bg-[#C2A14D] mx-auto mt-4 md:mt-6"></div>
+          <div className="w-20 md:w-24 h-0.5 bg-[#888888] mx-auto mt-4 md:mt-6"></div>
         </div>
         
         {/* Grid de diferenciais - 1 coluna no mobile, 2 no tablet, 3 no desktop */}
@@ -36,14 +36,14 @@ export function DifferentialsPage() {
             return (
               <div 
                 key={index}
-                className="bg-[#F2F2F2] p-8 md:p-10 rounded-sm border-l-4 border-[#C2A14D] hover:shadow-xl transition-all hover:-translate-y-1 group"
+                className="bg-[#F2F2F2] p-8 md:p-10 rounded-sm border-l-4 border-[#888888] hover:shadow-xl transition-all hover:-translate-y-1 group"
               >
                 <div className="flex flex-col items-center text-center gap-4 md:gap-5">
-                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-sm bg-white flex items-center justify-center shadow-md group-hover:bg-[#0A0F24] transition-colors">
-                    <Icon className="w-8 h-8 md:w-10 md:h-10 text-[#C2A14D] group-hover:text-white" />
+                  <div className="w-16 h-16 md:w-20 md:h-20 rounded-sm bg-white flex items-center justify-center shadow-md group-hover:bg-[#1C1C1C] transition-colors">
+                    <Icon className="w-8 h-8 md:w-10 md:h-10 text-[#888888] group-hover:text-white" />
                   </div>
                   <h3 
-                    className="text-[#0A0F24]"
+                    className="text-[#1C1C1C]"
                     style={{
                       fontFamily: "'Inter', sans-serif",
                       fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
@@ -61,7 +61,7 @@ export function DifferentialsPage() {
         {/* Mensagem adicional */}
         <div className="text-center pt-6 md:pt-8">
           <p 
-            className="text-[#0A0F24]/70 max-w-2xl mx-auto"
+            className="text-[#1C1C1C]/70 max-w-2xl mx-auto"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 'clamp(0.9375rem, 2vw, 1rem)',

@@ -6,37 +6,45 @@
   <title>CMS — Dr. Marlon Inácio</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Crimson+Text:wght@400;700&family=EB+Garamond:wght@400;700&family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;700&family=PT+Serif:wght@400;700&family=Source+Serif+4:wght@400;700&family=Spectral:wght@400;700&display=swap" rel="stylesheet" />
 </head>
 <body>
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="header-left">
-      <img src="/project-assets/favicon.png" alt="Logo" class="header-logo" />
-      <div>
-        <div class="header-title">CMS — Dr. Marlon Inácio</div>
-        <div class="header-sub">Gerenciador de Publicações</div>
-      </div>
+<!-- ═══ HEADER ═══ -->
+<header class="header">
+  <div class="header-left">
+    <img src="/project-assets/favicon.png" alt="Logo" class="header-logo" />
+    <div>
+      <div class="header-title">Estúdio de Publicações</div>
+      <div class="header-sub">Dr. Marlon Inácio · OAB/DF 87.696</div>
     </div>
-    <div style="display:flex;gap:8px;align-items:center">
-      <span id="ai-status-badge" class="ai-badge ai-badge-off">IA desativada</span>
-      <button class="btn-posts-list" onclick="openConfigModal()">✦ Configurar IA</button>
-      <button class="btn-posts-list" onclick="togglePostsList()">Ver posts</button>
-    </div>
-  </header>
+  </div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="ai-status-badge" class="ai-badge ai-badge-off">IA desativada</span>
+    <button class="btn-header" onclick="openConfigModal()">✦ Configurar IA</button>
+    <button class="btn-header" onclick="togglePostsList()">Ver posts</button>
+  </div>
+</header>
 
-  <!-- CONFIG IA MODAL -->
-  <div id="config-modal" class="modal hidden">
-    <div class="modal-box" style="max-width:460px">
-      <div class="modal-header">
-        <span>✦ Configurar Assistente IA</span>
-        <button onclick="document.getElementById('config-modal').classList.add('hidden')">✕</button>
-      </div>
-      <div style="padding:20px;display:flex;flex-direction:column;gap:14px">
-        <p style="font-size:0.8rem;color:#888;line-height:1.6">
-          Cole sua chave da <strong style="color:#f0f0f0">Groq</strong> abaixo para ativar a geração de texto com IA.<br>
-          É <strong style="color:#C9A96E">gratuita</strong> e muito mais rápida. A chave fica salva localmente.
+<!-- ═══ MODAIS ═══ -->
+
+<!-- Config IA + Exportação -->
+<div id="config-modal" class="modal hidden">
+  <div class="modal-box" style="max-width:480px">
+    <div class="modal-header">
+      <span>✦ Configurações do estúdio</span>
+      <button onclick="document.getElementById('config-modal').classList.add('hidden')">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:20px">
+
+      <!-- Seção: IA -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">
+          Assistente IA
+        </div>
+        <p style="font-size:0.78rem;color:#888;line-height:1.6">
+          Cole sua chave da <strong style="color:#f0f0f0">Groq</strong> para ativar geração de texto.
+          É <strong style="color:#C9A96E">gratuita</strong> e fica salva só na sua máquina.
         </p>
         <a href="https://console.groq.com/keys" target="_blank"
            style="font-size:0.72rem;color:#C9A96E;text-decoration:none">
@@ -44,181 +52,295 @@
         </a>
         <input id="openai-key-input" type="password" class="field-input"
                placeholder="gsk_..." autocomplete="off" />
-        <button class="btn-publish" style="margin-top:4px" onclick="saveApiKey()">Salvar chave</button>
-        <div id="config-result" class="publish-result hidden"></div>
       </div>
+
+      <!-- Separador -->
+      <div style="height:1px;background:var(--border)"></div>
+
+      <!-- Seção: Exportação -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">
+          Pasta de exportação
+        </div>
+        <p style="font-size:0.78rem;color:#888;line-height:1.6">
+          Ao publicar, os arquivos são salvos automaticamente aqui:<br>
+          <span style="color:#f0f0f0">Carrossel</span> → imagens <code style="color:var(--accent)">.png</code> em subpasta com o nome do post<br>
+          <span style="color:#f0f0f0">Artigo</span> → documento <code style="color:var(--accent)">.docx</code> pronto para revisão
+        </p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <input id="output-folder-input" type="text" class="field-input"
+                 style="flex:1"
+                 placeholder="Ex: C:\Users\Marlon\Desktop\Posts Sociais" />
+          <button class="btn-header" onclick="openFolderInExplorer()"
+                  title="Abrir pasta no Explorer">📂</button>
+        </div>
+        <div class="field-hint">A pasta é criada automaticamente se não existir.</div>
+      </div>
+
+      <button class="btn-primary" onclick="saveApiKey()">Salvar configurações</button>
+      <div id="config-result" class="result-msg hidden"></div>
     </div>
   </div>
+</div>
 
-  <!-- SUGERIR IDEIAS MODAL -->
-  <div id="ideas-modal" class="modal hidden">
-    <div class="modal-box" style="max-width:500px">
-      <div class="modal-header">
-        <span>✦ Sugestões de Post</span>
-        <button onclick="document.getElementById('ideas-modal').classList.add('hidden')">✕</button>
-      </div>
-      <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
-        <p style="font-size:0.75rem;color:#888">Categoria selecionada: <strong id="ideas-category" style="color:#C9A96E"></strong></p>
-        <div id="ideas-content" style="font-size:0.82rem;color:#f0f0f0;line-height:1.8;white-space:pre-line;min-height:80px">
-          Gerando ideias...
-        </div>
-      </div>
+<!-- Sugerir ideias -->
+<div id="ideas-modal" class="modal hidden">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-header">
+      <span>✦ Sugestões de Post</span>
+      <button onclick="document.getElementById('ideas-modal').classList.add('hidden')">✕</button>
+    </div>
+    <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
+      <p style="font-size:0.75rem;color:#888">Categoria: <strong id="ideas-category" style="color:#C9A96E"></strong></p>
+      <div id="ideas-content" style="font-size:0.82rem;color:#f0f0f0;line-height:1.8;white-space:pre-line;min-height:80px">Gerando ideias...</div>
     </div>
   </div>
+</div>
 
-  <!-- POSTS LIST MODAL -->
-  <div id="posts-modal" class="modal hidden">
-    <div class="modal-box">
-      <div class="modal-header">
-        <span>Posts publicados</span>
-        <button onclick="togglePostsList()">✕</button>
-      </div>
-      <div id="posts-list" class="posts-list">Carregando...</div>
+<!-- Lista de posts -->
+<div id="posts-modal" class="modal hidden">
+  <div class="modal-box">
+    <div class="modal-header">
+      <span>Posts publicados</span>
+      <button onclick="togglePostsList()">✕</button>
     </div>
+    <div id="posts-list" class="posts-list">Carregando...</div>
   </div>
+</div>
 
-  <!-- MAIN -->
-  <main class="main">
+<!-- ═══ MAIN ═══ -->
+<main class="main">
 
-    <!-- ── FORMULÁRIO ── -->
-    <section class="form-panel">
+  <!-- ── FORMULÁRIO (wizard) ── -->
+  <section class="form-panel">
 
-      <!-- Tipo -->
-      <div class="field-group">
-        <label class="field-label">Tipo de publicação</label>
-        <div class="toggle-group">
-          <button id="btn-carousel" class="toggle-btn active" onclick="setType('carousel')">Carrossel</button>
-          <button id="btn-article"  class="toggle-btn"        onclick="setType('article')">Artigo</button>
+    <!-- ─ STEP 1 · TIPO ─ -->
+    <div class="step active" id="step-1">
+      <div class="step-head" onclick="activateStep(1)">
+        <div class="step-num">01</div>
+        <div class="step-meta">
+          <div class="step-label">Tipo de publicação</div>
+          <div class="step-chip" id="chip-1"></div>
         </div>
       </div>
-
-      <!-- Categoria -->
-      <div class="field-group">
-        <label class="field-label">Categoria</label>
-        <select id="category" class="field-select" onchange="onCategoryChange()">
-          <option value="Direito Penal">Direito Penal</option>
-          <option value="Direito Administrativo">Direito Administrativo</option>
-          <option value="Direito Civil">Direito Civil</option>
-          <option value="Consultoria Jurídica">Consultoria Jurídica</option>
-          <option value="Tecnologia e IA Jurídica">Tecnologia e IA Jurídica</option>
-        </select>
+      <div class="step-body" id="body-1">
+        <div class="type-grid">
+          <button class="type-card active" id="card-carousel" onclick="setType('carousel')">
+            <div class="type-icon">⧉</div>
+            <div class="type-name">Carrossel</div>
+            <div class="type-desc">Múltiplos slides</div>
+          </button>
+          <button class="type-card" id="card-article" onclick="setType('article')">
+            <div class="type-icon">≡</div>
+            <div class="type-name">Artigo</div>
+            <div class="type-desc">Texto completo</div>
+          </button>
+        </div>
+        <button class="btn-next" onclick="nextStep()">Continuar →</button>
       </div>
+    </div>
 
-      <!-- Título -->
-      <div class="field-group">
-        <label class="field-label">Título</label>
-        <input id="title" type="text" class="field-input" placeholder="Ex: O que fazer se a polícia bater na sua porta?" oninput="onTitleInput()" />
-        <div class="field-hint">Slug: <span id="slug-preview" class="slug-text">—</span></div>
-      </div>
-
-      <!-- Tempo de leitura -->
-      <div class="field-group">
-        <label class="field-label">Tempo de leitura</label>
-        <input id="readTime" type="text" class="field-input field-input-sm" placeholder="Ex: 3 min" value="3 min" oninput="updatePreview()" />
-      </div>
-
-      <!-- Posição do logo -->
-      <div class="field-group">
-        <label class="field-label">Posição do logo</label>
-        <div class="logo-pos-group">
-          <label class="logo-pos-opt">
-            <input type="radio" name="logoPos" value="footer" checked onchange="updatePreview()" />
-            <span class="logo-pos-label">
-              <span class="logo-pos-icon">⊟</span>
-              Rodapé de todos os slides
-            </span>
-          </label>
-          <label class="logo-pos-opt">
-            <input type="radio" name="logoPos" value="watermark" onchange="updatePreview()" />
-            <span class="logo-pos-label">
-              <span class="logo-pos-icon">◱</span>
-              Marca d'água (canto)
-            </span>
-          </label>
-          <label class="logo-pos-opt">
-            <input type="radio" name="logoPos" value="cta" onchange="updatePreview()" />
-            <span class="logo-pos-label">
-              <span class="logo-pos-icon">◎</span>
-              Apenas no slide final
-            </span>
-          </label>
+    <!-- ─ STEP 2 · CATEGORIA ─ -->
+    <div class="step locked" id="step-2">
+      <div class="step-head" onclick="activateStep(2)">
+        <div class="step-num">02</div>
+        <div class="step-meta">
+          <div class="step-label">Categoria</div>
+          <div class="step-chip" id="chip-2"></div>
         </div>
       </div>
-
-      <!-- IA — Sugerir ideias -->
-      <div id="ai-ideas-row" style="display:flex;gap:8px;align-items:center">
-        <button class="btn-ai-ideas" onclick="suggestIdeas()">✦ Sugerir ideias de post</button>
-      </div>
-
-      <!-- ── SLIDES (carrossel) ── -->
-      <div id="slides-section">
-        <div class="slides-header">
-          <label class="field-label" style="margin:0">Slides</label>
-          <button class="btn-add-slide" onclick="addSlide()">+ Adicionar slide</button>
+      <div class="step-body" id="body-2">
+        <div class="cat-grid">
+          <button class="cat-card active" data-cat="Direito Penal" style="--accent:#8B1A1A" onclick="selectCategory(this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-1-2H5v17h2v-7h5.5l1 2H20V6h-6z"/></svg>
+            <span>Direito Penal</span>
+          </button>
+          <button class="cat-card" data-cat="Direito Administrativo" style="--accent:#1A3A8B" onclick="selectCategory(this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 22V9l9-7 9 7v13"/><path d="M9 22V12h6v10"/></svg>
+            <span>Direito Administrativo</span>
+          </button>
+          <button class="cat-card" data-cat="Direito Civil" style="--accent:#1A6B2E" onclick="selectCategory(this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3L3 7l9 4 9-4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>
+            <span>Direito Civil</span>
+          </button>
+          <button class="cat-card" data-cat="Consultoria Jurídica" style="--accent:#C9A96E" onclick="selectCategory(this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Consultoria Jurídica</span>
+          </button>
+          <button class="cat-card" data-cat="Tecnologia e IA Jurídica" style="--accent:#5A1A9B" onclick="selectCategory(this)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="6"/><rect x="9" y="16" width="6" height="6"/><rect x="2" y="9" width="6" height="6"/><rect x="16" y="9" width="6" height="6"/><line x1="9" y1="5" x2="2" y2="5"/><line x1="22" y1="5" x2="15" y2="5"/><line x1="5" y1="9" x2="5" y2="2"/><line x1="5" y1="22" x2="5" y2="15"/><line x1="9" y1="19" x2="2" y2="19"/><line x1="22" y1="19" x2="15" y2="19"/><line x1="19" y1="9" x2="19" y2="2"/><line x1="19" y1="22" x2="19" y2="15"/></svg>
+            <span>Tecnologia e IA</span>
+          </button>
         </div>
-        <div id="slides-container"></div>
-        <button class="btn-add-cta" onclick="addCtaSlide()">+ Adicionar slide de CTA final</button>
+        <button class="btn-next" onclick="nextStep()">Continuar →</button>
       </div>
+    </div>
 
-      <!-- ── ARTIGO ── -->
-      <div id="article-section" class="hidden">
+    <!-- ─ STEP 3 · TÍTULO ─ -->
+    <div class="step locked" id="step-3">
+      <div class="step-head" onclick="activateStep(3)">
+        <div class="step-num">03</div>
+        <div class="step-meta">
+          <div class="step-label">Título</div>
+          <div class="step-chip" id="chip-3"></div>
+        </div>
+      </div>
+      <div class="step-body" id="body-3">
         <div class="field-group">
-          <label class="field-label">Imagem de capa</label>
-          <div class="upload-area" id="cover-upload-area" onclick="document.getElementById('cover-file').click()">
-            <span id="cover-upload-text">Clique para enviar imagem de capa</span>
-            <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
+          <label class="field-label">Título do post</label>
+          <input id="title" type="text" class="field-input"
+                 placeholder="Ex: O que fazer se a polícia bater na sua porta?"
+                 oninput="onTitleInput()" />
+          <div class="field-hint">Slug: <span id="slug-preview" class="slug-text">—</span></div>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Tempo de leitura</label>
+          <input id="readTime" type="text" class="field-input field-sm"
+                 placeholder="Ex: 3 min" value="3 min" oninput="updatePreview()" />
+        </div>
+        <button class="btn-next" onclick="nextStep()">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ─ STEP 4 · APARÊNCIA ─ -->
+    <div class="step locked" id="step-4">
+      <div class="step-head" onclick="activateStep(4)">
+        <div class="step-num">04</div>
+        <div class="step-meta">
+          <div class="step-label">Aparência</div>
+          <div class="step-chip" id="chip-4"></div>
+        </div>
+      </div>
+      <div class="step-body" id="body-4">
+        <div class="field-group">
+          <label class="field-label">Posição do logo</label>
+          <div class="logo-pos-group">
+            <label class="logo-pos-opt">
+              <input type="radio" name="logoPos" value="footer" checked onchange="updatePreview()" />
+              <span class="logo-pos-label"><span class="logo-pos-icon">⊟</span>Rodapé de todos os slides</span>
+            </label>
+            <label class="logo-pos-opt">
+              <input type="radio" name="logoPos" value="watermark" onchange="updatePreview()" />
+              <span class="logo-pos-label"><span class="logo-pos-icon">◱</span>Marca d'água (canto)</span>
+            </label>
+            <label class="logo-pos-opt">
+              <input type="radio" name="logoPos" value="cta" onchange="updatePreview()" />
+              <span class="logo-pos-label"><span class="logo-pos-icon">◎</span>Apenas no slide final</span>
+            </label>
           </div>
         </div>
-        <div class="field-group">
-          <label class="field-label">Resumo (aparece no card)</label>
-          <textarea id="excerpt" class="field-textarea" rows="2" placeholder="Uma frase curta que desperta curiosidade..." oninput="updatePreview()"></textarea>
+        <button class="btn-next" onclick="nextStep()">Continuar →</button>
+      </div>
+    </div>
+
+    <!-- ─ STEP 5 · CONTEÚDO ─ -->
+    <div class="step locked" id="step-5">
+      <div class="step-head" onclick="activateStep(5)">
+        <div class="step-num">05</div>
+        <div class="step-meta">
+          <div class="step-label">Conteúdo</div>
+          <div class="step-chip" id="chip-5"></div>
         </div>
-        <div class="field-group">
-          <label class="field-label">Conteúdo completo</label>
-          <textarea id="content" class="field-textarea" rows="8" placeholder="Texto completo do artigo..." oninput="updatePreview()"></textarea>
+      </div>
+      <div class="step-body" id="body-5">
+
+        <!-- IA — sugerir ideias -->
+        <button class="btn-ai-ideas" onclick="suggestIdeas()">✦ Sugerir ideias de post com IA</button>
+
+        <!-- CARROSSEL -->
+        <div id="slides-section">
+          <div class="slides-header">
+            <span class="field-label" style="margin:0">Slides</span>
+            <button class="btn-ghost" onclick="addSlide()">+ Slide</button>
+          </div>
+          <div id="slides-container"></div>
+          <button class="btn-add-cta" onclick="addCtaSlide()">+ Slide de CTA final</button>
         </div>
-      </div>
 
-      <!-- Publicar -->
-      <div class="publish-area">
-        <button id="publish-btn" class="btn-publish" onclick="publish()">
-          <span id="publish-text">Publicar post</span>
-        </button>
-        <div id="publish-result" class="publish-result hidden"></div>
-      </div>
-
-    </section>
-
-    <!-- ── PREVIEW ── -->
-    <section class="preview-panel">
-      <div class="preview-header">
-        <span class="preview-label">Preview</span>
-        <span class="preview-nav">
-          <button onclick="prevSlide()" class="nav-arrow">‹</button>
-          <span id="slide-counter" class="slide-counter">1 / 1</span>
-          <button onclick="nextSlide()" class="nav-arrow">›</button>
-        </span>
-      </div>
-
-      <div class="preview-phone">
-        <div id="preview-card" class="preview-card"></div>
-        <div id="preview-dots" class="preview-dots"></div>
-      </div>
-
-      <div class="preview-url-box hidden" id="preview-url-box">
-        <div class="preview-url-label">Link gerado</div>
-        <div class="preview-url-row">
-          <span id="preview-url-text" class="preview-url-text"></span>
-          <button onclick="copyUrl()" class="btn-copy">Copiar</button>
+        <!-- ARTIGO -->
+        <div id="article-section" class="hidden">
+          <div class="field-group">
+            <label class="field-label">Imagem de capa</label>
+            <div class="upload-area" onclick="document.getElementById('cover-file').click()">
+              <span id="cover-upload-text">Clique para enviar imagem de capa</span>
+              <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
+            </div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Resumo</label>
+            <textarea id="excerpt" class="field-textarea" rows="2"
+                      placeholder="Uma frase que desperta curiosidade..." oninput="updatePreview()"></textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label">Conteúdo completo</label>
+            <textarea id="content" class="field-textarea" rows="8"
+                      placeholder="Texto completo do artigo..." oninput="updatePreview()"></textarea>
+          </div>
         </div>
-        <a id="whatsapp-share-btn" href="#" target="_blank" class="btn-whatsapp-share">
-          Compartilhar no WhatsApp
-        </a>
+
       </div>
-    </section>
+    </div>
 
-  </main>
+    <!-- ─ PUBLICAR ─ -->
+    <div class="publish-area">
+      <button id="publish-btn" class="btn-primary btn-publish-full" onclick="publish()">
+        <span id="publish-text">Publicar post</span>
+      </button>
+      <div id="publish-result" class="result-msg hidden"></div>
+    </div>
 
-  <script src="app.js"></script>
+    <!-- URL gerada -->
+    <div class="preview-url-box hidden" id="preview-url-box">
+      <div class="preview-url-label">Link gerado</div>
+      <div class="preview-url-row">
+        <span id="preview-url-text" class="preview-url-text"></span>
+        <button onclick="copyUrl()" class="btn-copy">Copiar</button>
+      </div>
+      <a id="whatsapp-share-btn" href="#" target="_blank" class="btn-whatsapp-share">Compartilhar no WhatsApp</a>
+    </div>
+
+  </section>
+
+  <!-- ── PREVIEW ── -->
+  <section class="preview-panel">
+    <div class="preview-header">
+      <span class="preview-label">Preview</span>
+      <span class="preview-nav">
+        <button onclick="prevSlide()" class="nav-arrow">‹</button>
+        <span id="slide-counter" class="slide-counter">1 / 1</span>
+        <button onclick="nextSlide()" class="nav-arrow">›</button>
+      </span>
+    </div>
+    <div class="preview-phone">
+      <div id="preview-card" class="preview-card"></div>
+      <div id="preview-dots" class="preview-dots"></div>
+    </div>
+  </section>
+
+</main>
+
+<!-- Font picker popover (shared) -->
+<div id="font-picker" class="font-picker hidden">
+  <div class="font-picker-inner" id="font-picker-inner"></div>
+</div>
+
+<!-- html2canvas (servido localmente, sem CDN) -->
+<script src="/vendor/html2canvas/html2canvas.min.js"></script>
+
+<!-- Módulos — ordem importa (dependências primeiro) -->
+<script src="js/data.js"></script>
+<script src="js/state.js"></script>
+<script src="js/utils.js"></script>
+<script src="js/image-editor.js"></script>
+<script src="js/font-picker.js"></script>
+<script src="js/wizard.js"></script>
+<script src="js/slides.js"></script>
+<script src="js/preview.js"></script>
+<script src="js/upload.js"></script>
+<script src="js/ai.js"></script>
+<script src="js/publish.js"></script>
+<script src="js/posts-list.js"></script>
+<script src="js/export.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

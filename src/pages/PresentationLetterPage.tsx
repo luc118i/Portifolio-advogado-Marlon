@@ -3,13 +3,13 @@ export function PresentationLetterPage() {
     <div className="h-screen w-full bg-white flex items-center justify-center px-6 md:px-12 lg:px-20">
       <div className="max-w-4xl w-full space-y-8 md:space-y-10 lg:space-y-12">
         {/* Detalhe decorativo dourado */}
-        <div className="w-20 md:w-24 lg:w-32 h-0.5 bg-[#C2A14D]"></div>
+        <div className="w-20 md:w-24 lg:w-32 h-0.5 bg-[#888888]"></div>
         
         {/* Título */}
         <h2 
-          className="text-[#0A0F24]"
+          className="text-[#1C1C1C]"
           style={{
-            fontFamily: "'Playfair Display', serif",
+            fontFamily: "'Libre Baskerville', serif",
             fontSize: 'clamp(2rem, 6vw, 3rem)',
             fontWeight: '600',
             letterSpacing: '-0.01em'
@@ -21,7 +21,7 @@ export function PresentationLetterPage() {
         {/* Conteúdo da carta */}
         <div className="space-y-6 md:space-y-8">
           <p 
-            className="text-[#0A0F24]"
+            className="text-[#1C1C1C]"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
@@ -30,14 +30,14 @@ export function PresentationLetterPage() {
             }}
           >
             Sou advogado recém-inscrito na OAB, comprometido com a prática jurídica 
-            <span className="text-[#C2A14D]"> ética</span>, 
-            <span className="text-[#C2A14D]"> responsável </span>
+            <span className="text-[#888888]"> ética</span>, 
+            <span className="text-[#888888]"> responsável </span>
             e orientada a 
-            <span className="text-[#C2A14D]"> resultados</span>.
+            <span className="text-[#888888]"> resultados</span>.
           </p>
           
           <p 
-            className="text-[#0A0F24]"
+            className="text-[#1C1C1C]"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
@@ -52,7 +52,7 @@ export function PresentationLetterPage() {
           </p>
           
           <p 
-            className="text-[#0A0F24]"
+            className="text-[#1C1C1C]"
             style={{
               fontFamily: "'Inter', sans-serif",
               fontSize: 'clamp(1rem, 2.5vw, 1.125rem)',
@@ -68,9 +68,9 @@ export function PresentationLetterPage() {
           
           <div className="pt-6 md:pt-8">
             <p 
-              className="text-[#C2A14D] italic"
+              className="text-[#888888] italic"
               style={{
-                fontFamily: "'Playfair Display', serif",
+                fontFamily: "'Libre Baskerville', serif",
                 fontSize: 'clamp(1.125rem, 3vw, 1.25rem)',
                 fontWeight: '500'
               }}

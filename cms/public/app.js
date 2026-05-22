@@ -1,4 +1,20 @@
 // ═══════════════════════════════════════════════════════════════
+// FONTES DISPONÍVEIS
+// ═══════════════════════════════════════════════════════════════
+const FONTS = [
+  { id: 'Playfair Display',   name: 'Playfair Display'   },
+  { id: 'Cormorant Garamond', name: 'Cormorant Garamond'  },
+  { id: 'EB Garamond',        name: 'EB Garamond'         },
+  { id: 'Lora',               name: 'Lora'                },
+  { id: 'Merriweather',       name: 'Merriweather'        },
+  { id: 'Crimson Text',       name: 'Crimson Text'        },
+  { id: 'Source Serif 4',     name: 'Source Serif 4'      },
+  { id: 'PT Serif',           name: 'PT Serif'            },
+  { id: 'Spectral',           name: 'Spectral'            },
+  { id: 'Libre Baskerville',  name: 'Libre Baskerville'   },
+];
+
+// ═══════════════════════════════════════════════════════════════
 // LAYOUTS DE COMPOSIÇÃO
 // ═══════════════════════════════════════════════════════════════
 const LAYOUTS = [
@@ -120,16 +136,27 @@ let state = {
   content:        '',
 };
 
+let currentStep  = 1;
 let publishedUrl = null;
 
 // ═══════════════════════════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════════════════════════
 function createEmptySlide() {
-  return { type: 'content', layout: 'default', imagePath: null, imageX: 0, imageY: 0, imageScale: 1, headline: '', body: '' };
+  return {
+    type: 'content', layout: 'default',
+    imagePath: null, imageX: 0, imageY: 0, imageScale: 1,
+    headline: '', body: '',
+    headlineFont: 'Playfair Display',
+  };
 }
 function createCtaSlide() {
-  return { type: 'cta', headline: 'Está com dúvidas jurídicas?', body: 'Fale comigo antes de tomar qualquer decisão.' };
+  return {
+    type: 'cta',
+    headline: 'Está com dúvidas jurídicas?',
+    body: 'Fale comigo antes de tomar qualquer decisão.',
+    headlineFont: 'Playfair Display',
+  };
 }
 
 function generateSlug(title) {
@@ -149,12 +176,60 @@ function today() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// STEPPER — WIZARD
+// ═══════════════════════════════════════════════════════════════
+function activateStep(n) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`step-${i}`);
+    if (!el) continue;
+    el.classList.remove('active', 'locked', 'completed');
+    if (i === n)      el.classList.add('active');
+    else if (i < n)   el.classList.add('completed');
+    else              el.classList.add('locked');
+  }
+  currentStep = n;
+}
+
+function nextStep() {
+  updateChip(currentStep);
+  if (currentStep < 5) activateStep(currentStep + 1);
+}
+
+function updateChip(step) {
+  const chip = document.getElementById(`chip-${step}`);
+  if (!chip) return;
+  switch (step) {
+    case 1:
+      chip.textContent = state.type === 'carousel' ? 'Carrossel' : 'Artigo';
+      break;
+    case 2:
+      chip.textContent = state.category;
+      break;
+    case 3: {
+      const t = state.title;
+      chip.textContent = t ? (t.length > 26 ? t.slice(0, 23) + '…' : t) : '';
+      break;
+    }
+    case 4: {
+      const pos = getLogoPos();
+      chip.textContent = pos === 'footer' ? 'Rodapé' : pos === 'watermark' ? 'Marca d\'água' : 'Slide final';
+      break;
+    }
+    case 5:
+      chip.textContent = state.type === 'carousel'
+        ? `${state.slides.length} slide(s)`
+        : 'Artigo';
+      break;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
 // TIPO
 // ═══════════════════════════════════════════════════════════════
 function setType(t) {
   state.type = t;
-  document.getElementById('btn-carousel').classList.toggle('active', t === 'carousel');
-  document.getElementById('btn-article').classList.toggle('active',  t === 'article');
+  document.getElementById('card-carousel').classList.toggle('active', t === 'carousel');
+  document.getElementById('card-article').classList.toggle('active',  t === 'article');
   document.getElementById('slides-section').classList.toggle('hidden',  t !== 'carousel');
   document.getElementById('article-section').classList.toggle('hidden', t !== 'article');
   updatePreview();
@@ -163,8 +238,10 @@ function setType(t) {
 // ═══════════════════════════════════════════════════════════════
 // CATEGORIA
 // ═══════════════════════════════════════════════════════════════
-function onCategoryChange() {
-  state.category = document.getElementById('category').value;
+function selectCategory(el) {
+  document.querySelectorAll('.cat-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  state.category = el.dataset.cat;
   updatePreview();
 }
 
@@ -179,6 +256,48 @@ function onTitleInput() {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// FONT PICKER
+// ═══════════════════════════════════════════════════════════════
+let fontPickerTarget = null;
+
+function openFontPicker(index, anchorEl) {
+  fontPickerTarget = index;
+  const picker = document.getElementById('font-picker');
+  const inner  = document.getElementById('font-picker-inner');
+  const current = state.slides[index]?.headlineFont || FONTS[0].id;
+
+  inner.innerHTML = FONTS.map(f => `
+    <div class="font-opt ${f.id === current ? 'active' : ''}"
+         style="font-family:'${f.id}', serif"
+         onclick="setFont(${index}, '${escHtml(f.id)}')">
+      ${f.name}
+    </div>
+  `).join('');
+
+  const rect = anchorEl.getBoundingClientRect();
+  picker.style.top  = (rect.bottom + 6) + 'px';
+  // Clamp to viewport width
+  const pickerW = 220;
+  const left = Math.min(rect.left, window.innerWidth - pickerW - 12);
+  picker.style.left = Math.max(8, left) + 'px';
+  picker.classList.remove('hidden');
+}
+
+function setFont(index, fontId) {
+  if (state.slides[index]) {
+    state.slides[index].headlineFont = fontId;
+  }
+  closeFontPicker();
+  renderSlidesForms();
+  selectSlide(index);
+}
+
+function closeFontPicker() {
+  document.getElementById('font-picker').classList.add('hidden');
+  fontPickerTarget = null;
+}
+
+// ═══════════════════════════════════════════════════════════════
 // SLIDES — FORM
 // ═══════════════════════════════════════════════════════════════
 function addSlide() {
@@ -188,7 +307,6 @@ function addSlide() {
 }
 
 function addCtaSlide() {
-  // Remove CTA anterior se existir
   state.slides = state.slides.filter(s => s.type !== 'cta');
   state.slides.push(createCtaSlide());
   renderSlidesForms();
@@ -226,10 +344,12 @@ function renderSlidesForms() {
 }
 
 function renderSlideForm(slide, index, container) {
-  const isCta = slide.type === 'cta';
-  const card  = document.createElement('div');
-  card.className = `slide-card${state.currentSlide === index ? ' selected' : ''}${isCta ? ' cta-card' : ''}`;
-  card.onclick = () => selectSlide(index);
+  const isCta      = slide.type === 'cta';
+  const font       = slide.headlineFont || 'Playfair Display';
+  const fontShort  = font.split(' ')[0];
+  const card       = document.createElement('div');
+  card.className   = `slide-card${state.currentSlide === index ? ' selected' : ''}${isCta ? ' cta-card' : ''}`;
+  card.onclick     = () => selectSlide(index);
 
   card.innerHTML = `
     <div class="slide-card-header">
@@ -291,10 +411,20 @@ function renderSlideForm(slide, index, container) {
       </div>
     </div>
 
+    <!-- Headline com font picker -->
     <div onclick="event.stopPropagation()">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+        <span class="field-label" style="margin:0">${isCta ? 'Headline do CTA' : 'Headline'}</span>
+        <button class="btn-font-picker"
+                onclick="event.stopPropagation(); openFontPicker(${index}, this)">
+          <span class="font-preview" style="font-family:'${escHtml(font)}', serif">Aa</span>
+          <span>${escHtml(fontShort)}</span>
+        </button>
+      </div>
       <input id="headline-${index}" class="slide-input" type="text"
              placeholder="${isCta ? 'Headline do CTA' : 'Headline (título do slide)'}"
              value="${escHtml(slide.headline)}"
+             style="font-family:'${escHtml(font)}', serif"
              oninput="state.slides[${index}].headline = this.value; updatePreview()" />
       <div class="slide-ai-row" style="margin-top:5px">
         <button id="btn-ai-headline-${index}" class="btn-ai-inline"
@@ -304,6 +434,7 @@ function renderSlideForm(slide, index, container) {
       </div>
     </div>
 
+    <!-- Body -->
     <div onclick="event.stopPropagation()">
       <textarea id="body-${index}" class="slide-textarea" rows="2"
                 placeholder="${isCta ? 'Chamada para ação' : 'Texto do slide'}"
@@ -329,9 +460,9 @@ function setSlideLayout(index, layoutId) {
 
 function clearSlideImage(index) {
   state.slides[index].imagePath = null;
-  state.slides[index].imageX = 0;
-  state.slides[index].imageY = 0;
-  state.slides[index].imageScale = 1;
+  state.slides[index].imageX    = 0;
+  state.slides[index].imageY    = 0;
+  state.slides[index].imageScale= 1;
   renderSlidesForms();
   updatePreview();
 }
@@ -376,9 +507,9 @@ async function uploadCover(input) {
 // PREVIEW
 // ═══════════════════════════════════════════════════════════════
 function updatePreview() {
-  state.category    = document.getElementById('category').value;
-  state.readTime    = document.getElementById('readTime').value;
-  state.logoPosition= getLogoPos();
+  const rtEl = document.getElementById('readTime');
+  if (rtEl) state.readTime = rtEl.value;
+  state.logoPosition = getLogoPos();
 
   const card    = document.getElementById('preview-card');
   const dots    = document.getElementById('preview-dots');
@@ -386,7 +517,7 @@ function updatePreview() {
 
   if (state.type === 'article') {
     renderArticlePreview(card);
-    dots.innerHTML    = '';
+    dots.innerHTML      = '';
     counter.textContent = '1 / 1';
     return;
   }
@@ -406,6 +537,7 @@ function updatePreview() {
 function renderCarouselSlide(card, slide, index) {
   const tpl  = TEMPLATES[state.category] || TEMPLATES['Direito Penal'];
   const lpos = state.logoPosition;
+  const font = slide.headlineFont || 'Playfair Display';
 
   if (slide.type === 'cta') {
     card.style.background = tpl.bg;
@@ -415,7 +547,7 @@ function renderCarouselSlide(card, slide, index) {
         <img src="/project-assets/favicon.png" class="pc-cta-logo" alt="Logo" onerror="this.style.display='none'">
         <div class="pc-cta-name">Dr. Marlon Inácio</div>
         <div class="pc-cta-oab">OAB/DF 87.696</div>
-        <div class="pc-cta-headline">${escHtml(slide.headline || 'Está com dúvidas?')}</div>
+        <div class="pc-cta-headline" style="font-family:'${escHtml(font)}', serif">${escHtml(slide.headline || 'Está com dúvidas?')}</div>
         <div class="pc-cta-body">${escHtml(slide.body || 'Fale comigo antes de tomar qualquer decisão.')}</div>
         <div class="pc-cta-btn">
           <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
@@ -443,9 +575,9 @@ function renderCarouselSlide(card, slide, index) {
                transform-origin:center center;">` : ''}
     </div>`;
 
-  const overlayHtml  = `<div class="pc-overlay"></div>`;
-  const iconBgHtml   = !hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : '';
-  const watermarkHtml= watermark  ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : '';
+  const overlayHtml   = `<div class="pc-overlay"></div>`;
+  const iconBgHtml    = !hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : '';
+  const watermarkHtml = watermark  ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : '';
 
   const footerHtml = footerLogo ? `
     <div class="pc-footer">
@@ -456,15 +588,16 @@ function renderCarouselSlide(card, slide, index) {
       <span class="pc-footer-url">advogado-marlon.vercel.app</span>
     </div>` : '';
 
-  const headline = escHtml(slide.headline || 'Headline do slide');
-  const body     = escHtml(slide.body     || '');
+  const headline    = escHtml(slide.headline || 'Headline do slide');
+  const body        = escHtml(slide.body     || '');
+  const fontStyle   = `font-family:'${escHtml(font)}', serif;`;
 
   // ── LAYOUT: DEFAULT ──────────────────────────────────────────
   if (layout === 'default') {
     card.innerHTML = `${bgHtml}${overlayHtml}${iconBgHtml}${watermarkHtml}
       <div class="pc-content">
         <div class="pc-category" style="color:${tpl.accent}">${tpl.label}</div>
-        <div class="pc-headline">${headline}</div>
+        <div class="pc-headline" style="${fontStyle}">${headline}</div>
         ${body ? `<div class="pc-body">${body}</div>` : ''}
         ${footerHtml}
       </div>`;
@@ -477,7 +610,7 @@ function renderCarouselSlide(card, slide, index) {
       <div class="pc-layout-dica">
         <div class="pc-dica-badge" style="background:${tpl.accent}">✦ DICA DA SEMANA</div>
         <div class="pc-dica-icon">${tpl.icon.replace('width="180" height="180"','width="72" height="72"').replace('opacity:0.06','opacity:0.9')}</div>
-        <div class="pc-dica-headline">${headline}</div>
+        <div class="pc-dica-headline" style="${fontStyle}">${headline}</div>
         ${body ? `<div class="pc-dica-body">${body}</div>` : ''}
         ${footerHtml ? `<div class="pc-footer" style="border-top:1px solid rgba(255,255,255,0.1);margin-top:auto;padding-top:10px">${footerHtml.replace('<div class="pc-footer">','').replace('</div>','')}</div>` : ''}
       </div>`;
@@ -488,9 +621,9 @@ function renderCarouselSlide(card, slide, index) {
       <div class="pc-overlay" style="background:linear-gradient(160deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.5) 100%)"></div>
       ${iconBgHtml}${watermarkHtml}
       <div class="pc-layout-voce">
-        <div class="pc-voce-eyebrow" style="color:${tpl.accent}">VOCÊ SABIA?</div>
+        <div class="pc-voce-eyebrow" style="color:${tpl.accent};${fontStyle}">VOCÊ SABIA?</div>
         <div class="pc-voce-line" style="background:${tpl.accent}"></div>
-        <div class="pc-voce-headline">${headline}</div>
+        <div class="pc-voce-headline" style="${fontStyle}">${headline}</div>
         ${body ? `<div class="pc-voce-body">${body}</div>` : ''}
         ${footerHtml}
       </div>`;
@@ -505,7 +638,7 @@ function renderCarouselSlide(card, slide, index) {
           <div class="pc-caso-tag" style="border-color:${tpl.accent};color:${tpl.accent}">⚖ CASO REAL</div>
           <div class="pc-caso-label">O que aconteceu:</div>
         </div>
-        <div class="pc-caso-headline">${headline}</div>
+        <div class="pc-caso-headline" style="${fontStyle}">${headline}</div>
         ${body ? `<div class="pc-caso-body">${body}</div>` : ''}
         <div class="pc-caso-bar" style="background:${tpl.accent}"></div>
         ${footerHtml}
@@ -513,8 +646,8 @@ function renderCarouselSlide(card, slide, index) {
 
   // ── LAYOUT: MITO OU VERDADE? ──────────────────────────────────
   } else if (layout === 'mito-verdade') {
-    const isVerdade = body.toLowerCase().includes('verdade');
-    const isMito    = body.toLowerCase().includes('mito');
+    const isVerdade     = body.toLowerCase().includes('verdade');
+    const isMito        = body.toLowerCase().includes('mito');
     const verdictColor  = isVerdade ? '#25D366' : isMito ? '#d44' : tpl.accent;
     const verdictLabel  = isVerdade ? '✓ VERDADE' : isMito ? '✗ MITO' : '?';
 
@@ -524,7 +657,7 @@ function renderCarouselSlide(card, slide, index) {
       <div class="pc-layout-mito">
         <div class="pc-mito-eyebrow">MITO OU VERDADE?</div>
         <div class="pc-mito-box" style="border-color:rgba(255,255,255,0.15)">
-          <div class="pc-mito-headline">${headline}</div>
+          <div class="pc-mito-headline" style="${fontStyle}">${headline}</div>
         </div>
         ${body ? `<div class="pc-mito-body">${body}</div>` : ''}
         <div class="pc-mito-verdict" style="background:${verdictColor}">${verdictLabel}</div>
@@ -538,7 +671,7 @@ function renderCarouselSlide(card, slide, index) {
       ${iconBgHtml}${watermarkHtml}
       <div class="pc-layout-foco">
         <div class="pc-foco-bar" style="background:${tpl.accent}"></div>
-        <div class="pc-foco-headline">${headline}</div>
+        <div class="pc-foco-headline" style="${fontStyle}">${headline}</div>
         <div class="pc-foco-bar2" style="background:rgba(255,255,255,0.12)"></div>
         ${body ? `<div class="pc-foco-body">${body}</div>` : ''}
         <div class="pc-foco-footer">
@@ -550,7 +683,7 @@ function renderCarouselSlide(card, slide, index) {
 }
 
 function renderArticlePreview(card) {
-  const tpl = TEMPLATES[state.category] || TEMPLATES['Direito Penal'];
+  const tpl     = TEMPLATES[state.category] || TEMPLATES['Direito Penal'];
   const title   = state.title   || 'Título do artigo';
   const excerpt = document.getElementById('excerpt')?.value || 'Resumo do artigo...';
 
@@ -596,18 +729,18 @@ async function publish() {
     alert('Adicione pelo menos um slide com headline.'); return;
   }
 
-  const btn  = document.getElementById('publish-btn');
-  const txt  = document.getElementById('publish-text');
-  const res  = document.getElementById('publish-result');
+  const btn = document.getElementById('publish-btn');
+  const txt = document.getElementById('publish-text');
+  const res = document.getElementById('publish-result');
   btn.disabled = true;
   txt.textContent = 'Publicando...';
-  res.className = 'publish-result hidden';
+  res.className = 'result-msg hidden';
 
   const post = {
     slug:         state.slug || generateSlug(title),
     title,
     type:         state.type,
-    category:     document.getElementById('category').value,
+    category:     state.category,
     date:         today(),
     readTime:     document.getElementById('readTime').value || '3 min',
     logoPosition: getLogoPos(),
@@ -628,18 +761,17 @@ async function publish() {
       body: JSON.stringify(post),
     });
     const data = await r.json();
-
     if (!r.ok) throw new Error(data.error || 'Erro desconhecido.');
 
     publishedUrl = data.url;
     showUrl(publishedUrl);
-    res.className = 'publish-result success';
+    res.className = 'result-msg success';
     res.textContent = '✓ Post publicado! Vercel está atualizando (aguarde ~40s).';
   } catch (err) {
-    res.className = 'publish-result error';
+    res.className = 'result-msg error';
     res.textContent = '✕ ' + err.message;
   } finally {
-    btn.disabled = false;
+    btn.disabled    = false;
     txt.textContent = 'Publicar post';
     res.classList.remove('hidden');
   }
@@ -666,7 +798,7 @@ function copyUrl() {
 // LISTA DE POSTS
 // ═══════════════════════════════════════════════════════════════
 async function togglePostsList() {
-  const modal = document.getElementById('posts-modal');
+  const modal    = document.getElementById('posts-modal');
   const isHidden = modal.classList.toggle('hidden');
   if (!isHidden) await loadPostsList();
 }
@@ -677,7 +809,10 @@ async function loadPostsList() {
   try {
     const res   = await fetch('/api/posts');
     const posts = await res.json();
-    if (!posts.length) { container.innerHTML = '<p style="color:#888;padding:12px;font-size:0.8rem">Nenhum post publicado ainda.</p>'; return; }
+    if (!posts.length) {
+      container.innerHTML = '<p style="color:#888;padding:12px;font-size:0.8rem">Nenhum post publicado ainda.</p>';
+      return;
+    }
     container.innerHTML = posts.map(p => `
       <div class="post-item">
         <div class="post-item-info">
@@ -690,7 +825,9 @@ async function loadPostsList() {
         <button class="btn-delete" onclick="deletePost('${p.slug}')">🗑</button>
       </div>
     `).join('');
-  } catch { container.innerHTML = '<p style="color:#d44;padding:12px;font-size:0.8rem">Erro ao carregar posts.</p>'; }
+  } catch {
+    container.innerHTML = '<p style="color:#d44;padding:12px;font-size:0.8rem">Erro ao carregar posts.</p>';
+  }
 }
 
 async function deletePost(slug) {
@@ -731,7 +868,7 @@ function wheelZoom(e, index) {
   e.preventDefault();
   e.stopPropagation();
   const delta = e.deltaY < 0 ? 0.08 : -0.08;
-  const slide = state.slides[index];
+  const slide  = state.slides[index];
   slide.imageScale = Math.max(0.3, Math.min(3, (slide.imageScale || 1) + delta));
   applyImgTransform(index);
   const slider = document.getElementById(`zoom-slider-${index}`);
@@ -739,7 +876,7 @@ function wheelZoom(e, index) {
 }
 
 function zoomStep(index, delta) {
-  const slide = state.slides[index];
+  const slide  = state.slides[index];
   slide.imageScale = Math.max(0.3, Math.min(3, (slide.imageScale || 1) + delta));
   applyImgTransform(index);
   const slider = document.getElementById(`zoom-slider-${index}`);
@@ -752,9 +889,9 @@ function setZoomSlider(val, index) {
 }
 
 function fitImage(index) {
-  state.slides[index].imageX    = 0;
-  state.slides[index].imageY    = 0;
-  state.slides[index].imageScale= 1;
+  state.slides[index].imageX     = 0;
+  state.slides[index].imageY     = 0;
+  state.slides[index].imageScale = 1;
   applyImgTransform(index);
   const slider = document.getElementById(`zoom-slider-${index}`);
   if (slider) slider.value = 100;
@@ -781,10 +918,10 @@ async function checkAiStatus() {
     aiConfigured = data.configured;
     const badge = document.getElementById('ai-status-badge');
     if (aiConfigured) {
-      badge.className = 'ai-badge ai-badge-on';
+      badge.className   = 'ai-badge ai-badge-on';
       badge.textContent = '✦ IA ativa';
     } else {
-      badge.className = 'ai-badge ai-badge-off';
+      badge.className   = 'ai-badge ai-badge-off';
       badge.textContent = 'IA desativada';
     }
   } catch {}
@@ -801,7 +938,7 @@ function openConfigModal() {
 async function saveApiKey() {
   const key = document.getElementById('openai-key-input').value.trim();
   const res = document.getElementById('config-result');
-  res.className = 'publish-result hidden';
+  res.className = 'result-msg hidden';
   if (!key) return;
   try {
     const r    = await fetch('/api/config', {
@@ -811,13 +948,13 @@ async function saveApiKey() {
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.error);
-    res.className = 'publish-result success';
+    res.className   = 'result-msg success';
     res.textContent = '✓ Chave salva! IA ativada.';
     res.classList.remove('hidden');
     await checkAiStatus();
     setTimeout(() => document.getElementById('config-modal').classList.add('hidden'), 1500);
   } catch (err) {
-    res.className = 'publish-result error';
+    res.className   = 'result-msg error';
     res.textContent = '✕ ' + err.message;
     res.classList.remove('hidden');
   }
@@ -831,15 +968,14 @@ async function suggestIdeas() {
   const modal    = document.getElementById('ideas-modal');
   const content  = document.getElementById('ideas-content');
   const catLabel = document.getElementById('ideas-category');
-  const category = document.getElementById('category').value;
-  catLabel.textContent = category;
-  content.innerHTML = '<span class="spinner"></span> Gerando ideias...';
+  catLabel.textContent = state.category;
+  content.innerHTML    = '<span class="spinner"></span> Gerando ideias...';
   modal.classList.remove('hidden');
   try {
     const res  = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'idea', category }),
+      body: JSON.stringify({ mode: 'idea', category: state.category }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
@@ -854,10 +990,9 @@ async function suggestIdeas() {
 // ═══════════════════════════════════════════════════════════════
 async function aiGenerateHeadline(index) {
   if (!aiConfigured) { openConfigModal(); return; }
-  const btn      = document.getElementById(`btn-ai-headline-${index}`);
-  const input    = document.getElementById(`headline-${index}`);
-  const category = document.getElementById('category').value;
-  const topic    = state.title || category;
+  const btn   = document.getElementById(`btn-ai-headline-${index}`);
+  const input = document.getElementById(`headline-${index}`);
+  const topic = state.title || state.category;
 
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>';
@@ -865,7 +1000,7 @@ async function aiGenerateHeadline(index) {
     const res  = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'headline', category, topic }),
+      body: JSON.stringify({ mode: 'headline', category: state.category, topic }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
@@ -875,7 +1010,7 @@ async function aiGenerateHeadline(index) {
   } catch (err) {
     alert('Erro: ' + err.message);
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '✦ Gerar headline';
   }
 }
@@ -887,16 +1022,15 @@ async function aiGenerateBody(index) {
   if (!aiConfigured) { openConfigModal(); return; }
   const btn      = document.getElementById(`btn-ai-body-${index}`);
   const textarea = document.getElementById(`body-${index}`);
-  const category = document.getElementById('category').value;
   const headline = state.slides[index].headline || state.title;
 
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<span class="spinner"></span>';
   try {
     const res  = await fetch('/api/ai/generate', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ mode: 'body', category, headline }),
+      body: JSON.stringify({ mode: 'body', category: state.category, headline }),
     });
     const data = await res.json();
     if (!res.ok) throw new Error(data.error);
@@ -906,7 +1040,7 @@ async function aiGenerateBody(index) {
   } catch (err) {
     alert('Erro: ' + err.message);
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '✦ Gerar texto';
   }
 }
@@ -922,7 +1056,7 @@ async function aiHumanize(index, field) {
   const text  = el.value.trim();
   if (!text) return;
 
-  btn.disabled = true;
+  btn.disabled  = true;
   btn.innerHTML = '<span class="spinner"></span>';
   try {
     const res  = await fetch('/api/ai/humanize', {
@@ -938,7 +1072,7 @@ async function aiHumanize(index, field) {
   } catch (err) {
     alert('Erro: ' + err.message);
   } finally {
-    btn.disabled = false;
+    btn.disabled  = false;
     btn.innerHTML = '◈ Humanizar';
   }
 }
@@ -947,15 +1081,15 @@ async function aiHumanize(index, field) {
 // INIT
 // ═══════════════════════════════════════════════════════════════
 function init() {
+  // Garante step 1 ativo
+  activateStep(1);
+
+  // Renderiza slides (estará no step 5, invisível por enquanto)
   renderSlidesForms();
   updatePreview();
   checkAiStatus();
 
-  document.querySelectorAll('input[name="logoPos"]').forEach(el => {
-    el.addEventListener('change', updatePreview);
-  });
-
-  // Drag global handlers
+  // Drag global
   document.addEventListener('mousemove', (e) => {
     if (!imgDrag) return;
     const { index, startX, startY, startImgX, startImgY } = imgDrag;
@@ -969,6 +1103,16 @@ function init() {
     const canvas = document.getElementById(`img-canvas-${imgDrag.index}`);
     if (canvas) canvas.style.cursor = 'grab';
     imgDrag = null;
+  });
+
+  // Fechar font picker ao clicar fora
+  document.addEventListener('click', (e) => {
+    const picker = document.getElementById('font-picker');
+    if (picker && !picker.classList.contains('hidden')) {
+      if (!picker.contains(e.target) && !e.target.closest('.btn-font-picker')) {
+        closeFontPicker();
+      }
+    }
   });
 }
 

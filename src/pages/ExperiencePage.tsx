@@ -40,9 +40,9 @@ export function ExperiencePage() {
         {/* Título */}
         <div>
           <h2 
-            className="text-[#0A0F24]"
+            className="text-[#1C1C1C]"
             style={{
-              fontFamily: "'Playfair Display', serif",
+              fontFamily: "'Libre Baskerville', serif",
               fontSize: 'clamp(2rem, 6vw, 3rem)',
               fontWeight: '600',
               letterSpacing: '-0.01em'
@@ -50,25 +50,25 @@ export function ExperiencePage() {
           >
             Experiência Jurídica
           </h2>
-          <div className="w-24 md:w-32 h-0.5 bg-[#C2A14D] mt-4 md:mt-6"></div>
+          <div className="w-24 md:w-32 h-0.5 bg-[#888888] mt-4 md:mt-6"></div>
         </div>
         
         {/* Timeline */}
         <div className="relative">
           {/* Linha vertical - oculta no mobile para economizar espaço */}
-          <div className="hidden md:block absolute left-6 lg:left-8 top-0 bottom-0 w-0.5 bg-[#C2A14D]/30"></div>
+          <div className="hidden md:block absolute left-6 lg:left-8 top-0 bottom-0 w-0.5 bg-[#888888]/30"></div>
           
           {/* Experiências */}
           <div className="space-y-10 md:space-y-12">
             {experiences.map((exp, index) => (
               <div key={index} className="relative md:pl-16 lg:pl-20">
                 {/* Ponto dourado na timeline - ajustado para mobile */}
-                <div className="hidden md:block absolute left-3.5 lg:left-5 top-0 w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-[#C2A14D] border-4 border-white shadow-md"></div>
+                <div className="hidden md:block absolute left-3.5 lg:left-5 top-0 w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-[#888888] border-4 border-white shadow-md"></div>
                 
                 <div className="space-y-4">
                   <div>
                     <p 
-                      className="text-[#C2A14D] mb-2"
+                      className="text-[#888888] mb-2"
                       style={{
                         fontFamily: "'Inter', sans-serif",
                         fontSize: 'clamp(0.875rem, 2vw, 0.95rem)',
@@ -79,9 +79,9 @@ export function ExperiencePage() {
                       {exp.period}
                     </p>
                     <h3 
-                      className="text-[#0A0F24] mb-1"
+                      className="text-[#1C1C1C] mb-1"
                       style={{
-                        fontFamily: "'Playfair Display', serif",
+                        fontFamily: "'Libre Baskerville', serif",
                         fontSize: 'clamp(1.25rem, 3vw, 1.5rem)',
                         fontWeight: '600'
                       }}
@@ -89,7 +89,7 @@ export function ExperiencePage() {
                       {exp.title}
                     </h3>
                     <p 
-                      className="text-[#0A0F24]/70"
+                      className="text-[#1C1C1C]/70"
                       style={{
                         fontFamily: "'Inter', sans-serif",
                         fontSize: 'clamp(0.9375rem, 2vw, 1rem)',
@@ -104,14 +104,14 @@ export function ExperiencePage() {
                     {exp.activities.map((activity, actIndex) => (
                       <li 
                         key={actIndex}
-                        className="flex items-start gap-2 md:gap-3 text-[#0A0F24]"
+                        className="flex items-start gap-2 md:gap-3 text-[#1C1C1C]"
                         style={{
                           fontFamily: "'Inter', sans-serif",
                           fontSize: 'clamp(0.875rem, 2vw, 0.95rem)',
                           lineHeight: '1.6'
                         }}
                       >
-                        <span className="text-[#C2A14D] mt-1.5 text-xs">▸</span>
+                        <span className="text-[#888888] mt-1.5 text-xs">▸</span>
                         <span>{activity}</span>
                       </li>
                     ))}
