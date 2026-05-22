@@ -10,7 +10,8 @@ const fs           = require('fs');
 const { execSync } = require('child_process');
 
 const app         = express();
-const PORT        = 4000;
+const PORT        = Number(process.env.PORT) || 4000;
+const MAX_PORT    = PORT + 10;
 const PROJECT     = path.resolve(__dirname, '..');
 const POSTS_JSON  = path.join(PROJECT, 'src', 'data', 'posts');
 const POSTS_IMG   = path.join(PROJECT, 'public', 'posts');
@@ -49,7 +50,30 @@ app.use('/api/ai',      require('./routes/ai')     (loadConfig));
 app.use('/api/export',  require('./routes/export') (loadConfig));
 
 // ─── Start ────────────────────────────────────────────────────
-app.listen(PORT, () => {
-  console.log(`\n  CMS rodando em http://localhost:${PORT}\n`);
-  try { execSync(`start http://localhost:${PORT}`); } catch {}
-});
+function startServer(port) {
+  const server = app.listen(port, () => {
+    const url = `http://localhost:${port}`;
+    console.log(`\n  CMS rodando em ${url}\n`);
+    if (port !== PORT) {
+      console.log(`  Porta ${PORT} ocupada. Usando porta ${port}.\n`);
+    }
+    try { execSync(`start ${url}`); } catch {}
+  });
+
+  server.on('error', (err) => {
+    if (err.code === 'EADDRINUSE' && port < MAX_PORT) {
+      console.log(`  Porta ${port} em uso. Tentando ${port + 1}...`);
+      startServer(port + 1);
+      return;
+    }
+
+    if (err.code === 'EADDRINUSE') {
+      console.error(`\n  Nao foi possivel iniciar: portas ${PORT}-${MAX_PORT} estao ocupadas.\n`);
+      return;
+    }
+
+    console.error('\n  Erro ao iniciar o CMS:', err.message, '\n');
+  });
+}
+
+startServer(PORT);

@@ -52,6 +52,8 @@ function renderSlideForm(slide, index, container) {
   const isCta     = slide.type === 'cta';
   const font      = slide.headlineFont || 'Playfair Display';
   const fontShort = font.split(' ')[0];
+  const bodyFont      = slide.bodyFont || 'Inter';
+  const bodyFontShort = bodyFont.split(' ')[0];
   const card      = document.createElement('div');
 
   card.className = [
@@ -104,7 +106,17 @@ function renderSlideForm(slide, index, container) {
       ` : `
         <div class="slide-upload"
              onclick="document.getElementById('file-${index}').click(); event.stopPropagation()">
-          <span>Clique para enviar imagem (opcional)</span>
+          <span class="upload-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+              <circle cx="8.5" cy="10" r="1.5"></circle>
+              <path d="M21 15l-5-5L5 19"></path>
+              <path d="M12 3v7"></path>
+              <path d="M9 6l3-3 3 3"></path>
+            </svg>
+          </span>
+          <span class="upload-title">Enviar imagem</span>
+          <span class="upload-subtitle">PNG ou JPG opcional</span>
         </div>
       `}
       <input type="file" id="file-${index}" accept="image/*" class="hidden"
@@ -128,7 +140,8 @@ function renderSlideForm(slide, index, container) {
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
         <span class="field-label" style="margin:0">${isCta ? 'Headline do CTA' : 'Headline'}</span>
         <button class="btn-font-picker"
-                onclick="event.stopPropagation(); openFontPicker(${index}, this)">
+                onclick="event.stopPropagation(); openFontPicker(${index}, this, 'headlineFont')"
+                title="Alterar fonte da headline">
           <span class="font-preview" style="font-family:'${escHtml(font)}',serif">Aa</span>
           <span>${escHtml(fontShort)}</span>
         </button>
@@ -147,8 +160,18 @@ function renderSlideForm(slide, index, container) {
     </div>
 
     <div onclick="event.stopPropagation()">
+      <div class="field-row">
+        <span class="field-label" style="margin:0">${isCta ? 'Texto do CTA' : 'Texto / subtítulo'}</span>
+        <button class="btn-font-picker"
+                onclick="event.stopPropagation(); openFontPicker(${index}, this, 'bodyFont')"
+                title="Alterar fonte do texto">
+          <span class="font-preview" style="font-family:'${escHtml(bodyFont)}',sans-serif">Aa</span>
+          <span>${escHtml(bodyFontShort)}</span>
+        </button>
+      </div>
       <textarea id="body-${index}" class="slide-textarea" rows="2"
                 placeholder="${isCta ? 'Chamada para ação' : 'Texto do slide'}"
+                style="font-family:'${escHtml(bodyFont)}',sans-serif"
                 oninput="state.slides[${index}].body=this.value; updatePreview()"
       >${escHtml(slide.body)}</textarea>
       <div class="slide-ai-row" style="margin-top:5px">

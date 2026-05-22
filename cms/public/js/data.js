@@ -5,6 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 const FONTS = [
+  { id: 'Inter',              name: 'Inter'              },
   { id: 'Playfair Display',   name: 'Playfair Display'   },
   { id: 'Cormorant Garamond', name: 'Cormorant Garamond'  },
   { id: 'EB Garamond',        name: 'EB Garamond'         },

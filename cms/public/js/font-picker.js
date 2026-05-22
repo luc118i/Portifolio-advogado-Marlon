@@ -5,16 +5,16 @@
 
 let fontPickerTarget = null;
 
-function openFontPicker(index, anchorEl) {
-  fontPickerTarget = index;
+function openFontPicker(index, anchorEl, field = 'headlineFont') {
+  fontPickerTarget = { index, field };
   const picker  = document.getElementById('font-picker');
   const inner   = document.getElementById('font-picker-inner');
-  const current = state.slides[index]?.headlineFont || FONTS[0].id;
+  const current = state.slides[index]?.[field] || (field === 'bodyFont' ? 'Inter' : 'Playfair Display');
 
   inner.innerHTML = FONTS.map(f => `
     <div class="font-opt ${f.id === current ? 'active' : ''}"
          style="font-family:'${f.id}', serif"
-         onclick="setFont(${index}, '${escHtml(f.id)}')">
+         onclick="setFont(${index}, '${field}', '${escHtml(f.id)}')">
       ${f.name}
     </div>
   `).join('');
@@ -27,8 +27,8 @@ function openFontPicker(index, anchorEl) {
   picker.classList.remove('hidden');
 }
 
-function setFont(index, fontId) {
-  if (state.slides[index]) state.slides[index].headlineFont = fontId;
+function setFont(index, field, fontId) {
+  if (state.slides[index]) state.slides[index][field] = fontId;
   closeFontPicker();
   renderSlidesForms();
   selectSlide(index);

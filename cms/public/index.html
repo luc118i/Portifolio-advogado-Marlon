@@ -262,7 +262,19 @@
           <div class="field-group">
             <label class="field-label">Imagem de capa</label>
             <div class="upload-area" onclick="document.getElementById('cover-file').click()">
-              <span id="cover-upload-text">Clique para enviar imagem de capa</span>
+              <span class="upload-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                  <circle cx="8.5" cy="10" r="1.5"></circle>
+                  <path d="M21 15l-5-5L5 19"></path>
+                  <path d="M12 3v7"></path>
+                  <path d="M9 6l3-3 3 3"></path>
+                </svg>
+              </span>
+              <span class="upload-copy">
+                <span class="upload-title" id="cover-upload-text">Enviar imagem de capa</span>
+                <span class="upload-subtitle">PNG ou JPG para o artigo</span>
+              </span>
               <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
             </div>
           </div>

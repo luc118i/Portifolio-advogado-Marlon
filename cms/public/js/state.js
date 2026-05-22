@@ -15,6 +15,7 @@ function createEmptySlide() {
     headline:      '',
     body:          '',
     headlineFont:  'Playfair Display',
+    bodyFont:      'Inter',
   };
 }
 
@@ -24,6 +25,7 @@ function createCtaSlide() {
     headline:     'Está com dúvidas jurídicas?',
     body:         'Fale comigo antes de tomar qualquer decisão.',
     headlineFont: 'Playfair Display',
+    bodyFont:     'Inter',
   };
 }
 
