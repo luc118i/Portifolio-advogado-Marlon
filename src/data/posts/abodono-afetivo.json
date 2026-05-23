@@ -1,31 +1,12 @@
 {
   "slug": "abodono-afetivo",
   "title": "abodono afetivo",
-  "type": "carousel",
+  "type": "article",
   "category": "Direito Administrativo",
   "date": "2026-05-23",
   "readTime": "3 min",
   "logoPosition": "footer",
-  "slides": [
-    {
-      "type": "content",
-      "layout": "default",
-      "imagePath": "/posts/1779573312755-ciuf9.webp",
-      "imageX": 0,
-      "imageY": 0,
-      "imageScale": 1,
-      "imageRotate": 0,
-      "imageFlipH": false,
-      "imageFlipV": false,
-      "imageFilter": "dourado",
-      "imageBlur": 0.5,
-      "imageBrightness": 100,
-      "imageContrast": 100,
-      "imageSaturation": 100,
-      "headline": "direito",
-      "body": "bla bla bla",
-      "headlineFont": "Lora",
-      "bodyFont": "Inter"
-    }
-  ]
+  "coverImage": "/posts/1779573467041-ckwm3.webp",
+  "excerpt": "SEI LA ",
+  "content": "BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA BLA "
 }
