@@ -1,0 +1,35 @@
+{
+  "slug": "teste",
+  "title": "teste",
+  "type": "carousel",
+  "category": "Direito Penal",
+  "date": "2026-05-23",
+  "readTime": "3 min",
+  "logoPosition": "footer",
+  "slides": [
+    {
+      "type": "content",
+      "layout": "default",
+      "imagePath": null,
+      "imageX": 0,
+      "imageY": 0,
+      "imageScale": 1,
+      "headline": "teste",
+      "body": "sub titulo teste",
+      "headlineFont": "Fraunces",
+      "bodyFont": "Inter"
+    },
+    {
+      "type": "content",
+      "layout": "voce-sabia",
+      "imagePath": null,
+      "imageX": 0,
+      "imageY": 0,
+      "imageScale": 1,
+      "headline": "que pirataria e crime",
+      "body": "teste",
+      "headlineFont": "Playfair Display",
+      "bodyFont": "Inter"
+    }
+  ]
+}
