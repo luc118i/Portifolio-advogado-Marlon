@@ -1,0 +1,51 @@
+{
+  "slug": "abodono-afetivo",
+  "title": "abodono afetivo",
+  "type": "carousel",
+  "category": "Direito Administrativo",
+  "date": "2026-05-23",
+  "readTime": "3 min",
+  "logoPosition": "footer",
+  "slides": [
+    {
+      "type": "content",
+      "layout": "default",
+      "imagePath": "/posts/1779569023193-ewahp.png",
+      "imageX": 0,
+      "imageY": 0,
+      "imageScale": 0.3,
+      "imageRotate": 0,
+      "imageFlipH": false,
+      "imageFlipV": false,
+      "imageFilter": "none",
+      "imageBlur": 5.5,
+      "imageBrightness": 54,
+      "imageContrast": 100,
+      "imageSaturation": 100,
+      "headline": "TESTE",
+      "body": "KKKKKKKKKKKKKKKKKKKKKKKKKKKKKKKK",
+      "headlineFont": "Playfair Display",
+      "bodyFont": "Inter"
+    },
+    {
+      "type": "content",
+      "layout": "default",
+      "imagePath": null,
+      "imageX": 0,
+      "imageY": 0,
+      "imageScale": 1,
+      "imageRotate": 0,
+      "imageFlipH": false,
+      "imageFlipV": false,
+      "imageFilter": "none",
+      "imageBlur": 0,
+      "imageBrightness": 100,
+      "imageContrast": 100,
+      "imageSaturation": 100,
+      "headline": "",
+      "body": "",
+      "headlineFont": "Playfair Display",
+      "bodyFont": "Inter"
+    }
+  ]
+}
