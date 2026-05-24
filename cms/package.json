@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "CMS local — Dr. Marlon Inácio",
   "main": "server.js",
+  "bin": "server.js",
   "scripts": {
     "start": "node server.js",
     "build-exe": "pkg . --compress GZip --output CMS-Marlon.exe"
