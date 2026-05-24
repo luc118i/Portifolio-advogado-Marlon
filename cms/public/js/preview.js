@@ -42,7 +42,7 @@ function renderCarouselSlide(card, slide) {
     card.innerHTML = `
       <div class="pc-bg" style="background:${tpl.bg}"></div>
       <div class="pc-cta">
-        <img src="/project-assets/favicon.png" class="pc-cta-logo" alt="Logo" onerror="this.style.display='none'">
+        <img src="/favicon.png" class="pc-cta-logo" alt="Logo" onerror="this.style.display='none'">
         <div class="pc-cta-name">Dr. Marlon Inácio</div>
         <div class="pc-cta-oab">OAB/DF 87.696</div>
         <div class="pc-cta-headline" style="font-family:'${escHtml(font)}',serif">
@@ -80,11 +80,11 @@ function renderCarouselSlide(card, slide) {
     </div>`;
   const overlayHtml   = `<div class="pc-overlay"></div>`;
   const iconBgHtml    = !hasBgImg ? `<div class="pc-icon-bg">${tpl.icon}</div>` : '';
-  const watermarkHtml = watermark ? `<img src="/project-assets/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : '';
+  const watermarkHtml = watermark ? `<img src="/favicon.png" class="pc-watermark" alt="Logo" onerror="this.style.display='none'">` : '';
   const footerHtml    = footerLogo ? `
     <div class="pc-footer">
       <div class="pc-footer-logo">
-        <img src="/project-assets/favicon.png" alt="Logo" onerror="this.style.display='none'">
+        <img src="/favicon.png" alt="Logo" onerror="this.style.display='none'">
         <span class="pc-footer-name">Dr. Marlon Inácio</span>
       </div>
       <span class="pc-footer-url">advogado-marlon.vercel.app</span>
@@ -168,7 +168,7 @@ function renderCarouselSlide(card, slide) {
         <div class="pc-foco-bar2" style="background:rgba(255,255,255,0.12)"></div>
         ${body ? `<div class="pc-foco-body" style="${bodyFontStyle}">${body}</div>` : ''}
         <div class="pc-foco-footer">
-          ${lpos !== 'watermark' ? `<img src="/project-assets/favicon.png" class="pc-foco-logo" alt="Logo" onerror="this.style.display='none'">` : ''}
+          ${lpos !== 'watermark' ? `<img src="/favicon.png" class="pc-foco-logo" alt="Logo" onerror="this.style.display='none'">` : ''}
           <span class="pc-foco-name" style="color:${tpl.accent}">Dr. Marlon Inácio</span>
         </div>
       </div>`;
@@ -193,7 +193,7 @@ function renderArticlePreview(card) {
         <div class="pc-article-title">${escHtml(title)}</div>
         <div class="pc-article-excerpt">${escHtml(excerpt)}</div>
         <div class="pc-article-meta">
-          <img src="/project-assets/favicon.png" class="pc-article-meta-logo" alt="Logo" onerror="this.style.display='none'">
+          <img src="/favicon.png" class="pc-article-meta-logo" alt="Logo" onerror="this.style.display='none'">
           <span class="pc-article-meta-text">Dr. Marlon Inácio · ${state.readTime || '3 min'}</span>
         </div>
       </div>
