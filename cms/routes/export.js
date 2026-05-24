@@ -11,23 +11,29 @@ const fs      = require('fs');
 module.exports = function exportRouter(loadConfig) {
   const router = express.Router();
 
-  // ─── POST /api/export/images ─────────────────────────────────
-  // Recebe array de { name, data (base64 PNG) } e salva em
-  // [output_folder]/[slug]/slide-01.png, slide-02.png, …, cta.png
-  router.post('/images', (req, res) => {
+  // ─── Núcleo compartilhado: salva imagens base64 na pasta ─────
+  function saveImages(req, res) {
     const cfg = loadConfig();
     if (!cfg.output_folder)
-      return res.status(400).json({ error: 'Pasta de exportação não configurada.' });
+      return res.status(400).json({ error: 'Pasta de exportação não configurada. Acesse Configurações → Exportação.' });
 
     const { slug, images } = req.body;
+    if (!slug?.trim())
+      return res.status(400).json({ error: 'Slug do post não informado.' });
     if (!images?.length)
       return res.status(400).json({ error: 'Nenhuma imagem recebida.' });
 
-    const folder = path.join(cfg.output_folder, slug);
+    // Normaliza para caminho absoluto (resolve barras mistas, espaços, etc.)
+    const baseFolder = path.resolve(cfg.output_folder);
+    const folder     = path.join(baseFolder, slug.trim());
+
+    // Garante que a pasta (e todos os pais) exista
     try {
       fs.mkdirSync(folder, { recursive: true });
     } catch (err) {
-      return res.status(500).json({ error: 'Não foi possível criar a pasta: ' + err.message });
+      return res.status(500).json({
+        error: `Não foi possível criar a pasta "${folder}": ${err.message}`,
+      });
     }
 
     const saved = [];
@@ -40,10 +46,51 @@ module.exports = function exportRouter(loadConfig) {
         saved.push(name);
       }
     } catch (err) {
-      return res.status(500).json({ error: 'Erro ao salvar imagem: ' + err.message });
+      return res.status(500).json({
+        error: `Erro ao salvar imagem "${err.path || 'desconhecido'}": ${err.message}`,
+      });
     }
 
     res.json({ success: true, folder, saved });
+  }
+
+  // ─── POST /api/export/images — chamado após publicação ───────
+  router.post('/images', saveImages);
+
+  // ─── POST /api/export/now — exportar SEM publicar ────────────
+  // Mesmo fluxo de /images. Botão "Salvar localmente" usa esta rota.
+  router.post('/now', saveImages);
+
+  // ─── POST /api/export/flat-image — exportação em lote ────────
+  // Salva UMA imagem diretamente em output_folder (sem subpasta de slug).
+  // Usado pelo batch-export.js ao exportar todos os posts.
+  router.post('/flat-image', (req, res) => {
+    const cfg = loadConfig();
+    if (!cfg.output_folder)
+      return res.status(400).json({ error: 'Pasta de exportação não configurada.' });
+
+    const { name, data } = req.body;
+    if (!name?.trim())
+      return res.status(400).json({ error: 'Nome do arquivo não informado.' });
+    if (!data)
+      return res.status(400).json({ error: 'Dados da imagem não recebidos.' });
+
+    const baseFolder = path.resolve(cfg.output_folder);
+    try {
+      fs.mkdirSync(baseFolder, { recursive: true });
+    } catch (err) {
+      return res.status(500).json({ error: `Não foi possível criar a pasta: ${err.message}` });
+    }
+
+    try {
+      const base64   = data.replace(/^data:image\/\w+;base64,/, '');
+      const buffer   = Buffer.from(base64, 'base64');
+      const filePath = path.join(baseFolder, name.trim());
+      fs.writeFileSync(filePath, buffer);
+      res.json({ success: true, filePath, name });
+    } catch (err) {
+      res.status(500).json({ error: `Erro ao salvar imagem "${name}": ${err.message}` });
+    }
   });
 
   // ─── POST /api/export/docx ────────────────────────────────────

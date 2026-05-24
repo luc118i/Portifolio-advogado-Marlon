@@ -56,5 +56,13 @@
     server: {
       port: 3000,
       open: true,
+      // Proxy /api/posts → CMS local (porta 4000) durante desenvolvimento.
+      // Em produção (Vercel), /api/posts é servida pela serverless function api/posts.js
+      proxy: {
+        '/api/posts': {
+          target: 'http://localhost:4000',
+          changeOrigin: true,
+        },
+      },
     },
   });

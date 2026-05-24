@@ -12,12 +12,26 @@ const { execSync } = require('child_process');
 const app         = express();
 const PORT        = Number(process.env.PORT) || 4000;
 const MAX_PORT    = PORT + 10;
-const PROJECT     = path.resolve(__dirname, '..');
-const POSTS_JSON  = path.join(PROJECT, 'src', 'data', 'posts');
-const POSTS_IMG   = path.join(PROJECT, 'public', 'posts');
-const CONFIG_FILE = path.join(__dirname, 'config.json');
 
-// ─── Config (chave Groq + pasta de exportação) ───────────────
+// ─── Detecta se está rodando como .exe (compilado com pkg) ────────
+// process.pkg existe somente quando empacotado; caso contrário é undefined.
+// Quando .exe: PROJECT_DIR = pasta onde o .exe está.
+// Quando node: PROJECT_DIR = pasta pai do cms/ (raiz do portfólio).
+const IS_PKG    = typeof process.pkg !== 'undefined';
+const PROJECT   = IS_PKG
+  ? path.dirname(process.execPath)      // diretório do .exe
+  : path.resolve(__dirname, '..');      // raiz do repositório
+
+// Quando rodando como .exe, os dados ficam na mesma pasta do executável.
+// Quando rodando como script node, ficam em src/data/posts e public/posts.
+const POSTS_JSON  = IS_PKG
+  ? path.join(PROJECT, 'data', 'posts')
+  : path.join(PROJECT, 'src', 'data', 'posts');
+
+const POSTS_IMG   = path.join(PROJECT, IS_PKG ? 'posts' : 'public', 'posts');
+const CONFIG_FILE = path.join(IS_PKG ? PROJECT : __dirname, 'config.json');
+
+// ─── Config (chave Groq + pasta de exportação + integrações) ─
 function loadConfig() {
   try { return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8')); }
   catch { return {}; }
@@ -42,12 +56,25 @@ app.use('/vendor/html2canvas',
 );
 
 // ─── Rotas ────────────────────────────────────────────────────
-app.use('/api/upload',  require('./routes/upload') (POSTS_IMG));
-app.use('/api/posts',   require('./routes/posts')  (POSTS_JSON, PROJECT));
-app.use('/api/publish', require('./routes/publish')(POSTS_JSON, PROJECT));
-app.use('/api/config',  require('./routes/config') (loadConfig, saveConfig));
-app.use('/api/ai',      require('./routes/ai')     (loadConfig));
-app.use('/api/export',  require('./routes/export') (loadConfig));
+app.use('/api/upload',    require('./routes/upload')    (POSTS_IMG));
+app.use('/api/posts',     require('./routes/posts')     (POSTS_JSON, PROJECT, loadConfig));
+app.use('/api/publish',   require('./routes/publish')   (POSTS_JSON, PROJECT, loadConfig));
+app.use('/api/config',    require('./routes/config')    (loadConfig, saveConfig));
+app.use('/api/ai',        require('./routes/ai')        (loadConfig));
+app.use('/api/export',    require('./routes/export')    (loadConfig));
+app.use('/api/instagram', require('./routes/instagram') (loadConfig, saveConfig));
+
+// ─── Keepalive — ping periódico para manter a conexão ────────
+// Neon não pausa, mas mantemos o ping para detectar falhas cedo.
+const SIX_DAYS_MS = 6 * 24 * 60 * 60 * 1000;
+
+const { keepalive } = require('./lib/db');
+
+// Primeiro ping 30s após start (aguarda configuração estabilizar)
+setTimeout(() => keepalive(loadConfig), 30_000);
+
+// Depois a cada 6 dias
+setInterval(() => keepalive(loadConfig), SIX_DAYS_MS);
 
 // ─── Start ────────────────────────────────────────────────────
 function startServer(port) {
