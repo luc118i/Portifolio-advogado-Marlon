@@ -41,14 +41,36 @@ function openTextModal(index, field) {
       oninput="state.slides[${index}].headline=this.value;updatePreview()"
     />`;
   } else {
+    const isLista      = slide.layout === 'lista';
+    const isChecklist  = slide.layout === 'checklist';
+    const isRanking    = slide.layout === 'ranking';
+    const isComparativo = slide.layout === 'comparativo';
+    const isListaLike  = isLista || isChecklist || isRanking;
+
+    const placeholders = {
+      lista:      'Um item por linha (máx. 4):\nPrimeiro passo\nSegundo passo\nTerceiro passo',
+      checklist:  'Um item por linha (máx. 5):\nDocumento de identidade\nComprovante de renda\nCertidão de nascimento',
+      ranking:    'Um item por linha (máx. 4):\nMelhor opção aqui\nSegunda opção\nTerceira opção',
+      comparativo:'Use o HEADLINE para o "Errado"\ne o TEXTO para o "Certo".\nEx: "Assinar sem ler" / "Ler antes de assinar"',
+    };
+    const hints = {
+      lista:      '💡 Lista — cada linha = um item numerado (máx. 4)',
+      checklist:  '✓ Checklist — cada linha = um item com marca (máx. 5)',
+      ranking:    '🏆 Ranking — cada linha = uma posição (máx. 4)',
+      comparativo:'↔ Comparativo — Headline = lado ✕ Errado · Texto = lado ✓ Certo',
+    };
+    const placeholder = placeholders[slide.layout] || 'Texto do slide...';
+    const hint        = hints[slide.layout] || '';
+
     wrap.innerHTML = `<textarea
       id="body-${index}"
       class="text-modal-textarea"
-      rows="4"
-      placeholder="Texto do slide..."
+      rows="${isListaLike ? 5 : 4}"
+      placeholder="${placeholder}"
       style="font-family:'${escHtml(curFont)}',sans-serif"
       oninput="state.slides[${index}].body=this.value;updatePreview()"
-    >${escHtml(curText)}</textarea>`;
+    >${escHtml(curText)}</textarea>
+    ${hint ? `<p style="font-size:0.625rem;color:var(--muted);margin-top:4px">${hint}</p>` : ''}`;
   }
 
   // AI buttons — IDs must match what ai.js expects

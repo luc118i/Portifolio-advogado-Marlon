@@ -22,8 +22,8 @@ function createEmptySlide() {
     imageSaturation:  100,
     headline:         '',
     body:             '',
-    headlineFont:     'Playfair Display',
-    bodyFont:         'Inter',
+    headlineFont:     'DM Serif Display',
+    bodyFont:         'Space Grotesk',
   };
 }
 
@@ -32,8 +32,8 @@ function createCtaSlide() {
     type:         'cta',
     headline:     'Está com dúvidas jurídicas?',
     body:         'Fale comigo antes de tomar qualquer decisão.',
-    headlineFont: 'Playfair Display',
-    bodyFont:     'Inter',
+    headlineFont: 'DM Serif Display',
+    bodyFont:     'Space Grotesk',
   };
 }
 
@@ -45,6 +45,7 @@ const state = {
   slug:           '',
   readTime:       '3 min',
   logoPosition:   'footer',
+  format:         'story',
   currentSlide:   0,
   slides:         [createEmptySlide()],
   // Artigo

@@ -97,6 +97,137 @@ const LAYOUTS = [
            <div style="height:5px;background:rgba(255,255,255,0.4);width:80%;margin-bottom:4px;border-radius:1px"></div>
            <div style="height:2px;background:rgba(255,255,255,0.3);width:40%"></div>`,
   },
+  {
+    id: 'estatistica',
+    name: 'Estatística',
+    mini: `<div style="text-align:center">
+             <div style="font-size:5px;opacity:0.45;letter-spacing:0.1em;margin-bottom:2px">EM NÚMEROS</div>
+             <div style="font-size:15px;font-weight:700;opacity:0.9;line-height:1;margin-bottom:3px">78%</div>
+             <div style="height:1px;background:rgba(255,255,255,0.45);width:20px;margin:0 auto 4px"></div>
+             <div style="height:3px;background:rgba(255,255,255,0.25);border-radius:1px;width:80%;margin:0 auto"></div>
+           </div>`,
+  },
+  {
+    id: 'pull-quote',
+    name: 'Citação',
+    mini: `<div style="padding:0 2px">
+             <div style="font-size:16px;font-weight:700;opacity:0.55;line-height:0.75;margin-bottom:3px">"</div>
+             <div style="height:3px;background:rgba(255,255,255,0.5);border-radius:1px;margin-bottom:2px"></div>
+             <div style="height:2px;background:rgba(255,255,255,0.3);border-radius:1px;width:80%;margin-bottom:3px"></div>
+             <div style="height:2px;background:rgba(255,255,255,0.15);border-radius:1px;width:50%"></div>
+           </div>`,
+  },
+  {
+    id: 'alerta',
+    name: 'Alerta',
+    mini: `<div style="border-left:2px solid rgba(255,255,255,0.65);padding-left:4px">
+             <div style="font-size:5px;opacity:0.65;letter-spacing:0.08em;margin-bottom:3px">⚠ ATENÇÃO</div>
+             <div style="height:4px;background:rgba(255,255,255,0.5);border-radius:1px;margin-bottom:2px"></div>
+             <div style="height:3px;background:rgba(255,255,255,0.3);border-radius:1px;width:85%"></div>
+           </div>`,
+  },
+  {
+    id: 'magazine',
+    name: 'Magazine',
+    mini: `<div>
+             <div style="height:6px;background:rgba(255,255,255,0.55);border-radius:1px;margin-bottom:2px"></div>
+             <div style="height:4px;background:rgba(255,255,255,0.35);border-radius:1px;width:80%;margin-bottom:5px"></div>
+             <div style="height:1px;background:rgba(255,255,255,0.25);margin-bottom:4px"></div>
+             <div style="height:3px;background:rgba(255,255,255,0.2);border-radius:1px;margin-bottom:2px"></div>
+             <div style="height:3px;background:rgba(255,255,255,0.15);border-radius:1px;width:70%"></div>
+           </div>`,
+  },
+  {
+    id: 'split',
+    name: 'Split',
+    mini: `<div style="display:flex;gap:3px;height:36px;margin:-2px">
+             <div style="width:36%;background:rgba(255,255,255,0.22);border-radius:1px"></div>
+             <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:2px;padding:2px 0">
+               <div style="height:4px;background:rgba(255,255,255,0.5);border-radius:1px"></div>
+               <div style="height:3px;background:rgba(255,255,255,0.3);border-radius:1px;width:80%"></div>
+               <div style="height:3px;background:rgba(255,255,255,0.18);border-radius:1px;width:60%"></div>
+             </div>
+           </div>`,
+  },
+  {
+    id: 'lista',
+    name: 'Lista',
+    mini: `<div style="display:flex;flex-direction:column;gap:3px">
+             <div style="font-size:5px;opacity:0.4;letter-spacing:0.08em;margin-bottom:1px">PASSO A PASSO</div>
+             ${[1,2,3].map(n=>`
+               <div style="display:flex;gap:3px;align-items:center">
+                 <div style="min-width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.32);font-size:5px;display:flex;align-items:center;justify-content:center;color:rgba(0,0,0,0.8);font-weight:700">${n}</div>
+                 <div style="height:2px;flex:1;background:rgba(255,255,255,0.32);border-radius:1px"></div>
+               </div>`).join('')}
+           </div>`,
+  },
+  {
+    id: 'checklist',
+    name: 'Checklist',
+    mini: `<div style="display:flex;flex-direction:column;gap:3px">
+             <div style="font-size:5px;opacity:0.45;letter-spacing:0.08em;margin-bottom:1px">CHECKLIST</div>
+             ${[0,1,2].map(()=>`
+               <div style="display:flex;gap:3px;align-items:center">
+                 <div style="width:8px;height:8px;border-radius:2px;background:rgba(37,211,102,0.45);display:flex;align-items:center;justify-content:center;font-size:6px;color:#fff">✓</div>
+                 <div style="height:2px;flex:1;background:rgba(255,255,255,0.35);border-radius:1px"></div>
+               </div>`).join('')}
+           </div>`,
+  },
+  {
+    id: 'comparativo',
+    name: 'Comparativo',
+    mini: `<div style="display:flex;gap:2px;height:28px;margin-top:2px">
+             <div style="flex:1;background:rgba(210,60,60,0.25);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px">✕</div>
+             <div style="width:1px;background:rgba(255,255,255,0.12)"></div>
+             <div style="flex:1;background:rgba(37,211,102,0.2);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:9px">✓</div>
+           </div>`,
+  },
+  {
+    id: 'pergunta-resp',
+    name: 'Pergunta',
+    mini: `<div style="display:flex;flex-direction:column;gap:3px">
+             <div style="border-radius:2px;padding:2px 4px;background:rgba(255,255,255,0.1)">
+               <div style="font-size:5px;opacity:0.45;margin-bottom:1px">PERGUNTA</div>
+               <div style="height:3px;background:rgba(255,255,255,0.5);border-radius:1px"></div>
+             </div>
+             <div style="display:flex;align-items:center;gap:2px;padding:0 2px">
+               <div style="flex:1;height:1px;background:rgba(255,255,255,0.15)"></div>
+               <div style="font-size:5px;opacity:0.5;font-weight:700">R</div>
+               <div style="flex:1;height:1px;background:rgba(255,255,255,0.15)"></div>
+             </div>
+             <div style="height:2px;background:rgba(255,255,255,0.3);border-radius:1px"></div>
+             <div style="height:2px;background:rgba(255,255,255,0.2);border-radius:1px;width:70%"></div>
+           </div>`,
+  },
+  {
+    id: 'ranking',
+    name: 'Ranking',
+    mini: `<div style="display:flex;flex-direction:column;gap:2px">
+             <div style="font-size:5px;opacity:0.4;letter-spacing:0.08em;margin-bottom:1px">🏆 RANKING</div>
+             <div style="display:flex;gap:3px;align-items:center">
+               <div style="font-size:7px;font-weight:700;opacity:0.95;min-width:7px">1</div>
+               <div style="height:4px;flex:1;background:rgba(255,255,255,0.7);border-radius:1px"></div>
+             </div>
+             <div style="display:flex;gap:3px;align-items:center">
+               <div style="font-size:6px;font-weight:700;opacity:0.6;min-width:7px">2</div>
+               <div style="height:3px;width:80%;background:rgba(255,255,255,0.45);border-radius:1px"></div>
+             </div>
+             <div style="display:flex;gap:3px;align-items:center">
+               <div style="font-size:5px;font-weight:700;opacity:0.4;min-width:7px">3</div>
+               <div style="height:2px;width:60%;background:rgba(255,255,255,0.28);border-radius:1px"></div>
+             </div>
+           </div>`,
+  },
+];
+
+const FORMATS = [
+  { id: 'story',     name: 'Story',     ratio: '9:16',    pw: 300, ph: 480 },
+  { id: 'feed',      name: 'Feed 1:1',  ratio: '1:1',     pw: 300, ph: 300 },
+  { id: 'feed-4-5',  name: 'Feed 4:5',  ratio: '4:5',     pw: 300, ph: 375 },
+  { id: 'reels',     name: 'Reels',     ratio: '9:16',    pw: 300, ph: 480 },
+  { id: 'linkedin',  name: 'LinkedIn',  ratio: '1.91:1',  pw: 380, ph: 199 },
+  { id: 'youtube',   name: 'YouTube',   ratio: '16:9',    pw: 340, ph: 191 },
+  { id: 'pinterest', name: 'Pinterest', ratio: '2:3',     pw: 300, ph: 450 },
 ];
 
 const IMG_FILTERS = [

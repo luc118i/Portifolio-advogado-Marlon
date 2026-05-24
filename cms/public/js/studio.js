@@ -57,22 +57,32 @@ function applyZoom() {
 }
 
 // ── Preview modes ────────────────────────────────────────────────
-let currentPreviewMode = 'mobile';
+let currentPreviewMode = 'story';
 
-function setPreviewMode(mode) {
-  currentPreviewMode = mode;
-  document.querySelectorAll('.preview-mode-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.mode === mode);
+function setPreviewMode(formatId) {
+  // Mapear IDs legados
+  const legacyMap = { mobile: 'story', social: 'feed', desktop: 'youtube' };
+  formatId = legacyMap[formatId] || formatId;
+
+  if (typeof state !== 'undefined') state.format = formatId;
+  currentPreviewMode = formatId;
+
+  // Atualizar chips ativos
+  document.querySelectorAll('.format-chip').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.format === formatId);
   });
+
+  // Atualizar classe no preview body
   const body = document.querySelector('.preview-panel-body');
   if (body) {
-    body.classList.remove('mode-mobile', 'mode-desktop', 'mode-social');
-    body.classList.add(`mode-${mode}`);
+    [...body.classList].filter(c => c.startsWith('mode-')).forEach(c => body.classList.remove(c));
+    body.classList.add(`mode-${formatId}`);
   }
+
+  // Atualizar label
+  const fmt = typeof FORMATS !== 'undefined' ? FORMATS.find(f => f.id === formatId) : null;
   const label = document.getElementById('preview-mode-label');
-  if (label) {
-    label.textContent = { mobile: 'Story · 9:16', social: 'Feed · 1:1', desktop: 'Wide · 16:9' }[mode] || '';
-  }
+  if (label && fmt) label.textContent = `${fmt.name} · ${fmt.ratio}`;
 }
 
 // ── Breadcrumb + toolbar step sync ──────────────────────────────
@@ -249,6 +259,21 @@ function applyTemplate(idx) {
   updatePreview();
 }
 
+function renderFormatPicker() {
+  const bar = document.getElementById('format-bar');
+  if (!bar || typeof FORMATS === 'undefined') return;
+  const cur = (typeof state !== 'undefined' ? state.format : null) || 'story';
+  bar.innerHTML = FORMATS.map(f => `
+    <button class="format-chip${f.id === cur ? ' active' : ''}"
+            data-format="${f.id}"
+            onclick="setPreviewMode('${f.id}')"
+            title="${f.name} · ${f.ratio}">
+      <span class="format-chip-name">${f.name}</span>
+      <span class="format-chip-ratio">${f.ratio}</span>
+    </button>
+  `).join('');
+}
+
 // ── Boot: patch activateStep + updatePreview after all scripts load ──
 document.addEventListener('DOMContentLoaded', () => {
   // Patch activateStep (defined in wizard.js)
@@ -274,5 +299,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial sync
   syncStudioUI(1);
   syncToolbarBadges();
-  setPreviewMode('mobile');
+  renderFormatPicker();
+  setPreviewMode('story');
 });

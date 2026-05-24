@@ -172,6 +172,174 @@ function renderCarouselSlide(card, slide) {
           <span class="pc-foco-name" style="color:${tpl.accent}">Dr. Marlon Inácio</span>
         </div>
       </div>`;
+
+  } else if (layout === 'estatistica') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.80)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-estat">
+        <div class="pc-estat-eyebrow" style="color:${tpl.accent}">EM NÚMEROS</div>
+        <div class="pc-estat-number" style="${fontStyle} color:${tpl.accent}">${headline}</div>
+        <div class="pc-estat-line" style="background:${tpl.accent}"></div>
+        ${body ? `<div class="pc-estat-body" style="${bodyFontStyle}">${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'pull-quote') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.82)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-quote">
+        <div class="pc-quote-mark" style="color:${tpl.accent}">"</div>
+        <div class="pc-quote-text" style="${fontStyle}">${headline}</div>
+        ${body ? `<div class="pc-quote-attr" style="${bodyFontStyle}">— ${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'alerta') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.84)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-alerta">
+        <div class="pc-alerta-inner" style="border-left-color:${tpl.accent}">
+          <div class="pc-alerta-badge" style="color:${tpl.accent}">⚠ ATENÇÃO</div>
+          <div class="pc-alerta-headline" style="${fontStyle}">${headline}</div>
+          ${body ? `<div class="pc-alerta-body" style="${bodyFontStyle}">${body}</div>` : ''}
+        </div>
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'magazine') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:linear-gradient(to top,rgba(0,0,0,0.90) 0%,rgba(0,0,0,0.40) 55%,rgba(0,0,0,0.18) 100%)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-mag">
+        <div class="pc-mag-top">
+          <div class="pc-mag-category" style="color:${tpl.accent};${bodyFontStyle}">${tpl.label}</div>
+          <div class="pc-mag-headline" style="${fontStyle}">${headline}</div>
+        </div>
+        <div class="pc-mag-line"></div>
+        ${body ? `<div class="pc-mag-body" style="${bodyFontStyle}">${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'split') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.68)"></div>
+      ${watermarkHtml}
+      <div class="pc-layout-split">
+        <div class="pc-split-accent" style="background:${tpl.accent}">
+          <div class="pc-split-label">${tpl.label}</div>
+        </div>
+        <div class="pc-split-content">
+          <div class="pc-split-headline" style="${fontStyle}">${headline}</div>
+          ${body ? `<div class="pc-split-body" style="${bodyFontStyle}">${body}</div>` : ''}
+          ${footerHtml}
+        </div>
+      </div>`;
+
+  } else if (layout === 'lista') {
+    const rawLines = slide.body || '';
+    const items    = rawLines.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 4);
+    const itemsHtml = items.map((item, i) => `
+      <div class="pc-lista-item">
+        <div class="pc-lista-num" style="background:${tpl.accent}">${i + 1}</div>
+        <div class="pc-lista-text" style="${bodyFontStyle}">${escHtml(item)}</div>
+      </div>`).join('');
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.82)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-lista">
+        <div class="pc-lista-eyebrow" style="color:${tpl.accent}">PASSO A PASSO</div>
+        <div class="pc-lista-headline" style="${fontStyle}">${headline}</div>
+        <div class="pc-lista-items">${itemsHtml}</div>
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'checklist') {
+    const rawLines = slide.body || '';
+    const items = rawLines.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 5);
+    const itemsHtml = items.map(item => `
+      <div class="pc-check-item">
+        <div class="pc-check-box" style="border-color:${tpl.accent}">
+          <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="${tpl.accent}" stroke-width="2.5" stroke-linecap="round">
+            <path d="M2 6l3 3 5-5"/>
+          </svg>
+        </div>
+        <span class="pc-check-text" style="${bodyFontStyle}">${escHtml(item)}</span>
+      </div>`).join('');
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.82)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-check">
+        <div class="pc-check-eyebrow" style="color:${tpl.accent}">✦ CHECKLIST</div>
+        <div class="pc-check-headline" style="${fontStyle}">${headline}</div>
+        <div class="pc-check-items">${itemsHtml}</div>
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'comparativo') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.86)"></div>
+      ${watermarkHtml}
+      <div class="pc-layout-comp">
+        <div class="pc-comp-title" style="${bodyFontStyle}">COMPARATIVO</div>
+        <div class="pc-comp-cols">
+          <div class="pc-comp-col pc-comp-errado">
+            <div class="pc-comp-icon">✕</div>
+            <div class="pc-comp-label">Errado</div>
+            <div class="pc-comp-text" style="${fontStyle}">${headline}</div>
+          </div>
+          <div class="pc-comp-divider"></div>
+          <div class="pc-comp-col pc-comp-certo">
+            <div class="pc-comp-icon">✓</div>
+            <div class="pc-comp-label">Certo</div>
+            <div class="pc-comp-text" style="${fontStyle}">${body || '…'}</div>
+          </div>
+        </div>
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'pergunta-resp') {
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.83)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-qa">
+        <div class="pc-qa-q-box" style="border-color:${tpl.accent}">
+          <div class="pc-qa-q-label" style="color:${tpl.accent}">PERGUNTA</div>
+          <div class="pc-qa-question" style="${fontStyle}">${headline}</div>
+        </div>
+        <div class="pc-qa-divider">
+          <div class="pc-qa-divider-line" style="background:${tpl.accent}"></div>
+          <div class="pc-qa-divider-dot" style="background:${tpl.accent}">R</div>
+          <div class="pc-qa-divider-line" style="background:${tpl.accent}"></div>
+        </div>
+        ${body ? `<div class="pc-qa-answer" style="${bodyFontStyle}">${body}</div>` : ''}
+        ${footerHtml}
+      </div>`;
+
+  } else if (layout === 'ranking') {
+    const rawLines = slide.body || '';
+    const items = rawLines.split('\n').map(l => l.trim()).filter(Boolean).slice(0, 4);
+    const bars = ['100%', '80%', '62%', '48%'];
+    const opas = [1, 0.75, 0.55, 0.40];
+    const itemsHtml = items.map((item, i) => `
+      <div class="pc-rank-item">
+        <div class="pc-rank-num" style="${fontStyle};color:${i===0?tpl.accent:'rgba(255,255,255,'+(opas[i])+')'};">${i+1}</div>
+        <div class="pc-rank-bar">
+          <div class="pc-rank-text" style="${bodyFontStyle};opacity:${opas[i]}">${escHtml(item)}</div>
+          <div class="pc-rank-track" style="width:${bars[i]};background:${i===0?tpl.accent:'rgba(255,255,255,0.18)'}"></div>
+        </div>
+      </div>`).join('');
+    card.innerHTML = `${bgHtml}
+      <div class="pc-overlay" style="background:rgba(0,0,0,0.83)"></div>
+      ${iconBgHtml}${watermarkHtml}
+      <div class="pc-layout-rank">
+        <div class="pc-rank-eyebrow" style="color:${tpl.accent}">🏆 RANKING</div>
+        <div class="pc-rank-headline" style="${fontStyle}">${headline}</div>
+        <div class="pc-rank-items">${itemsHtml}</div>
+        ${footerHtml}
+      </div>`;
   }
 }
 
