@@ -6,16 +6,24 @@
 
 function createEmptySlide() {
   return {
-    type:          'content',
-    layout:        'default',
-    imagePath:     null,
-    imageX:        0,
-    imageY:        0,
-    imageScale:    1,
-    headline:      '',
-    body:          '',
-    headlineFont:  'Playfair Display',
-    bodyFont:      'Inter',
+    type:             'content',
+    layout:           'default',
+    imagePath:        null,
+    imageX:           0,
+    imageY:           0,
+    imageScale:       1,
+    imageRotate:      0,
+    imageFlipH:       false,
+    imageFlipV:       false,
+    imageFilter:      'none',
+    imageBlur:        0,
+    imageBrightness:  100,
+    imageContrast:    100,
+    imageSaturation:  100,
+    headline:         '',
+    body:             '',
+    headlineFont:     'Playfair Display',
+    bodyFont:         'Inter',
   };
 }
 

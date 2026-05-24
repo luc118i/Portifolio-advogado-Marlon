@@ -15,7 +15,7 @@ async function uploadSlideImage(input, index) {
     renderSlidesForms();
     selectSlide(index);
   } catch (err) {
-    alert('Erro ao enviar imagem: ' + err.message);
+    toast('Erro ao enviar imagem: ' + err.message, 'error');
   }
 }
 
@@ -32,6 +32,6 @@ async function uploadCover(input) {
     document.getElementById('cover-upload-text').textContent = '✓ ' + data.path.split('/').pop();
     updatePreview();
   } catch (err) {
-    alert('Erro ao enviar capa: ' + err.message);
+    toast('Erro ao enviar capa: ' + err.message, 'error');
   }
 }

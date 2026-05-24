@@ -5,7 +5,7 @@
 // Chamado por publish.js após git push bem-sucedido
 // ═══════════════════════════════════════════════════════════════
 
-// ─── Ponto de entrada ─────────────────────────────────────────
+// ─── Ponto de entrada (após publicação) ───────────────────────
 // Retorna: { folder, saved[] } | { fileName, path } | null (se pasta não configurada)
 async function exportAfterPublish(post) {
   let cfg;
@@ -17,14 +17,62 @@ async function exportAfterPublish(post) {
   if (!cfg.output_folder) return null; // pasta não configurada — silencioso
 
   if (post.type === 'carousel') {
-    return exportCarouselImages(post);
+    return exportCarouselImages(post, '/api/export/images');
   } else {
     return exportArticleDocx(post);
   }
 }
 
+// ─── Exportar agora sem publicar (botão "Salvar localmente") ──
+async function exportLocalOnly() {
+  const title = document.getElementById('title')?.value.trim();
+  if (!title) { toast('Defina o título do post antes de exportar.', 'warning'); return; }
+
+  if (state.type === 'carousel' && state.slides.every(s => !s.headline)) {
+    toast('Adicione pelo menos um slide com headline.', 'warning'); return;
+  }
+
+  // Verifica se pasta está configurada
+  let cfg;
+  try { cfg = await fetch('/api/config').then(r => r.json()); } catch { cfg = {}; }
+  if (!cfg.output_folder) {
+    toast('Configure a pasta de exportação em Configurações → Exportação.', 'warning');
+    openConfigScreen();
+    return;
+  }
+
+  const btn = document.getElementById('btn-export-local');
+  if (btn) { btn.disabled = true; btn.textContent = 'Salvando…'; }
+
+  try {
+    const post = {
+      slug:  state.slug || generateSlug(title),
+      title,
+      type:  state.type,
+      slides: state.slides,
+    };
+
+    let result;
+    if (state.type === 'carousel') {
+      result = await exportCarouselImages(post, '/api/export/now');
+    } else {
+      result = await exportArticleDocx(post);
+    }
+
+    if (result?.folder) {
+      toast(`✓ ${result.saved.length} imagem(ns) salva(s) em:\n${result.folder}`, 'success', 5000);
+    } else if (result?.fileName) {
+      toast(`✓ Arquivo salvo: ${result.fileName}`, 'success', 5000);
+    }
+  } catch (err) {
+    toast('Erro ao exportar: ' + err.message, 'error');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Salvar localmente'; }
+  }
+}
+
 // ─── Carrossel: captura cada slide com html2canvas ────────────
-async function exportCarouselImages(post) {
+async function exportCarouselImages(post, apiUrl = '/api/export/images') {
   if (typeof html2canvas === 'undefined') {
     throw new Error('html2canvas não disponível');
   }
@@ -58,7 +106,7 @@ async function exportCarouselImages(post) {
   state.currentSlide = savedSlide;
   updatePreview();
 
-  const res  = await fetch('/api/export/images', {
+  const res  = await fetch(apiUrl, {
     method:  'POST',
     headers: { 'Content-Type': 'application/json' },
     body:    JSON.stringify({ slug: post.slug, images }),

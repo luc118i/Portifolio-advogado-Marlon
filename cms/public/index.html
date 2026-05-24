@@ -3,85 +3,243 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CMS — Dr. Marlon Inácio</title>
+  <title>Estúdio — Dr. Marlon Inácio</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;700&family=Crimson+Text:wght@400;700&family=EB+Garamond:wght@400;700&family=Inter:wght@400;500;600;700&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;700&family=Merriweather:wght@300;400;700&family=Playfair+Display:wght@400;700&family=PT+Serif:wght@400;700&family=Source+Serif+4:wght@400;700&family=Spectral:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Abril+Fatface&family=Albert+Sans:wght@400;600;700&family=Archivo+Black&family=Bebas+Neue&family=Bitter:wght@400;700&family=Bodoni+Moda:wght@400;700&family=Bricolage+Grotesque:wght@400;600;700&family=Cinzel:wght@400;700&family=Cormorant+Garamond:wght@400;700&family=Crimson+Text:wght@400;700&family=DM+Sans:wght@400;500;700&family=DM+Serif+Display:wght@400&family=EB+Garamond:wght@400;700&family=Epilogue:wght@400;600;700&family=Figtree:wght@400;600;700&family=Fraunces:wght@400;700&family=Instrument+Serif&family=Inter:wght@400;500;600;700&family=Josefin+Sans:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Lora:wght@400;700&family=Manrope:wght@400;600;700&family=Merriweather:wght@300;400;700&family=Outfit:wght@400;600&family=PT+Serif:wght@400;700&family=Playfair+Display:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&family=Raleway:wght@400;600&family=Source+Serif+4:wght@400;700&family=Space+Grotesk:wght@400;600;700&family=Spectral:wght@400;700&family=Syne:wght@400;700&family=Work+Sans:wght@400;600&family=Yeseva+One&family=Young+Serif&display=swap" rel="stylesheet" />
 </head>
 <body>
 
 <!-- ═══ HEADER ═══ -->
 <header class="header">
   <div class="header-left">
+    <button class="header-sidebar-toggle" onclick="toggleSidebar()" title="Menu">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+        <line x1="2" y1="4" x2="13" y2="4"/>
+        <line x1="2" y1="7.5" x2="13" y2="7.5"/>
+        <line x1="2" y1="11" x2="13" y2="11"/>
+      </svg>
+    </button>
     <img src="/project-assets/favicon.png" alt="Logo" class="header-logo" />
     <div>
       <div class="header-title">Estúdio de Publicações</div>
       <div class="header-sub">Dr. Marlon Inácio · OAB/DF 87.696</div>
     </div>
   </div>
-  <div style="display:flex;gap:8px;align-items:center">
-    <span id="ai-status-badge" class="ai-badge ai-badge-off">IA desativada</span>
-    <button class="btn-header" onclick="openConfigModal()">✦ Configurar IA</button>
-    <button class="btn-header" onclick="togglePostsList()">Ver posts</button>
+  <div class="header-actions">
+    <span id="ai-status-badge" class="ai-badge ai-badge-off ai-badge-compact">IA</span>
+    <button class="btn-header" onclick="openConfigScreen()">✦ Configurar IA</button>
+    <div style="width:1px;height:16px;background:var(--border);margin:0 2px"></div>
+    <button class="btn-header-icon" onclick="resetStudio()" title="Novo post">
+      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <line x1="6.5" y1="1" x2="6.5" y2="12"/>
+        <line x1="1" y1="6.5" x2="12" y2="6.5"/>
+      </svg>
+    </button>
   </div>
 </header>
 
 <!-- ═══ MODAIS ═══ -->
 
-<!-- Config IA + Exportação -->
+<!-- Config IA + Exportação (mantido oculto, substituído pela config-screen) -->
 <div id="config-modal" class="modal hidden">
   <div class="modal-box" style="max-width:480px">
     <div class="modal-header">
-      <span>✦ Configurações do estúdio</span>
+      <span>✦ Configurações</span>
       <button onclick="document.getElementById('config-modal').classList.add('hidden')">✕</button>
-    </div>
-    <div style="padding:20px;display:flex;flex-direction:column;gap:20px">
-
-      <!-- Seção: IA -->
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">
-          Assistente IA
-        </div>
-        <p style="font-size:0.78rem;color:#888;line-height:1.6">
-          Cole sua chave da <strong style="color:#f0f0f0">Groq</strong> para ativar geração de texto.
-          É <strong style="color:#C9A96E">gratuita</strong> e fica salva só na sua máquina.
-        </p>
-        <a href="https://console.groq.com/keys" target="_blank"
-           style="font-size:0.72rem;color:#C9A96E;text-decoration:none">
-          → Obter chave gratuita em console.groq.com/keys
-        </a>
-        <input id="openai-key-input" type="password" class="field-input"
-               placeholder="gsk_..." autocomplete="off" />
-      </div>
-
-      <!-- Separador -->
-      <div style="height:1px;background:var(--border)"></div>
-
-      <!-- Seção: Exportação -->
-      <div style="display:flex;flex-direction:column;gap:10px">
-        <div style="font-size:0.68rem;font-weight:700;color:var(--muted);letter-spacing:0.1em;text-transform:uppercase">
-          Pasta de exportação
-        </div>
-        <p style="font-size:0.78rem;color:#888;line-height:1.6">
-          Ao publicar, os arquivos são salvos automaticamente aqui:<br>
-          <span style="color:#f0f0f0">Carrossel</span> → imagens <code style="color:var(--accent)">.png</code> em subpasta com o nome do post<br>
-          <span style="color:#f0f0f0">Artigo</span> → documento <code style="color:var(--accent)">.docx</code> pronto para revisão
-        </p>
-        <div style="display:flex;gap:8px;align-items:center">
-          <input id="output-folder-input" type="text" class="field-input"
-                 style="flex:1"
-                 placeholder="Ex: C:\Users\Marlon\Desktop\Posts Sociais" />
-          <button class="btn-header" onclick="openFolderInExplorer()"
-                  title="Abrir pasta no Explorer">📂</button>
-        </div>
-        <div class="field-hint">A pasta é criada automaticamente se não existir.</div>
-      </div>
-
-      <button class="btn-primary" onclick="saveApiKey()">Salvar configurações</button>
-      <div id="config-result" class="result-msg hidden"></div>
     </div>
   </div>
 </div>
+
+<!-- ═══ TELA DE CONFIGURAÇÕES ═══ -->
+<div id="config-screen" class="config-screen hidden">
+
+  <!-- Header -->
+  <div class="config-screen-header">
+    <button class="posts-back-btn" onclick="closeConfigScreen()">← Voltar</button>
+    <h2 class="config-screen-title">Configurações</h2>
+    <span id="ai-status-badge-config" class="ai-badge ai-badge-off ai-badge-compact">IA</span>
+  </div>
+
+  <!-- 2-pane layout -->
+  <div class="config-layout">
+
+    <!-- ── Nav esquerda ── -->
+    <nav class="config-nav">
+      <button class="config-nav-item active" data-cs="ai"
+              onclick="switchConfigSection('ai')">
+        <span class="config-nav-icon">✦</span>
+        <span class="config-nav-label">Assistente de IA</span>
+        <span class="config-nav-badge" id="cnb-ai"></span>
+      </button>
+      <button class="config-nav-item" data-cs="export"
+              onclick="switchConfigSection('export')">
+        <span class="config-nav-icon">📂</span>
+        <span class="config-nav-label">Exportação</span>
+        <span class="config-nav-badge" id="cnb-export"></span>
+      </button>
+      <button class="config-nav-item" data-cs="neon"
+              onclick="switchConfigSection('neon')">
+        <span class="config-nav-icon">⚡</span>
+        <span class="config-nav-label">Banco de dados</span>
+        <span class="config-nav-badge" id="cnb-neon"></span>
+      </button>
+      <button class="config-nav-item" data-cs="ig"
+              onclick="switchConfigSection('ig')">
+        <span class="config-nav-icon">📷</span>
+        <span class="config-nav-label">Instagram</span>
+        <span class="config-nav-badge" id="cnb-ig"></span>
+      </button>
+    </nav>
+
+    <!-- ── Conteúdo direito ── -->
+    <div class="config-content">
+
+      <!-- ── SEÇÃO: Assistente de IA ── -->
+      <div class="config-section active" id="cs-ai">
+        <div class="cs-eyebrow">Groq · Gratuito</div>
+        <h3 class="cs-title">Assistente de IA</h3>
+        <p class="cs-desc">
+          A IA gera headlines, textos dos slides e sugestões de pauta automaticamente.
+          Use a <strong>Groq</strong> — API gratuita, sem cartão, resposta em milissegundos.
+        </p>
+
+        <div class="cs-field">
+          <label class="cs-label">Chave de API</label>
+          <p class="cs-hint">Obtenha em <a href="https://console.groq.com/keys" target="_blank">console.groq.com/keys</a> e cole abaixo. Fica salva só nesta máquina.</p>
+          <input id="openai-key-input" type="password" class="field-input cs-input"
+                 placeholder="gsk_..." autocomplete="off" />
+        </div>
+
+        <div class="cs-save-row">
+          <button class="btn-primary cs-save-btn" onclick="saveApiKey()">Salvar</button>
+          <span class="cs-status" id="ai-status-badge-config-inline"></span>
+        </div>
+      </div>
+
+      <!-- ── SEÇÃO: Exportação ── -->
+      <div class="config-section" id="cs-export">
+        <div class="cs-eyebrow">Arquivos locais</div>
+        <h3 class="cs-title">Pasta de exportação</h3>
+        <p class="cs-desc">
+          Ao publicar um post, os arquivos são salvos automaticamente na pasta escolhida —
+          sem precisar arrastar arquivos depois.
+        </p>
+
+        <div class="cs-info-grid">
+          <div class="cs-info-item">
+            <span class="cs-info-icon">⧉</span>
+            <div>
+              <div class="cs-info-label">Carrossel</div>
+              <div class="cs-info-val">Imagens <code>.png</code> em subpasta com o nome do post</div>
+            </div>
+          </div>
+          <div class="cs-info-item">
+            <span class="cs-info-icon">≡</span>
+            <div>
+              <div class="cs-info-label">Artigo</div>
+              <div class="cs-info-val">Documento <code>.docx</code> pronto para revisão</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="cs-field">
+          <label class="cs-label">Caminho da pasta</label>
+          <p class="cs-hint">A pasta é criada automaticamente se não existir.</p>
+          <div class="cs-row">
+            <input id="output-folder-input" type="text" class="field-input cs-input"
+                   placeholder="Ex: C:\Users\Marlon\Desktop\Posts Sociais" />
+            <button class="cs-icon-btn" onclick="openFolderInExplorer()" title="Abrir no Explorer">📂</button>
+          </div>
+        </div>
+
+        <div class="cs-save-row">
+          <button class="btn-primary cs-save-btn" onclick="saveApiKey()">Salvar</button>
+        </div>
+      </div>
+
+      <!-- ── SEÇÃO: Banco Neon ── -->
+      <div class="config-section" id="cs-neon">
+        <div class="cs-eyebrow">PostgreSQL · Neon</div>
+        <h3 class="cs-title">Banco de dados</h3>
+        <p class="cs-desc">
+          Os posts publicados ficam armazenados no Neon — banco PostgreSQL em nuvem,
+          gratuito e sem suspensão por inatividade. Execute <code>cms/db/schema.sql</code>
+          no SQL Editor antes de usar.
+        </p>
+
+        <a href="https://console.neon.tech" target="_blank" class="cs-link-block">
+          <span>→ Criar projeto gratuito em console.neon.tech</span>
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9L9 2M9 2H4M9 2v5"/></svg>
+        </a>
+
+        <div class="cs-field">
+          <label class="cs-label">Connection String</label>
+          <p class="cs-hint">Neon Dashboard → Connection Details → <strong>Pooled connection</strong>.</p>
+          <div class="cs-row">
+            <input id="database-url-input" type="password" class="field-input cs-input"
+                   placeholder="postgresql://user:pass@ep-xxx.neon.tech/dbname?sslmode=require"
+                   autocomplete="off" />
+            <button class="cs-icon-btn" id="db-test-btn" onclick="testDbConnection()" title="Testar conexão">⚡</button>
+          </div>
+          <div id="db-test-result" class="cs-test-result" style="display:none"></div>
+        </div>
+
+        <div class="cs-save-row">
+          <button class="btn-primary cs-save-btn" onclick="saveApiKey()">Salvar</button>
+        </div>
+      </div>
+
+      <!-- ── SEÇÃO: Instagram ── -->
+      <div class="config-section" id="cs-ig">
+        <div class="cs-eyebrow">Meta Graph API</div>
+        <h3 class="cs-title">Instagram</h3>
+        <p class="cs-desc">
+          Exibe os posts publicados do perfil Instagram do cliente dentro do CMS.
+          Requer conta <strong>Business</strong> ou <strong>Creator</strong>.
+        </p>
+
+        <a href="https://developers.facebook.com/tools/explorer/" target="_blank" class="cs-link-block">
+          <span>→ Obter token no Graph API Explorer (scope: instagram_basic)</span>
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 9L9 2M9 2H4M9 2v5"/></svg>
+        </a>
+
+        <div class="cs-field">
+          <label class="cs-label">ID do usuário</label>
+          <input id="ig-user-id-input" type="text" class="field-input cs-input"
+                 placeholder="ID numérico (ex: 17841400000000000)" autocomplete="off" />
+        </div>
+
+        <div class="cs-field">
+          <label class="cs-label">Access Token</label>
+          <p class="cs-hint">Use um Long-lived token (válido por 60 dias). Renove na aba Posts → Instagram.</p>
+          <input id="ig-token-input" type="password" class="field-input cs-input"
+                 placeholder="EAAxxxxxxx..." autocomplete="off" />
+        </div>
+
+        <div class="cs-field">
+          <label class="cs-label">App ID e App Secret <span style="color:var(--muted);font-weight:400">(opcional)</span></label>
+          <p class="cs-hint">Necessários apenas para converter token de curta duração em long-lived.</p>
+          <div class="cs-row">
+            <input id="ig-app-id-input" type="text" class="field-input cs-input"
+                   placeholder="App ID" autocomplete="off" />
+            <input id="ig-app-secret-input" type="password" class="field-input cs-input"
+                   placeholder="App Secret" autocomplete="off" />
+          </div>
+        </div>
+
+        <div class="cs-save-row">
+          <button class="btn-primary cs-save-btn" onclick="saveApiKey()">Salvar</button>
+        </div>
+      </div>
+
+    </div><!-- /.config-content -->
+  </div><!-- /.config-layout -->
+
+  <!-- Result feedback (usado pelo saveApiKey) -->
+  <div id="config-result" class="result-msg hidden" style="display:none"></div>
+
+</div><!-- /#config-screen -->
 
 <!-- Sugerir ideias -->
 <div id="ideas-modal" class="modal hidden">
@@ -91,255 +249,855 @@
       <button onclick="document.getElementById('ideas-modal').classList.add('hidden')">✕</button>
     </div>
     <div style="padding:20px;display:flex;flex-direction:column;gap:12px">
-      <p style="font-size:0.75rem;color:#888">Categoria: <strong id="ideas-category" style="color:#C9A96E"></strong></p>
-      <div id="ideas-content" style="font-size:0.82rem;color:#f0f0f0;line-height:1.8;white-space:pre-line;min-height:80px">Gerando ideias...</div>
+      <p style="font-size:var(--text-sm);color:var(--muted)">Categoria: <strong id="ideas-category" style="color:var(--accent)"></strong></p>
+      <div id="ideas-content" style="font-size:var(--text-sm);color:var(--text);line-height:1.8;white-space:pre-line;min-height:80px">Gerando ideias...</div>
     </div>
   </div>
 </div>
 
-<!-- Lista de posts -->
-<div id="posts-modal" class="modal hidden">
-  <div class="modal-box">
+<!-- Editor avançado de imagem -->
+<div id="image-edit-modal" class="modal hidden">
+  <div class="modal-box img-edit-modal-box">
     <div class="modal-header">
-      <span>Posts publicados</span>
-      <button onclick="togglePostsList()">✕</button>
-    </div>
-    <div id="posts-list" class="posts-list">Carregando...</div>
-  </div>
-</div>
-
-<!-- ═══ MAIN ═══ -->
-<main class="main">
-
-  <!-- ── FORMULÁRIO (wizard) ── -->
-  <section class="form-panel">
-
-    <!-- ─ STEP 1 · TIPO ─ -->
-    <div class="step active" id="step-1">
-      <div class="step-head" onclick="activateStep(1)">
-        <div class="step-num">01</div>
-        <div class="step-meta">
-          <div class="step-label">Tipo de publicação</div>
-          <div class="step-chip" id="chip-1"></div>
-        </div>
-      </div>
-      <div class="step-body" id="body-1">
-        <div class="type-grid">
-          <button class="type-card active" id="card-carousel" onclick="setType('carousel')">
-            <div class="type-icon">⧉</div>
-            <div class="type-name">Carrossel</div>
-            <div class="type-desc">Múltiplos slides</div>
-          </button>
-          <button class="type-card" id="card-article" onclick="setType('article')">
-            <div class="type-icon">≡</div>
-            <div class="type-name">Artigo</div>
-            <div class="type-desc">Texto completo</div>
-          </button>
-        </div>
-        <button class="btn-next" onclick="nextStep()">Continuar →</button>
-      </div>
+      <span>Editar imagem</span>
+      <button onclick="closeImageModal(false)">✕</button>
     </div>
 
-    <!-- ─ STEP 2 · CATEGORIA ─ -->
-    <div class="step locked" id="step-2">
-      <div class="step-head" onclick="activateStep(2)">
-        <div class="step-num">02</div>
-        <div class="step-meta">
-          <div class="step-label">Categoria</div>
-          <div class="step-chip" id="chip-2"></div>
-        </div>
-      </div>
-      <div class="step-body" id="body-2">
-        <div class="cat-grid">
-          <button class="cat-card active" data-cat="Direito Penal" style="--accent:#8B1A1A" onclick="selectCategory(this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-1-2H5v17h2v-7h5.5l1 2H20V6h-6z"/></svg>
-            <span>Direito Penal</span>
-          </button>
-          <button class="cat-card" data-cat="Direito Administrativo" style="--accent:#1A3A8B" onclick="selectCategory(this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 22V9l9-7 9 7v13"/><path d="M9 22V12h6v10"/></svg>
-            <span>Direito Administrativo</span>
-          </button>
-          <button class="cat-card" data-cat="Direito Civil" style="--accent:#1A6B2E" onclick="selectCategory(this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3L3 7l9 4 9-4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>
-            <span>Direito Civil</span>
-          </button>
-          <button class="cat-card" data-cat="Consultoria Jurídica" style="--accent:#C9A96E" onclick="selectCategory(this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-            <span>Consultoria Jurídica</span>
-          </button>
-          <button class="cat-card" data-cat="Tecnologia e IA Jurídica" style="--accent:#5A1A9B" onclick="selectCategory(this)">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="6"/><rect x="9" y="16" width="6" height="6"/><rect x="2" y="9" width="6" height="6"/><rect x="16" y="9" width="6" height="6"/><line x1="9" y1="5" x2="2" y2="5"/><line x1="22" y1="5" x2="15" y2="5"/><line x1="5" y1="9" x2="5" y2="2"/><line x1="5" y1="22" x2="5" y2="15"/><line x1="9" y1="19" x2="2" y2="19"/><line x1="22" y1="19" x2="15" y2="19"/><line x1="19" y1="9" x2="19" y2="2"/><line x1="19" y1="22" x2="19" y2="15"/></svg>
-            <span>Tecnologia e IA</span>
-          </button>
-        </div>
-        <button class="btn-next" onclick="nextStep()">Continuar →</button>
-      </div>
-    </div>
+    <div class="img-edit-layout">
 
-    <!-- ─ STEP 3 · TÍTULO ─ -->
-    <div class="step locked" id="step-3">
-      <div class="step-head" onclick="activateStep(3)">
-        <div class="step-num">03</div>
-        <div class="step-meta">
-          <div class="step-label">Título</div>
-          <div class="step-chip" id="chip-3"></div>
+      <!-- Preview -->
+      <div class="img-edit-preview-col">
+        <div class="img-edit-preview-frame">
+          <img id="img-modal-preview-img" src="" alt="Preview" />
         </div>
+        <button class="img-edit-reset-btn" onclick="resetImgAdjustments()">↺ Restaurar padrões</button>
       </div>
-      <div class="step-body" id="body-3">
-        <div class="field-group">
-          <label class="field-label">Título do post</label>
-          <input id="title" type="text" class="field-input"
-                 placeholder="Ex: O que fazer se a polícia bater na sua porta?"
-                 oninput="onTitleInput()" />
-          <div class="field-hint">Slug: <span id="slug-preview" class="slug-text">—</span></div>
-        </div>
-        <div class="field-group">
-          <label class="field-label">Tempo de leitura</label>
-          <input id="readTime" type="text" class="field-input field-sm"
-                 placeholder="Ex: 3 min" value="3 min" oninput="updatePreview()" />
-        </div>
-        <button class="btn-next" onclick="nextStep()">Continuar →</button>
-      </div>
-    </div>
 
-    <!-- ─ STEP 4 · APARÊNCIA ─ -->
-    <div class="step locked" id="step-4">
-      <div class="step-head" onclick="activateStep(4)">
-        <div class="step-num">04</div>
-        <div class="step-meta">
-          <div class="step-label">Aparência</div>
-          <div class="step-chip" id="chip-4"></div>
+      <!-- Controls -->
+      <div class="img-edit-controls-col">
+
+        <!-- Filtros preset -->
+        <div class="img-edit-section">
+          <div class="img-edit-section-title">Filtros</div>
+          <div class="img-filter-grid" id="img-filter-grid"></div>
         </div>
-      </div>
-      <div class="step-body" id="body-4">
-        <div class="field-group">
-          <label class="field-label">Posição do logo</label>
-          <div class="logo-pos-group">
-            <label class="logo-pos-opt">
-              <input type="radio" name="logoPos" value="footer" checked onchange="updatePreview()" />
-              <span class="logo-pos-label"><span class="logo-pos-icon">⊟</span>Rodapé de todos os slides</span>
-            </label>
-            <label class="logo-pos-opt">
-              <input type="radio" name="logoPos" value="watermark" onchange="updatePreview()" />
-              <span class="logo-pos-label"><span class="logo-pos-icon">◱</span>Marca d'água (canto)</span>
-            </label>
-            <label class="logo-pos-opt">
-              <input type="radio" name="logoPos" value="cta" onchange="updatePreview()" />
-              <span class="logo-pos-label"><span class="logo-pos-icon">◎</span>Apenas no slide final</span>
-            </label>
+
+        <div class="img-edit-divider"></div>
+
+        <!-- Desfoque -->
+        <div class="img-edit-section">
+          <div class="img-edit-section-title">Desfoque</div>
+          <div class="img-edit-slider-row">
+            <span class="img-edit-slider-label">Blur</span>
+            <input type="range" id="img-modal-blur" class="img-edit-slider"
+                   min="0" max="20" step="0.5" value="0"
+                   oninput="onImgBlurChange(this.value)" />
+            <span class="img-edit-value" id="img-modal-blur-label">0px</span>
           </div>
         </div>
-        <button class="btn-next" onclick="nextStep()">Continuar →</button>
-      </div>
-    </div>
 
-    <!-- ─ STEP 5 · CONTEÚDO ─ -->
-    <div class="step locked" id="step-5">
-      <div class="step-head" onclick="activateStep(5)">
-        <div class="step-num">05</div>
-        <div class="step-meta">
-          <div class="step-label">Conteúdo</div>
-          <div class="step-chip" id="chip-5"></div>
-        </div>
-      </div>
-      <div class="step-body" id="body-5">
+        <div class="img-edit-divider"></div>
 
-        <!-- IA — sugerir ideias -->
-        <button class="btn-ai-ideas" onclick="suggestIdeas()">✦ Sugerir ideias de post com IA</button>
-
-        <!-- CARROSSEL -->
-        <div id="slides-section">
-          <div class="slides-header">
-            <span class="field-label" style="margin:0">Slides</span>
-            <button class="btn-ghost" onclick="addSlide()">+ Slide</button>
-          </div>
-          <div id="slides-container"></div>
-          <button class="btn-add-cta" onclick="addCtaSlide()">+ Slide de CTA final</button>
-        </div>
-
-        <!-- ARTIGO -->
-        <div id="article-section" class="hidden">
-          <div class="field-group">
-            <label class="field-label">Imagem de capa</label>
-            <div class="upload-area" onclick="document.getElementById('cover-file').click()">
-              <span class="upload-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-                  <circle cx="8.5" cy="10" r="1.5"></circle>
-                  <path d="M21 15l-5-5L5 19"></path>
-                  <path d="M12 3v7"></path>
-                  <path d="M9 6l3-3 3 3"></path>
-                </svg>
-              </span>
-              <span class="upload-copy">
-                <span class="upload-title" id="cover-upload-text">Enviar imagem de capa</span>
-                <span class="upload-subtitle">PNG ou JPG para o artigo</span>
-              </span>
-              <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
+        <!-- Ajustes manuais -->
+        <div class="img-edit-section">
+          <div class="img-edit-section-title">Ajustes</div>
+          <div class="img-edit-slider-group">
+            <div class="img-edit-slider-row">
+              <span class="img-edit-slider-label">Brilho</span>
+              <input type="range" id="img-modal-brightness" class="img-edit-slider"
+                     min="0" max="200" step="1" value="100"
+                     oninput="onImgAdjust('imageBrightness',this.value,'%')" />
+              <span class="img-edit-value" id="img-modal-brightness-label">100%</span>
+            </div>
+            <div class="img-edit-slider-row">
+              <span class="img-edit-slider-label">Contraste</span>
+              <input type="range" id="img-modal-contrast" class="img-edit-slider"
+                     min="0" max="200" step="1" value="100"
+                     oninput="onImgAdjust('imageContrast',this.value,'%')" />
+              <span class="img-edit-value" id="img-modal-contrast-label">100%</span>
+            </div>
+            <div class="img-edit-slider-row">
+              <span class="img-edit-slider-label">Saturação</span>
+              <input type="range" id="img-modal-saturation" class="img-edit-slider"
+                     min="0" max="200" step="1" value="100"
+                     oninput="onImgAdjust('imageSaturation',this.value,'%')" />
+              <span class="img-edit-value" id="img-modal-saturation-label">100%</span>
             </div>
           </div>
-          <div class="field-group">
-            <label class="field-label">Resumo</label>
-            <textarea id="excerpt" class="field-textarea" rows="2"
-                      placeholder="Uma frase que desperta curiosidade..." oninput="updatePreview()"></textarea>
+        </div>
+
+        <div class="img-edit-divider"></div>
+
+        <!-- Transformar -->
+        <div class="img-edit-section">
+          <div class="img-edit-section-title">Transformar</div>
+          <div class="img-edit-slider-row" style="margin-bottom:var(--space-4)">
+            <span class="img-edit-slider-label">Rotação</span>
+            <input type="range" id="img-modal-rotate" class="img-edit-slider"
+                   min="-180" max="180" step="1" value="0"
+                   oninput="onImgAdjust('imageRotate',this.value,'°')" />
+            <span class="img-edit-value" id="img-modal-rotate-label">0°</span>
           </div>
-          <div class="field-group">
-            <label class="field-label">Conteúdo completo</label>
-            <textarea id="content" class="field-textarea" rows="8"
-                      placeholder="Texto completo do artigo..." oninput="updatePreview()"></textarea>
+          <div class="img-edit-flip-row">
+            <button class="img-edit-flip-btn" onclick="rotateImgStep(-90)">↺ −90°</button>
+            <button class="img-edit-flip-btn" onclick="rotateImgStep(90)">↻ +90°</button>
+            <button class="img-edit-flip-btn" id="img-flip-h-btn" onclick="flipImg('h')">⇔ Horizontal</button>
+            <button class="img-edit-flip-btn" id="img-flip-v-btn" onclick="flipImg('v')">⇕ Vertical</button>
           </div>
         </div>
 
       </div>
     </div>
 
-    <!-- ─ PUBLICAR ─ -->
-    <div class="publish-area">
-      <button id="publish-btn" class="btn-primary btn-publish-full" onclick="publish()">
-        <span id="publish-text">Publicar post</span>
-      </button>
-      <div id="publish-result" class="result-msg hidden"></div>
+    <div class="img-edit-footer">
+      <button class="btn-ghost" onclick="closeImageModal(false)">Cancelar</button>
+      <button class="btn-primary" onclick="applyImageModal()">Aplicar</button>
     </div>
-
-    <!-- URL gerada -->
-    <div class="preview-url-box hidden" id="preview-url-box">
-      <div class="preview-url-label">Link gerado</div>
-      <div class="preview-url-row">
-        <span id="preview-url-text" class="preview-url-text"></span>
-        <button onclick="copyUrl()" class="btn-copy">Copiar</button>
-      </div>
-      <a id="whatsapp-share-btn" href="#" target="_blank" class="btn-whatsapp-share">Compartilhar no WhatsApp</a>
-    </div>
-
-  </section>
-
-  <!-- ── PREVIEW ── -->
-  <section class="preview-panel">
-    <div class="preview-header">
-      <span class="preview-label">Preview</span>
-      <span class="preview-nav">
-        <button onclick="prevSlide()" class="nav-arrow">‹</button>
-        <span id="slide-counter" class="slide-counter">1 / 1</span>
-        <button onclick="nextSlide()" class="nav-arrow">›</button>
-      </span>
-    </div>
-    <div class="preview-phone">
-      <div id="preview-card" class="preview-card"></div>
-      <div id="preview-dots" class="preview-dots"></div>
-    </div>
-  </section>
-
-</main>
-
-<!-- Font picker popover (shared) -->
-<div id="font-picker" class="font-picker hidden">
-  <div class="font-picker-inner" id="font-picker-inner"></div>
+  </div>
 </div>
 
-<!-- html2canvas (servido localmente, sem CDN) -->
+<!-- Assets -->
+<div id="assets-modal" class="modal hidden">
+  <div class="modal-box" style="max-width:560px">
+    <div class="modal-header">
+      <span>Assets — Imagens dos slides</span>
+      <button onclick="closeAssetsPanel()">✕</button>
+    </div>
+    <div style="padding:var(--space-7)">
+      <p id="assets-empty" class="assets-empty hidden">
+        Nenhuma imagem enviada ainda. Adicione imagens nos slides no Passo 5.
+      </p>
+      <div id="assets-grid" class="assets-grid hidden"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Templates -->
+<div id="templates-modal" class="modal hidden">
+  <div class="modal-box" style="max-width:580px">
+    <div class="modal-header">
+      <span>Templates prontos</span>
+      <button onclick="closeTemplatesPanel()">✕</button>
+    </div>
+    <div style="padding:var(--space-7);display:flex;flex-direction:column;gap:var(--space-6)">
+      <p style="font-size:var(--text-sm);color:var(--muted);line-height:1.6">
+        Escolha um template para começar rapidamente. O conteúdo pode ser editado depois.
+      </p>
+      <div class="templates-grid" id="templates-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de configuração de texto e fonte -->
+<div id="text-modal" class="modal hidden">
+  <div class="modal-box text-modal-box">
+    <div class="modal-header">
+      <span id="text-modal-title">Editar texto</span>
+      <button onclick="closeTextModal()">✕</button>
+    </div>
+    <div class="text-modal-body">
+      <div>
+        <div class="text-modal-font-header">
+          <div class="font-tab-bar">
+            <button class="font-tab active" data-cat="serif"    onclick="switchFontCategory('serif')">Serif</button>
+            <button class="font-tab"         data-cat="sans"    onclick="switchFontCategory('sans')">Sans-serif</button>
+            <button class="font-tab"         data-cat="display" onclick="switchFontCategory('display')">Impact</button>
+            <button class="font-tab font-tab-system hidden" id="tm-tab-system" data-cat="local" onclick="switchFontCategory('local')">Sistema</button>
+          </div>
+          <div class="tm-search-wrap">
+            <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="tm-search-icon">
+              <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/>
+            </svg>
+            <input type="text" class="tm-search-input" id="tm-search-input"
+                   placeholder="Buscar fonte…" oninput="_tmFilter(this.value)"
+                   autocomplete="off" spellcheck="false">
+          </div>
+        </div>
+        <div class="font-sort-bar font-sort-bar--modal hidden" id="font-sort-bar-modal">
+          <span class="font-sort-label">Ordenar</span>
+          <button class="font-sort-chip active" data-mode="az"   onclick="sortLocalFonts('az')">A → Z</button>
+          <button class="font-sort-chip"        data-mode="za"   onclick="sortLocalFonts('za')">Z → A</button>
+          <button class="font-sort-chip"        data-mode="orig" onclick="sortLocalFonts('orig')">Padrão do sistema</button>
+        </div>
+        <div class="font-grid" id="text-modal-font-grid"></div>
+        <div class="tm-system-bar" id="tm-system-bar">
+          <button class="tm-system-btn" onclick="loadSystemFonts()">
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="3" width="12" height="10" rx="1.5"/><path d="M5 7h6M5 10h4"/>
+            </svg>
+            Carregar fontes do sistema
+          </button>
+        </div>
+      </div>
+      <div>
+        <div class="text-modal-section-title">Texto</div>
+        <div id="text-modal-field-wrap"></div>
+        <div class="text-modal-ai-row">
+          <button id="text-modal-ai-gen" class="btn-ai-inline">✦ Gerar com IA</button>
+          <button id="text-modal-ai-humanize" class="btn-humanize">◈ Humanizar</button>
+        </div>
+      </div>
+    </div>
+    <div class="text-modal-footer">
+      <button class="btn-ghost" onclick="closeTextModal()">Cancelar</button>
+      <button class="btn-primary" onclick="applyTextModal()">Aplicar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TELA EXCLUSIVA DE POSTS ═══ -->
+<div id="posts-screen" class="posts-screen hidden">
+
+  <!-- Header -->
+  <div class="posts-screen-header">
+    <button class="posts-back-btn" onclick="closePostsScreen()">← Voltar</button>
+    <h2 class="posts-screen-title">Posts publicados</h2>
+    <div style="display:flex;gap:8px;align-items:center">
+      <button class="btn-secondary btn-export-all" onclick="exportAllPosts()" title="Exportar todos os carrosseis como imagens PNG">
+        📦 Exportar todos
+      </button>
+      <button class="btn-secondary" onclick="loadPostsList()" style="font-size:var(--text-xs)">↻ Atualizar</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="posts-tabs posts-screen-tabs">
+    <button class="posts-tab active" id="tab-cms" onclick="switchPostsTab('cms')">✦ CMS</button>
+    <button class="posts-tab" id="tab-ig" onclick="switchPostsTab('ig')">
+      📷 Instagram <span id="ig-status-badge" class="ig-badge"></span>
+    </button>
+  </div>
+
+  <!-- Painel CMS -->
+  <div id="panel-cms" class="posts-panel posts-screen-panel">
+    <div id="posts-list" class="posts-cards-grid">
+      <p class="posts-loading">Carregando…</p>
+    </div>
+  </div>
+
+  <!-- Painel Instagram -->
+  <div id="panel-ig" class="posts-panel posts-screen-panel hidden">
+    <div style="display:flex;justify-content:flex-end;margin-bottom:16px">
+      <button class="btn-secondary" onclick="_igLoaded=false;loadIgPosts()" style="font-size:var(--text-xs)">↻ Atualizar</button>
+    </div>
+    <div id="ig-posts-list" class="ig-grid">Clique em "Instagram" para carregar.</div>
+  </div>
+</div>
+
+<!-- Popover de compartilhamento -->
+<div id="share-popover" class="share-popover hidden" onclick="if(event.target===this)closeSharePopover()">
+  <div class="share-popover-inner">
+    <div class="share-popover-header">
+      <span>Compartilhar post</span>
+      <button onclick="closeSharePopover()">✕</button>
+    </div>
+    <div class="share-popover-body">
+      <a id="share-wa-btn" href="#" target="_blank" rel="noreferrer" class="share-option share-wa">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+        </svg>
+        WhatsApp
+      </a>
+      <a id="share-ig-btn" href="#" target="_blank" rel="noreferrer" class="share-option share-ig">
+        📷 Ver no Instagram
+      </a>
+      <button onclick="copyShareUrl()" id="share-copy-btn" class="share-option">
+        🔗 Copiar link
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STUDIO LAYOUT ═══ -->
+<div class="studio-layout" id="studio-layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar" id="sidebar">
+    <nav class="sidebar-nav">
+
+      <div class="sidebar-section-label">Criar</div>
+
+      <button class="sidebar-item active" data-nav="editor" data-tip="Editor" aria-label="Editor"
+              onclick="closeDashboard(); setNavActive('editor')"  >
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11.5 2.5l2 2L5 13l-2.5.5.5-2.5L11.5 2.5z"/>
+        </svg>
+        <span class="sidebar-label">Editor</span>
+      </button>
+
+      <button class="sidebar-item" data-nav="posts" data-tip="Posts" aria-label="Posts"
+              onclick="closeDashboard(); setNavActive('posts'); openPostsScreen()">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <rect x="2" y="2" width="12" height="12" rx="1.5"/>
+          <line x1="5" y1="6" x2="11" y2="6"/>
+          <line x1="5" y1="8.5" x2="11" y2="8.5"/>
+          <line x1="5" y1="11" x2="8" y2="11"/>
+        </svg>
+        <span class="sidebar-label">Posts</span>
+      </button>
+
+      <div class="sidebar-section-label">Biblioteca</div>
+
+      <button class="sidebar-item" data-nav="assets" data-tip="Assets" aria-label="Assets"
+              onclick="openAssetsPanel()">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="5.5" height="5.5" rx="1"/>
+          <rect x="8.5" y="2" width="5.5" height="5.5" rx="1"/>
+          <rect x="2" y="8.5" width="5.5" height="5.5" rx="1"/>
+          <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1"/>
+        </svg>
+        <span class="sidebar-label">Assets</span>
+      </button>
+
+      <button class="sidebar-item" data-nav="templates" data-tip="Templates" aria-label="Templates"
+              onclick="openTemplatesPanel()">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="12" height="4" rx="1"/>
+          <rect x="2" y="9" width="5" height="5" rx="1"/>
+          <rect x="9" y="9" width="5" height="5" rx="1"/>
+        </svg>
+        <span class="sidebar-label">Templates</span>
+      </button>
+
+      <button class="sidebar-item" data-nav="branding" data-tip="Aparência" aria-label="Aparência"
+              onclick="setNavActive('branding');activateStep(4)">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="8" r="6"/>
+          <circle cx="8" cy="8" r="2"/>
+          <line x1="8" y1="2" x2="8" y2="6"/>
+          <line x1="8" y1="10" x2="8" y2="14"/>
+          <line x1="2" y1="8" x2="6" y2="8"/>
+          <line x1="10" y1="8" x2="14" y2="8"/>
+        </svg>
+        <span class="sidebar-label">Branding</span>
+      </button>
+
+    </nav>
+
+    <div class="sidebar-footer">
+      <button class="sidebar-item" data-nav="config" data-tip="Configurações" aria-label="Configurações"
+              onclick="setNavActive('config'); openConfigScreen()">
+        <svg class="sidebar-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="8" cy="8" r="2"/>
+          <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.2 3.2l1.4 1.4M11.4 11.4l1.4 1.4M3.2 12.8l1.4-1.4M11.4 4.6l1.4-1.4"/>
+        </svg>
+        <span class="sidebar-label">Configurações</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ═══ DASHBOARD HOME ═══ -->
+  <div id="dashboard-home">
+
+    <!-- ── Centro: calendário + boas-vindas ── -->
+    <div class="dash-center">
+
+      <!-- Hero -->
+      <div class="dash-hero">
+
+        <!-- Coluna: calendário + faixa da semana -->
+        <div class="dash-cal-col">
+
+          <div class="dash-cal">
+            <div class="dash-cal-header" id="dash-weekday">SEGUNDA-FEIRA</div>
+            <div class="dash-cal-body">
+              <div class="dash-cal-day" id="dash-day">23</div>
+              <div class="dash-cal-divider"></div>
+              <div class="dash-cal-month" id="dash-month">MAIO · 2026</div>
+            </div>
+          </div>
+
+          <!-- Faixa da semana — fora do card, abaixo -->
+          <div class="dash-week-bar" id="dash-week-strip"></div>
+
+        </div>
+
+        <!-- Saudação (visível por padrão) -->
+        <div class="dash-greeting" id="dash-greeting">
+          <div class="dash-greeting-time" id="dash-greeting-time">Bom dia</div>
+          <div class="dash-greeting-name">Dr. Marlon,<br>pronto para publicar?</div>
+          <div class="dash-greeting-sub">
+            Crie conteúdo jurídico de impacto ou deixe a IA analisar as tendências do momento.
+          </div>
+        </div>
+
+        <!-- Painel de tendências IA (oculto por padrão) -->
+        <div class="dash-trends-panel" id="dash-trends-panel">
+          <div class="dash-trends-header">
+            <span class="dash-trends-label">✦ Tendências jurídicas</span>
+            <button class="dash-trends-close" onclick="closeDashTrends()">✕</button>
+          </div>
+          <div class="dash-trends-content" id="dash-trends-content"></div>
+
+          <!-- Feedback — visível só após geração bem-sucedida -->
+          <div class="dash-trends-feedback hidden" id="dash-trends-feedback">
+            <span class="dash-excluded-count" id="dash-excluded-count"></span>
+            <button class="dash-feedback-btn" id="dash-refresh-btn" onclick="dashRefreshIdeas()">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M10.5 2A5 5 0 1 0 11 6"/>
+                <polyline points="9,0 11,2 9,4"/>
+              </svg>
+              Novas sugestões
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /.dash-hero -->
+
+      <!-- Botões de ação -->
+      <div class="dash-actions">
+        <button class="dash-btn-create" onclick="closeDashboard()">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+            <line x1="6.5" y1="1" x2="6.5" y2="12"/>
+            <line x1="1" y1="6.5" x2="12" y2="6.5"/>
+          </svg>
+          Criar post
+        </button>
+        <button class="dash-btn-ai" id="dash-ai-btn" onclick="dashCreativeHelp()">
+          ✦ Ajuda Criativa
+        </button>
+      </div>
+
+      <!-- (faixa da semana movida para dentro do card) -->
+
+    </div><!-- /.dash-center -->
+
+    <!-- ── Direita: últimos posts ── -->
+    <div class="dash-right">
+      <div class="dash-right-header">
+        <span class="dash-right-heading">Últimas publicações</span>
+        <button class="posts-back-btn" onclick="closeDashboard(); openPostsScreen()" style="font-size:0.6rem;padding:4px 12px">
+          Ver todos →
+        </button>
+      </div>
+      <div class="dash-recent-list" id="dash-recent-list">
+        <p class="posts-loading">Carregando…</p>
+      </div>
+      <div class="dash-right-footer">
+        <button class="dash-footer-btn" onclick="closeDashboard()">
+          + Novo post
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /#dashboard-home -->
+
+  <!-- ── EDITOR AREA ── -->
+  <main class="editor-area hidden" id="editor-area">
+
+    <!-- Toolbar -->
+    <div class="editor-toolbar">
+      <div class="toolbar-left">
+        <div class="toolbar-group">
+          <span id="toolbar-type-badge" class="toolbar-badge">Carrossel</span>
+          <span id="toolbar-cat-badge" class="toolbar-badge toolbar-badge-muted">Direito Penal</span>
+        </div>
+        <div class="toolbar-divider"></div>
+        <div class="toolbar-group">
+          <span class="toolbar-step-label" id="toolbar-step">Passo 1 de 5</span>
+        </div>
+      </div>
+
+      <div class="toolbar-center">
+        <div class="toolbar-group" id="toolbar-step5-actions" style="display:none">
+          <button class="toolbar-btn toolbar-btn-text" onclick="addSlide()" title="Novo slide">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <line x1="5.5" y1="1" x2="5.5" y2="10"/><line x1="1" y1="5.5" x2="10" y2="5.5"/>
+            </svg>
+            Slide
+          </button>
+          <button class="toolbar-btn toolbar-btn-text" onclick="addCtaSlide()" title="Adicionar slide de CTA">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="5.5,1 6.9,4 10.2,4.2 7.7,6.5 8.6,9.8 5.5,8.1 2.4,9.8 3.3,6.5 0.8,4.2 4.1,4"/>
+            </svg>
+            CTA
+          </button>
+          <div class="toolbar-divider"></div>
+          <button class="toolbar-btn toolbar-btn-text" onclick="suggestIdeas()" title="Sugerir ideias com IA">
+            ✦ Sugerir ideias
+          </button>
+        </div>
+      </div>
+
+      <div class="toolbar-right">
+        <div class="toolbar-group">
+          <button class="toolbar-btn" id="toolbar-grid-btn" onclick="toggleGrid()" title="Grid guides">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+              <rect x="3" y="3" width="7" height="7" rx="0.5"/><rect x="14" y="3" width="7" height="7" rx="0.5"/>
+              <rect x="14" y="14" width="7" height="7" rx="0.5"/><rect x="3" y="14" width="7" height="7" rx="0.5"/>
+            </svg>
+          </button>
+          <div class="toolbar-divider"></div>
+          <button class="toolbar-btn toolbar-btn-sm" onclick="studioZoomOut()" title="Reduzir">−</button>
+          <span class="toolbar-zoom-label" id="toolbar-zoom">100%</span>
+          <button class="toolbar-btn toolbar-btn-sm" onclick="studioZoomIn()" title="Ampliar">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Breadcrumb steps -->
+    <div class="step-breadcrumb" id="step-breadcrumb">
+      <div class="breadcrumb-item active" data-step="1">
+        <div class="breadcrumb-num">1</div>
+        <span>Tipo</span>
+      </div>
+      <div class="breadcrumb-sep">›</div>
+      <div class="breadcrumb-item" data-step="2">
+        <div class="breadcrumb-num">2</div>
+        <span>Categoria</span>
+      </div>
+      <div class="breadcrumb-sep">›</div>
+      <div class="breadcrumb-item" data-step="3">
+        <div class="breadcrumb-num">3</div>
+        <span>Título</span>
+      </div>
+      <div class="breadcrumb-sep">›</div>
+      <div class="breadcrumb-item" data-step="4">
+        <div class="breadcrumb-num">4</div>
+        <span>Aparência</span>
+      </div>
+      <div class="breadcrumb-sep">›</div>
+      <div class="breadcrumb-item" data-step="5">
+        <div class="breadcrumb-num">5</div>
+        <span>Conteúdo</span>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="editor-canvas" id="editor-canvas">
+      <div class="editor-canvas-scroll">
+        <section class="form-panel">
+
+          <!-- ─ STEP 1 · TIPO ─ -->
+          <div class="step active" id="step-1">
+            <div class="step-head" onclick="activateStep(1)">
+              <div class="step-num">01</div>
+              <div class="step-meta">
+                <div class="step-label">Tipo de publicação</div>
+                <div class="step-chip" id="chip-1"></div>
+              </div>
+            </div>
+            <div class="step-body" id="body-1">
+              <div class="type-grid">
+                <button class="type-card active" id="card-carousel" onclick="setType('carousel')">
+                  <div class="type-icon">⧉</div>
+                  <div class="type-name">Carrossel</div>
+                  <div class="type-desc">Múltiplos slides</div>
+                </button>
+                <button class="type-card" id="card-article" onclick="setType('article')">
+                  <div class="type-icon">≡</div>
+                  <div class="type-name">Artigo</div>
+                  <div class="type-desc">Texto completo</div>
+                </button>
+              </div>
+              <button class="btn-next" onclick="nextStep()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- ─ STEP 2 · CATEGORIA ─ -->
+          <div class="step locked" id="step-2">
+            <div class="step-head" onclick="activateStep(2)">
+              <div class="step-num">02</div>
+              <div class="step-meta">
+                <div class="step-label">Categoria</div>
+                <div class="step-chip" id="chip-2"></div>
+              </div>
+            </div>
+            <div class="step-body" id="body-2">
+              <div class="cat-grid">
+                <button class="cat-card active" data-cat="Direito Penal" style="--accent:#8B1A1A" onclick="selectCategory(this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 6l-1-2H5v17h2v-7h5.5l1 2H20V6h-6z"/></svg>
+                  <span>Direito Penal</span>
+                </button>
+                <button class="cat-card" data-cat="Direito Administrativo" style="--accent:#1A3A8B" onclick="selectCategory(this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 22V9l9-7 9 7v13"/><path d="M9 22V12h6v10"/></svg>
+                  <span>Direito Administrativo</span>
+                </button>
+                <button class="cat-card" data-cat="Direito Civil" style="--accent:#1A6B2E" onclick="selectCategory(this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3L3 7l9 4 9-4-9-4z"/><path d="M3 12l9 4 9-4"/><path d="M3 17l9 4 9-4"/></svg>
+                  <span>Direito Civil</span>
+                </button>
+                <button class="cat-card" data-cat="Consultoria Jurídica" style="--accent:#C9A96E" onclick="selectCategory(this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                  <span>Consultoria Jurídica</span>
+                </button>
+                <button class="cat-card" data-cat="Tecnologia e IA Jurídica" style="--accent:#5A1A9B" onclick="selectCategory(this)">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="9" y="2" width="6" height="6"/><rect x="9" y="16" width="6" height="6"/><rect x="2" y="9" width="6" height="6"/><rect x="16" y="9" width="6" height="6"/><line x1="9" y1="5" x2="2" y2="5"/><line x1="22" y1="5" x2="15" y2="5"/><line x1="5" y1="9" x2="5" y2="2"/><line x1="5" y1="22" x2="5" y2="15"/><line x1="9" y1="19" x2="2" y2="19"/><line x1="22" y1="19" x2="15" y2="19"/><line x1="19" y1="9" x2="19" y2="2"/><line x1="19" y1="22" x2="19" y2="15"/></svg>
+                  <span>Tecnologia e IA</span>
+                </button>
+              </div>
+              <button class="btn-next" onclick="nextStep()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- ─ STEP 3 · TÍTULO ─ -->
+          <div class="step locked" id="step-3">
+            <div class="step-head" onclick="activateStep(3)">
+              <div class="step-num">03</div>
+              <div class="step-meta">
+                <div class="step-label">Título</div>
+                <div class="step-chip" id="chip-3"></div>
+              </div>
+            </div>
+            <div class="step-body" id="body-3">
+              <div class="field-group">
+                <label class="field-label">Título do post</label>
+                <input id="title" type="text" class="field-input"
+                       placeholder="Ex: O que fazer se a polícia bater na sua porta?"
+                       oninput="onTitleInput()" />
+                <div class="field-hint">Slug: <span id="slug-preview" class="slug-text">—</span></div>
+              </div>
+              <div class="field-group">
+                <label class="field-label">Tempo de leitura</label>
+                <input id="readTime" type="text" class="field-input field-sm"
+                       placeholder="Ex: 3 min" value="3 min" oninput="updatePreview()" />
+              </div>
+              <button class="btn-next" onclick="nextStep()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- ─ STEP 4 · APARÊNCIA ─ -->
+          <div class="step locked" id="step-4">
+            <div class="step-head" onclick="activateStep(4)">
+              <div class="step-num">04</div>
+              <div class="step-meta">
+                <div class="step-label">Aparência</div>
+                <div class="step-chip" id="chip-4"></div>
+              </div>
+            </div>
+            <div class="step-body" id="body-4">
+              <div class="field-group">
+                <label class="field-label">Posição do logo</label>
+                <div class="logo-pos-group">
+                  <label class="logo-pos-opt">
+                    <input type="radio" name="logoPos" value="footer" checked onchange="updatePreview()" />
+                    <span class="logo-pos-label"><span class="logo-pos-icon">⊟</span>Rodapé de todos os slides</span>
+                  </label>
+                  <label class="logo-pos-opt">
+                    <input type="radio" name="logoPos" value="watermark" onchange="updatePreview()" />
+                    <span class="logo-pos-label"><span class="logo-pos-icon">◱</span>Marca d'água (canto)</span>
+                  </label>
+                  <label class="logo-pos-opt">
+                    <input type="radio" name="logoPos" value="cta" onchange="updatePreview()" />
+                    <span class="logo-pos-label"><span class="logo-pos-icon">◎</span>Apenas no slide final</span>
+                  </label>
+                </div>
+              </div>
+              <button class="btn-next" onclick="nextStep()">Continuar →</button>
+            </div>
+          </div>
+
+          <!-- ─ STEP 5 · CONTEÚDO ─ -->
+          <div class="step locked" id="step-5">
+            <div class="step-head" onclick="activateStep(5)">
+              <div class="step-num">05</div>
+              <div class="step-meta">
+                <div class="step-label">Conteúdo</div>
+                <div class="step-chip" id="chip-5"></div>
+              </div>
+            </div>
+            <div class="step-body" id="body-5">
+              <button class="btn-ai-ideas" onclick="suggestIdeas()">✦ Sugerir ideias de post com IA</button>
+
+              <!-- CARROSSEL -->
+              <div id="slides-section">
+                <div class="slides-header">
+                  <span class="field-label" style="margin:0">Slides</span>
+                  <button class="btn-ghost" onclick="addSlide()">+ Slide</button>
+                </div>
+                <div id="slides-container"></div>
+                <button class="btn-add-cta" onclick="addCtaSlide()">+ Slide de CTA final</button>
+              </div>
+
+              <!-- ARTIGO -->
+              <div id="article-section" class="hidden">
+                <div class="field-group">
+                  <label class="field-label">Imagem de capa</label>
+                  <div class="upload-area" onclick="document.getElementById('cover-file').click()">
+                    <span class="upload-icon" aria-hidden="true">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                        <circle cx="8.5" cy="10" r="1.5"></circle>
+                        <path d="M21 15l-5-5L5 19"></path>
+                        <path d="M12 3v7"></path>
+                        <path d="M9 6l3-3 3 3"></path>
+                      </svg>
+                    </span>
+                    <span class="upload-copy">
+                      <span class="upload-title" id="cover-upload-text">Enviar imagem de capa</span>
+                      <span class="upload-subtitle">PNG ou JPG para o artigo</span>
+                    </span>
+                    <input type="file" id="cover-file" accept="image/*" class="hidden" onchange="uploadCover(this)" />
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Resumo</label>
+                  <textarea id="excerpt" class="field-textarea" rows="2"
+                            placeholder="Uma frase que desperta curiosidade..." oninput="updatePreview()"></textarea>
+                </div>
+                <div class="field-group">
+                  <label class="field-label">Conteúdo completo</label>
+                  <textarea id="content" class="field-textarea" rows="8"
+                            placeholder="Texto completo do artigo..." oninput="updatePreview()"></textarea>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ─ PUBLICAR ─ -->
+          <div class="publish-area">
+            <div class="publish-btn-row">
+              <button id="publish-btn" class="btn-primary btn-publish-full" onclick="publish()">
+                <span id="publish-text">Publicar post</span>
+              </button>
+              <button id="btn-export-local" class="btn-export-local" onclick="exportLocalOnly()" title="Salvar imagens na pasta configurada sem publicar online">
+                <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M2 11v2a1 1 0 001 1h10a1 1 0 001-1v-2"/>
+                  <polyline points="5,8 8,11 11,8"/>
+                  <line x1="8" y1="2" x2="8" y2="11"/>
+                </svg>
+                Salvar localmente
+              </button>
+            </div>
+            <div id="publish-result" class="result-msg hidden"></div>
+          </div>
+
+          <!-- URL gerada -->
+          <div class="preview-url-box hidden" id="preview-url-box">
+            <div class="preview-url-label">Link gerado</div>
+            <div class="preview-url-row">
+              <span id="preview-url-text" class="preview-url-text"></span>
+              <button onclick="copyUrl()" class="btn-copy">Copiar</button>
+            </div>
+            <a id="whatsapp-share-btn" href="#" target="_blank" class="btn-whatsapp-share">Compartilhar no WhatsApp</a>
+          </div>
+
+        </section>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── PREVIEW PANEL ── -->
+  <aside class="preview-panel hidden" id="preview-panel-aside">
+
+    <!-- Modes bar -->
+    <div class="preview-modes">
+      <button class="preview-mode-btn active" data-mode="mobile" onclick="setPreviewMode('mobile')" title="Mobile">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="7" y="2" width="10" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/>
+        </svg>
+      </button>
+      <button class="preview-mode-btn" data-mode="desktop" onclick="setPreviewMode('desktop')" title="Desktop">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/>
+        </svg>
+      </button>
+      <button class="preview-mode-btn" data-mode="social" onclick="setPreviewMode('social')" title="Social">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="18" height="18" rx="3"/>
+          <circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/>
+        </svg>
+      </button>
+      <div style="flex:1"></div>
+      <button class="preview-expand-btn" onclick="expandPreview()" title="Preview em tela cheia">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+          <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Preview body -->
+    <div class="preview-panel-body mode-mobile">
+      <div class="preview-header">
+        <span class="preview-label">Preview ao vivo</span>
+        <span class="preview-nav">
+          <button onclick="prevSlide()" class="nav-arrow">‹</button>
+          <span id="slide-counter" class="slide-counter">1 / 1</span>
+          <button onclick="nextSlide()" class="nav-arrow">›</button>
+        </span>
+      </div>
+
+      <div class="preview-phone">
+        <div id="preview-card" class="preview-card"></div>
+        <div id="preview-dots" class="preview-dots"></div>
+        <div id="preview-mode-label" class="preview-mode-label">Story · 9:16</div>
+      </div>
+    </div>
+
+  </aside>
+
+</div><!-- /.studio-layout -->
+
+<!-- ═══ FULLSCREEN PREVIEW ═══ -->
+<div id="preview-fullscreen" class="preview-fullscreen hidden">
+  <div class="preview-fullscreen-bg" onclick="closeFullscreen()"></div>
+  <div class="preview-fullscreen-content">
+    <div class="preview-fullscreen-toolbar">
+      <div class="preview-fullscreen-nav">
+        <button class="nav-arrow" onclick="fullscreenPrev()">‹</button>
+        <span id="fullscreen-counter" class="slide-counter">1 / 1</span>
+        <button class="nav-arrow" onclick="fullscreenNext()">›</button>
+      </div>
+      <button class="preview-fullscreen-close" onclick="closeFullscreen()">✕</button>
+    </div>
+    <div id="preview-fullscreen-card" class="preview-card"></div>
+  </div>
+</div>
+
+<!-- Font picker popover -->
+<div id="font-picker" class="font-picker hidden">
+  <div class="font-search-wrap">
+    <svg class="font-search-icon" width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+      <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.5" y1="10.5" x2="14" y2="14"/>
+    </svg>
+    <input type="text" class="font-search-input" id="font-search-input"
+           placeholder="Buscar fonte…" oninput="_fpFilter(this.value)" autocomplete="off" spellcheck="false">
+  </div>
+  <div id="font-picker-inner" class="font-picker-inner"></div>
+  <div class="font-local-bar" id="font-local-bar">
+    <button class="font-load-system-btn" id="font-load-btn" onclick="loadSystemFonts()">
+      <svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="3" width="12" height="10" rx="1.5"/>
+        <path d="M5 7h6M5 10h4"/>
+      </svg>
+      Fontes do sistema
+    </button>
+  </div>
+</div>
+
+<!-- Toast notifications -->
+<div id="toast-container"></div>
+
+<!-- Confirm dialog -->
+<div id="confirm-overlay" class="hidden" onclick="if(event.target===this)document.getElementById('confirm-overlay').classList.add('hidden')">
+  <div class="confirm-box" onclick="event.stopPropagation()">
+    <div class="confirm-icon">🗑</div>
+    <p id="confirm-message" class="confirm-msg">Tem certeza?</p>
+    <div class="confirm-actions">
+      <button id="confirm-cancel" class="btn-confirm-cancel">Cancelar</button>
+      <button id="confirm-ok" class="btn-confirm-danger">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ OVERLAY — EXPORTAÇÃO EM LOTE ═══ -->
+<div id="batch-export-overlay" class="batch-export-overlay hidden">
+  <div class="batch-progress-box">
+    <div class="batch-progress-title">📦 Exportando posts…</div>
+    <div class="batch-progress-bar-track">
+      <div class="batch-progress-bar-fill" id="batch-progress-fill" style="width:0%"></div>
+    </div>
+    <div class="batch-progress-count" id="batch-progress-count">Preparando…</div>
+    <div class="batch-progress-file" id="batch-progress-file"></div>
+  </div>
+</div>
+
+<!-- Vendor -->
 <script src="/vendor/html2canvas/html2canvas.min.js"></script>
 
-<!-- Módulos — ordem importa (dependências primeiro) -->
+<!-- Módulos -->
+<script src="js/notifications.js"></script>
 <script src="js/data.js"></script>
 <script src="js/state.js"></script>
 <script src="js/utils.js"></script>
@@ -353,6 +1111,10 @@
 <script src="js/publish.js"></script>
 <script src="js/posts-list.js"></script>
 <script src="js/export.js"></script>
+<script src="js/batch-export.js"></script>
+<script src="js/text-modal.js"></script>
+<script src="js/studio.js"></script>
+<script src="js/dashboard.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>

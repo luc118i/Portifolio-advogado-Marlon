@@ -5,17 +5,48 @@
 // ═══════════════════════════════════════════════════════════════
 
 const FONTS = [
-  { id: 'Inter',              name: 'Inter'              },
-  { id: 'Playfair Display',   name: 'Playfair Display'   },
-  { id: 'Cormorant Garamond', name: 'Cormorant Garamond'  },
-  { id: 'EB Garamond',        name: 'EB Garamond'         },
-  { id: 'Lora',               name: 'Lora'                },
-  { id: 'Merriweather',       name: 'Merriweather'        },
-  { id: 'Crimson Text',       name: 'Crimson Text'        },
-  { id: 'Source Serif 4',     name: 'Source Serif 4'      },
-  { id: 'PT Serif',           name: 'PT Serif'            },
-  { id: 'Spectral',           name: 'Spectral'            },
-  { id: 'Libre Baskerville',  name: 'Libre Baskerville'   },
+  // ── Serif Editorial — headlines de luxo e impacto ─────────────
+  { id: 'Playfair Display',    name: 'Playfair Display',    category: 'serif', desc: 'Editorial clássico'      },
+  { id: 'Cormorant Garamond',  name: 'Cormorant Garamond',  category: 'serif', desc: 'Elegante e refinado'     },
+  { id: 'Bodoni Moda',         name: 'Bodoni Moda',         category: 'serif', desc: 'Luxo, moda, 2024'        },
+  { id: 'Instrument Serif',    name: 'Instrument Serif',    category: 'serif', desc: 'Tendência 2024'          },
+  { id: 'Cinzel',              name: 'Cinzel',              category: 'serif', desc: 'Romano, perfeito p/ lei' },
+  { id: 'DM Serif Display',    name: 'DM Serif Display',    category: 'serif', desc: 'Impacto moderno'         },
+  { id: 'Fraunces',            name: 'Fraunces',            category: 'serif', desc: 'Expressivo, único'       },
+  { id: 'Yeseva One',          name: 'Yeseva One',          category: 'serif', desc: 'Display elegante'        },
+  { id: 'Young Serif',         name: 'Young Serif',         category: 'serif', desc: 'Fresco, editorial'       },
+
+  // ── Serif Clássica — leitura e credibilidade ──────────────────
+  { id: 'EB Garamond',         name: 'EB Garamond',         category: 'serif', desc: 'Literário, clássico'     },
+  { id: 'Lora',                name: 'Lora',                category: 'serif', desc: 'Moderno e legível'       },
+  { id: 'Bitter',              name: 'Bitter',              category: 'serif', desc: 'Jornalístico, nítido'    },
+  { id: 'Merriweather',        name: 'Merriweather',        category: 'serif', desc: 'Forte e marcante'        },
+  { id: 'Libre Baskerville',   name: 'Libre Baskerville',   category: 'serif', desc: 'Institucional'           },
+  { id: 'Source Serif 4',      name: 'Source Serif 4',      category: 'serif', desc: 'Contemporâneo'           },
+  { id: 'Spectral',            name: 'Spectral',            category: 'serif', desc: 'Digital-first serif'     },
+  { id: 'Crimson Text',        name: 'Crimson Text',        category: 'serif', desc: 'Lírico, delicado'        },
+  { id: 'PT Serif',            name: 'PT Serif',            category: 'serif', desc: 'Neutro, funcional'       },
+
+  // ── Sans-serif — limpeza e modernidade ───────────────────────
+  { id: 'Inter',               name: 'Inter',               category: 'sans',  desc: 'Clean, universal'        },
+  { id: 'Space Grotesk',       name: 'Space Grotesk',       category: 'sans',  desc: 'Tech editorial, 2024'    },
+  { id: 'Bricolage Grotesque', name: 'Bricolage Grotesque', category: 'sans',  desc: 'Variável, tendência 2024' },
+  { id: 'DM Sans',             name: 'DM Sans',             category: 'sans',  desc: 'Geométrico suave'        },
+  { id: 'Plus Jakarta Sans',   name: 'Plus Jakarta Sans',   category: 'sans',  desc: 'Moderno e amplo'         },
+  { id: 'Outfit',              name: 'Outfit',              category: 'sans',  desc: 'Friendly, tech'          },
+  { id: 'Manrope',             name: 'Manrope',             category: 'sans',  desc: 'Geométrico elegante'     },
+  { id: 'Figtree',             name: 'Figtree',             category: 'sans',  desc: 'Limpo, contemporâneo'    },
+  { id: 'Albert Sans',         name: 'Albert Sans',         category: 'sans',  desc: 'Geométrico, nítido'      },
+  { id: 'Epilogue',            name: 'Epilogue',            category: 'sans',  desc: 'Editorial moderno'       },
+  { id: 'Work Sans',           name: 'Work Sans',           category: 'sans',  desc: 'Funcional, legível'      },
+  { id: 'Raleway',             name: 'Raleway',             category: 'sans',  desc: 'Sofisticado, fino'       },
+  { id: 'Josefin Sans',        name: 'Josefin Sans',        category: 'sans',  desc: 'Geométrico claro'        },
+  { id: 'Syne',                name: 'Syne',                category: 'sans',  desc: 'Ousado, contemporâneo'   },
+
+  // ── Display · Impact — para headlines que param o scroll ─────
+  { id: 'Abril Fatface',       name: 'Abril Fatface',       category: 'display', desc: 'Ultra bold, editorial' },
+  { id: 'Bebas Neue',          name: 'Bebas Neue',          category: 'display', desc: 'Caps, redes sociais'   },
+  { id: 'Archivo Black',       name: 'Archivo Black',       category: 'display', desc: 'Bold, impacto direto'  },
 ];
 
 const LAYOUTS = [
@@ -65,6 +96,62 @@ const LAYOUTS = [
            <div style="height:7px;background:rgba(255,255,255,0.6);margin-bottom:2px;border-radius:1px"></div>
            <div style="height:5px;background:rgba(255,255,255,0.4);width:80%;margin-bottom:4px;border-radius:1px"></div>
            <div style="height:2px;background:rgba(255,255,255,0.3);width:40%"></div>`,
+  },
+];
+
+const IMG_FILTERS = [
+  { id: 'none',      label: 'Normal',     css: '' },
+  { id: 'dramatico', label: 'Dramático',  css: 'contrast(145%) brightness(86%) saturate(112%)' },
+  { id: 'sepia',     label: 'Sépia',      css: 'sepia(80%) brightness(106%)' },
+  { id: 'fade',      label: 'Desbotado',  css: 'saturate(50%) brightness(115%) contrast(86%)' },
+  { id: 'noir',      label: 'Noir',       css: 'grayscale(100%) contrast(128%) brightness(90%)' },
+  { id: 'dourado',   label: 'Dourado',    css: 'sepia(48%) saturate(155%) brightness(110%)' },
+  { id: 'frio',      label: 'Frio',       css: 'hue-rotate(195deg) saturate(78%) brightness(106%)' },
+  { id: 'vibrante',  label: 'Vibrante',   css: 'saturate(190%) brightness(107%) contrast(114%)' },
+];
+
+const PRESET_TEMPLATES = [
+  {
+    name: 'Dica da Semana',
+    desc: '3 slides · dica prática',
+    icon: '💡',
+    category: 'Direito Penal',
+    slides: [
+      { headline: 'Dica Jurídica da Semana', body: 'Descubra o que todo cidadão deve saber sobre seus direitos.', layout: 'dica-semana' },
+      { headline: 'O que diz a lei?', body: 'Conheça a legislação que garante seus direitos nessa situação.', layout: 'default' },
+      { headline: 'Consulte um advogado', body: 'A orientação certa faz toda a diferença. Não arrisque agir sem respaldo jurídico.', layout: 'foco' },
+    ],
+  },
+  {
+    name: 'Mito ou Verdade?',
+    desc: '2 slides · quiz jurídico',
+    icon: '⚖',
+    category: 'Direito Civil',
+    slides: [
+      { headline: 'Isso é MITO ou VERDADE?', body: 'Verdade', layout: 'mito-verdade' },
+      { headline: 'A resposta te surpreende', body: 'Muita gente erra nessa questão. Saiba o que diz o Código Civil.', layout: 'voce-sabia' },
+    ],
+  },
+  {
+    name: 'Caso Real',
+    desc: '3 slides · narrativa de caso',
+    icon: '📋',
+    category: 'Consultoria Jurídica',
+    slides: [
+      { headline: 'O que aconteceu', body: 'Um cliente veio até nós em uma situação delicada...', layout: 'caso-real' },
+      { headline: 'Como resolvemos', body: 'Com a estratégia jurídica certa, conseguimos reverter o caso.', layout: 'default' },
+      { headline: 'O resultado', body: 'Direito garantido. Justiça feita. É pra isso que estamos aqui.', layout: 'foco' },
+    ],
+  },
+  {
+    name: 'Você Sabia?',
+    desc: '2 slides · curiosidade jurídica',
+    icon: '🔍',
+    category: 'Direito Administrativo',
+    slides: [
+      { headline: 'Você sabia disso?', body: 'Uma informação que pode mudar sua visão sobre o sistema jurídico.', layout: 'voce-sabia' },
+      { headline: 'O que isso significa pra você', body: 'Entender seus direitos é o primeiro passo para exercê-los com segurança.', layout: 'default' },
+    ],
   },
 ];
 

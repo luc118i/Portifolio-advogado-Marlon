@@ -6,10 +6,14 @@
 // ═══════════════════════════════════════════════════════════════
 
 function init() {
+  // Prepara o editor em background (elementos estão no DOM mas hidden)
   activateStep(1);
   renderSlidesForms();
   updatePreview();
   checkAiStatus();
+
+  // Mostra a tela de boas-vindas
+  _dashInit();
 
   // ─── Drag global (image-editor.js) ──────────────────────────
   document.addEventListener('mousemove', (e) => {

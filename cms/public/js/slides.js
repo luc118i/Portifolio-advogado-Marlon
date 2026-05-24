@@ -48,13 +48,15 @@ function renderSlidesForms() {
   state.slides.forEach((slide, i) => renderSlideForm(slide, i, container));
 }
 
+const _EDIT_ICON = `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 1.5l2 2L3 11l-2.5.5.5-2.5L8.5 1.5z"/></svg>`;
+
 function renderSlideForm(slide, index, container) {
-  const isCta     = slide.type === 'cta';
-  const font      = slide.headlineFont || 'Playfair Display';
-  const fontShort = font.split(' ')[0];
+  const isCta         = slide.type === 'cta';
+  const font          = slide.headlineFont || 'Playfair Display';
+  const fontShort     = font.split(' ')[0];
   const bodyFont      = slide.bodyFont || 'Inter';
   const bodyFontShort = bodyFont.split(' ')[0];
-  const card      = document.createElement('div');
+  const card          = document.createElement('div');
 
   card.className = [
     'slide-card',
@@ -99,7 +101,8 @@ function renderSlideForm(slide, index, container) {
                    min="30" max="300" value="${Math.round((slide.imageScale||1)*100)}"
                    oninput="setZoomSlider(this.value,${index})">
             <button class="img-ctrl-btn" onclick="zoomStep(${index},0.1)">+</button>
-            <button class="img-ctrl-btn img-fit-btn" onclick="fitImage(${index})">⊞ Enquadrar</button>
+            <button class="img-ctrl-btn img-fit-btn" onclick="fitImage(${index})">⊞</button>
+            <button class="img-ctrl-btn img-edit-adv-btn" onclick="openImageModal(${index});event.stopPropagation()">✦ Ajustes</button>
             <button class="img-ctrl-btn img-rm-btn" onclick="clearSlideImage(${index})">✕</button>
           </div>
         </div>
@@ -136,50 +139,34 @@ function renderSlideForm(slide, index, container) {
       </div>
     </div>
 
-    <div onclick="event.stopPropagation()">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
-        <span class="field-label" style="margin:0">${isCta ? 'Headline do CTA' : 'Headline'}</span>
-        <button class="btn-font-picker"
-                onclick="event.stopPropagation(); openFontPicker(${index}, this, 'headlineFont')"
-                title="Alterar fonte da headline">
-          <span class="font-preview" style="font-family:'${escHtml(font)}',serif">Aa</span>
-          <span>${escHtml(fontShort)}</span>
-        </button>
-      </div>
-      <input id="headline-${index}" class="slide-input" type="text"
-             placeholder="${isCta ? 'Headline do CTA' : 'Headline (título do slide)'}"
-             value="${escHtml(slide.headline)}"
-             style="font-family:'${escHtml(font)}',serif"
-             oninput="state.slides[${index}].headline=this.value; updatePreview()" />
-      <div class="slide-ai-row" style="margin-top:5px">
-        <button id="btn-ai-headline-${index}" class="btn-ai-inline"
-                onclick="aiGenerateHeadline(${index})">✦ Gerar headline</button>
-        <button id="btn-humanize-headline-${index}" class="btn-humanize"
-                onclick="aiHumanize(${index},'headline')">◈ Humanizar</button>
-      </div>
-    </div>
+    <div class="slide-text-fields" onclick="event.stopPropagation()">
+      <button class="text-trigger" onclick="openTextModal(${index},'headline')">
+        <div class="text-trigger-content">
+          <span class="text-trigger-label">${isCta ? 'Headline do CTA' : 'Headline'}</span>
+          <span class="text-trigger-value${!slide.headline ? ' empty' : ''}"
+                style="font-family:'${escHtml(font)}',serif">
+            ${slide.headline ? escHtml(slide.headline) : 'Clique para editar...'}
+          </span>
+        </div>
+        <div class="text-trigger-meta">
+          <span class="text-trigger-font">${escHtml(fontShort)}</span>
+          <span class="text-trigger-icon">${_EDIT_ICON}</span>
+        </div>
+      </button>
 
-    <div onclick="event.stopPropagation()">
-      <div class="field-row">
-        <span class="field-label" style="margin:0">${isCta ? 'Texto do CTA' : 'Texto / subtítulo'}</span>
-        <button class="btn-font-picker"
-                onclick="event.stopPropagation(); openFontPicker(${index}, this, 'bodyFont')"
-                title="Alterar fonte do texto">
-          <span class="font-preview" style="font-family:'${escHtml(bodyFont)}',sans-serif">Aa</span>
-          <span>${escHtml(bodyFontShort)}</span>
-        </button>
-      </div>
-      <textarea id="body-${index}" class="slide-textarea" rows="2"
-                placeholder="${isCta ? 'Chamada para ação' : 'Texto do slide'}"
-                style="font-family:'${escHtml(bodyFont)}',sans-serif"
-                oninput="state.slides[${index}].body=this.value; updatePreview()"
-      >${escHtml(slide.body)}</textarea>
-      <div class="slide-ai-row" style="margin-top:5px">
-        <button id="btn-ai-body-${index}" class="btn-ai-inline"
-                onclick="aiGenerateBody(${index})">✦ Gerar texto</button>
-        <button id="btn-humanize-body-${index}" class="btn-humanize"
-                onclick="aiHumanize(${index},'body')">◈ Humanizar</button>
-      </div>
+      <button class="text-trigger" onclick="openTextModal(${index},'body')">
+        <div class="text-trigger-content">
+          <span class="text-trigger-label">${isCta ? 'Texto do CTA' : 'Texto / subtítulo'}</span>
+          <span class="text-trigger-value${!slide.body ? ' empty' : ''}"
+                style="font-family:'${escHtml(bodyFont)}',sans-serif">
+            ${slide.body ? escHtml(slide.body) : 'Clique para editar...'}
+          </span>
+        </div>
+        <div class="text-trigger-meta">
+          <span class="text-trigger-font">${escHtml(bodyFontShort)}</span>
+          <span class="text-trigger-icon">${_EDIT_ICON}</span>
+        </div>
+      </button>
     </div>
   `;
 

@@ -29,7 +29,11 @@ async function callGroq(apiKey, prompt, maxTokens = 300, temperature = 0.85) {
 }
 
 // ─── Prompts por modo ─────────────────────────────────────────
-function buildPrompt(mode, { category, headline, topic }) {
+function buildPrompt(mode, { category, headline, topic, exclude }) {
+  const excludeClause = exclude?.trim()
+    ? `\nTemas JÁ ABORDADOS PELO CLIENTE (não repita nem variações próximas destes): "${exclude.trim()}".\nSugira APENAS temas completamente diferentes e frescos.\n`
+    : '';
+
   const prompts = {
     headline: `Você é um especialista em marketing jurídico brasileiro.
 Crie UM headline curto e impactante (máximo 10 palavras) para um slide de carrossel na área de ${category}.
@@ -46,13 +50,13 @@ Linguagem: simples, direta, levemente urgente.
 Retorne APENAS as 2 frases, sem explicações.`,
 
     idea: `Você é um especialista em conteúdo jurídico digital brasileiro.
-Sugira 3 ideias criativas de post (carrossel) para um advogado na área de ${category}.
-Cada ideia deve ter: título gancho + 1 linha de descrição.
+Sugira 3 ideias ORIGINAIS e DIFERENTES entre si de post (carrossel) para um advogado na área de ${category}.
+${excludeClause}Cada ideia deve ter: título gancho + 1 linha de descrição.
 Formato:
 1. [Título] — [descrição]
 2. [Título] — [descrição]
 3. [Título] — [descrição]
-Retorne APENAS as 3 ideias.`,
+Retorne APENAS as 3 ideias, sem introdução, sem comentários extras.`,
   };
   return prompts[mode] || null;
 }
@@ -82,8 +86,8 @@ module.exports = function aiRouter(loadConfig) {
     if (!cfg.groq_api_key)
       return res.status(401).json({ error: 'Configure a chave da Groq primeiro.' });
 
-    const { mode, category, headline, topic } = req.body;
-    const prompt = buildPrompt(mode, { category, headline, topic });
+    const { mode, category, headline, topic, exclude } = req.body;
+    const prompt = buildPrompt(mode, { category, headline, topic, exclude });
     if (!prompt) return res.status(400).json({ error: 'Modo inválido.' });
 
     try {

@@ -17,29 +17,97 @@ async function checkAiStatus() {
   } catch {}
 }
 
-// ─── Modal de configurações ───────────────────────────────────
+// ─── Config Screen (tela dedicada de configurações) ───────────
+async function openConfigScreen() {
+  document.getElementById('config-screen').classList.remove('hidden');
+  document.getElementById('studio-layout').classList.add('hidden');
+  switchConfigSection('ai'); // sempre abre na seção de IA
+  _loadConfigValues();
+}
+
+function closeConfigScreen() {
+  document.getElementById('config-screen').classList.add('hidden');
+  document.getElementById('studio-layout').classList.remove('hidden');
+  setNavActive('editor');
+}
+
+// ── Navegar entre seções da config ────────────────────────────
+function switchConfigSection(id) {
+  document.querySelectorAll('.config-section').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.config-nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('cs-' + id)?.classList.add('active');
+  document.querySelector(`.config-nav-item[data-cs="${id}"]`)?.classList.add('active');
+}
+
+// Marca a seção ativa como salva com badge "✓"
+function _markConfigNavSaved() {
+  const active = document.querySelector('.config-nav-item.active');
+  if (!active) return;
+  const badge = active.querySelector('.config-nav-badge');
+  if (badge) { badge.textContent = '✓'; badge.classList.add('visible'); }
+}
+
+// Mantido para compatibilidade com qualquer referência antiga
 async function openConfigModal() {
-  document.getElementById('config-modal').classList.remove('hidden');
-  document.getElementById('config-result').classList.add('hidden');
-  // Carrega pasta de exportação atual
+  openConfigScreen();
+}
+
+async function _loadConfigValues() {
   try {
     const data = await fetch('/api/config').then(r => r.json());
-    const folderInput = document.getElementById('output-folder-input');
-    if (folderInput && data.output_folder) folderInput.value = data.output_folder;
+    const s = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+
+    s('output-folder-input', data.output_folder);
+    // Connection string mascarada → só atualiza placeholder
+    if (data.database_url) {
+      const el = document.getElementById('database-url-input');
+      if (el) el.placeholder = data.database_url; // já vem mascarada do server
+    }
+    s('ig-user-id-input', data.meta_ig_user_id || '');
+    if (data.meta_access_token) {
+      const el = document.getElementById('ig-token-input');
+      if (el) el.placeholder = data.meta_access_token;
+    }
+    if (data.meta_token_expires_at) {
+      const days = Math.round((new Date(data.meta_token_expires_at) - Date.now()) / 86400000);
+      const hint = document.getElementById('ig-token-input');
+      if (hint) hint.placeholder = `Token válido por mais ${days} dias`;
+    }
+    // Sincroniza badge da config screen
+    const badge = document.getElementById('ai-status-badge-config');
+    if (badge) {
+      badge.className   = aiConfigured ? 'ai-badge ai-badge-on'  : 'ai-badge ai-badge-off';
+      badge.textContent = aiConfigured ? '✦ IA ativa' : 'IA desativada';
+    }
   } catch {}
 }
 
 async function saveApiKey() {
-  const key    = document.getElementById('openai-key-input').value.trim();
-  const folder = document.getElementById('output-folder-input')?.value.trim() ?? '';
-  const res    = document.getElementById('config-result');
-  res.className = 'result-msg hidden';
-
-  if (!key && folder === '') return; // nada para salvar
+  const key        = document.getElementById('openai-key-input').value.trim();
+  const folder     = document.getElementById('output-folder-input')?.value.trim()  ?? '';
+  const dbUrl      = document.getElementById('database-url-input')?.value.trim()   ?? '';
+  const igUserId   = document.getElementById('ig-user-id-input')?.value.trim()     ?? '';
+  const igToken    = document.getElementById('ig-token-input')?.value.trim()       ?? '';
+  const igAppId    = document.getElementById('ig-app-id-input')?.value.trim()      ?? '';
+  const igAppSec   = document.getElementById('ig-app-secret-input')?.value.trim()  ?? '';
 
   const payload = {};
-  if (key)    payload.groq_api_key  = key;
-  if (folder !== '') payload.output_folder = folder;
+  if (key)        payload.groq_api_key      = key;
+  if (folder)     payload.output_folder     = folder;
+  if (dbUrl)      payload.database_url      = dbUrl;
+  if (igUserId)   payload.meta_ig_user_id   = igUserId;
+  if (igToken)    payload.meta_access_token = igToken;
+  if (igAppId)    payload.meta_app_id       = igAppId;
+  if (igAppSec)   payload.meta_app_secret   = igAppSec;
+
+  if (!Object.keys(payload).length) {
+    toast('Nenhum campo preenchido para salvar.', 'warning');
+    return;
+  }
+
+  // Desabilita o botão da seção ativa
+  const saveBtn = document.querySelector('.config-section.active .cs-save-btn');
+  if (saveBtn) { saveBtn.disabled = true; saveBtn.textContent = 'Salvando…'; }
 
   try {
     const r    = await fetch('/api/config', {
@@ -50,29 +118,64 @@ async function saveApiKey() {
     const data = await r.json();
     if (!r.ok) throw new Error(data.error);
 
-    res.className   = 'result-msg success';
-    res.textContent = '✓ Configurações salvas!';
-    res.classList.remove('hidden');
     await checkAiStatus();
-    setTimeout(() => document.getElementById('config-modal').classList.add('hidden'), 1500);
+    _markConfigNavSaved();
+    toast('Configurações salvas!', 'success');
   } catch (err) {
-    res.className   = 'result-msg error';
-    res.textContent = '✕ ' + err.message;
-    res.classList.remove('hidden');
+    toast('Erro ao salvar: ' + err.message, 'error');
+  } finally {
+    if (saveBtn) { saveBtn.disabled = false; saveBtn.textContent = 'Salvar'; }
+  }
+}
+
+// ─── Testar conexão Neon ──────────────────────────────────────
+async function testDbConnection() {
+  const btn      = document.getElementById('db-test-btn');
+  const resultEl = document.getElementById('db-test-result');
+  const dbUrl    = document.getElementById('database-url-input')?.value.trim();
+
+  btn.textContent = '…';
+  btn.disabled    = true;
+  resultEl.style.display = 'block';
+  resultEl.style.color   = 'var(--muted)';
+  resultEl.textContent   = 'Testando conexão…';
+
+  try {
+    const r    = await fetch('/api/config/test-db', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ database_url: dbUrl || undefined }),
+    });
+    const data = await r.json();
+
+    if (data.ok) {
+      resultEl.style.color = '#3ecf8e';
+      resultEl.textContent = `✓ Conectado ao Neon! Latência: ${data.latency_ms}ms`;
+    } else {
+      resultEl.style.color = 'var(--color-danger)';
+      resultEl.textContent = '✕ Falha: ' + (data.error || 'Erro desconhecido');
+    }
+  } catch {
+    resultEl.style.color = 'var(--color-danger)';
+    resultEl.textContent = '✕ Erro de rede ao testar conexão.';
+  } finally {
+    btn.textContent = '⚡';
+    btn.disabled    = false;
   }
 }
 
 // ─── Abrir pasta no Explorer ──────────────────────────────────
 async function openFolderInExplorer() {
   const folder = document.getElementById('output-folder-input')?.value.trim();
-  if (!folder) { alert('Digite o caminho da pasta primeiro.'); return; }
+  if (!folder) { toast('Digite o caminho da pasta primeiro.', 'warning'); return; }
   try {
     await fetch('/api/config/open-folder', {
       method:  'POST',
       headers: { 'Content-Type': 'application/json' },
       body:    JSON.stringify({ folder }),
     });
-  } catch {}
+    toast('Pasta aberta no Explorer.', 'info');
+  } catch { toast('Não foi possível abrir a pasta.', 'error'); }
 }
 
 // ─── Sugerir ideias ───────────────────────────────────────────
@@ -116,7 +219,7 @@ async function aiGenerateHeadline(index) {
     state.slides[index].headline = data.text;
     updatePreview();
   } catch (err) {
-    alert('Erro: ' + err.message);
+    toast('Erro ao gerar headline: ' + err.message, 'error');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '✦ Gerar headline';
@@ -142,7 +245,7 @@ async function aiGenerateBody(index) {
     state.slides[index].body = data.text;
     updatePreview();
   } catch (err) {
-    alert('Erro: ' + err.message);
+    toast('Erro ao gerar texto: ' + err.message, 'error');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '✦ Gerar texto';
@@ -170,7 +273,7 @@ async function aiHumanize(index, field) {
     state.slides[index][field] = data.text;
     updatePreview();
   } catch (err) {
-    alert('Erro: ' + err.message);
+    toast('Erro ao humanizar: ' + err.message, 'error');
   } finally {
     btn.disabled  = false;
     btn.innerHTML = '◈ Humanizar';

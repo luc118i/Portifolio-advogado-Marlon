@@ -74,7 +74,8 @@ function renderCarouselSlide(card, slide) {
       ${hasBgImg ? `<img src="${slide.imagePath}"
         style="position:absolute;top:50%;left:50%;min-width:100%;min-height:100%;
                width:auto;height:auto;pointer-events:none;
-               transform:translate(calc(-50% + ${slide.imageX||0}px),calc(-50% + ${slide.imageY||0}px)) scale(${slide.imageScale||1});
+               transform:${buildImgTransform(slide)};
+               filter:${buildImgFilter(slide)};
                transform-origin:center center;">` : ''}
     </div>`;
   const overlayHtml   = `<div class="pc-overlay"></div>`;
