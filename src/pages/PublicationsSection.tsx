@@ -360,7 +360,7 @@ function FeedPost({ post }: { post: Post }) {
             )}
             <div style={{ padding: "16px 18px 4px" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 14 }}>
-                <img src="/favicon.png" alt="" style={{ width: 28, height: 28, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "1.5px solid var(--line)" }} />
+                <img src="/favicon.svg" alt="" width={28} height={28} style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, border: "1.5px solid var(--line)" }} />
                 <div style={{ lineHeight: 1.4 }}>
                   <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", fontWeight: 700, color: "var(--ink)" }}>Dr. Marlon Inácio</span>
                   <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.65rem", color: "var(--text-faint)", marginLeft: 6 }}>
