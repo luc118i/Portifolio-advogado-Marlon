@@ -2253,44 +2253,151 @@ html {
   initial-value: 0;
 }
 
-/* OAB seal — agora usa imagem PNG com mix-blend-mode: multiply */
+/* ═══════════════════════════════════════════════════════════════
+   SISTEMA DE MARCA — Dr. Marlon Inácio · Advogado
+   Verde-tinta profundo + latão discreto sobre neutro quente.
+   Substitui a antiga paleta monocromática (--matte-gold era cinza).
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --ink:        #1b1c1a;   /* quase-preto quente (títulos, fundo escuro) */
+  --ink-90:     #2a2c29;
+  --paper:      #f6f5f1;   /* neutro quente claro */
+  --paper-2:    #eceae3;
+  --white:      #ffffff;
+  --text:       #33352f;   /* corpo sobre claro */
+  --text-soft:  #6a6c63;   /* secundário sobre claro */
+  --text-faint: #8f9186;
+  --line:       #d9d7cd;   /* fios / bordas sobre claro */
 
-/* Selo OAB — animação de respiração com glow */
-@keyframes seal-breathe {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow:
-      0 2px 12px rgba(0,0,0,0.35);
-  }
-  50% {
-    transform: scale(1.07);
-    box-shadow:
-      0 4px 20px rgba(0,0,0,0.4),
-      0 0 16px rgba(210,185,120,0.35),
-      0 0 32px rgba(180,160,90,0.18);
-  }
+  --green:      #1e4d3b;   /* cor de marca */
+  --green-soft: #2f6c54;
+  --green-wash: #e6ede9;
+  --green-ink:  #7fb79c;   /* verde legível sobre fundo escuro */
+
+  --brass:      #8c6d34;   /* metálico discreto — só detalhes finos */
+  --brass-soft: #b9975a;   /* latão sobre fundo escuro */
+
+  --wa:         #1f7a44;   /* verde WhatsApp dessaturado, sem competir com a marca */
+
+  --nav-h: 64px;
 }
 
-.seal-breathe {
-  animation: seal-breathe 4s ease-in-out infinite;
-  transform-origin: center center;
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
-/* Swipe hint — chevrons em cascata */
-@keyframes chevron-pulse {
-  0%         { transform: translateX(-4px); opacity: 0;    }
-  20%        { transform: translateX(0px);  opacity: 0.85; }
-  60%        { transform: translateX(4px);  opacity: 0.85; }
-  80%, 100%  { transform: translateX(8px);  opacity: 0;    }
+/* Cada seção compensa a navbar fixa ao ser ancorada */
+.site-section { scroll-margin-top: var(--nav-h); }
+
+/* Fios / divisórias padrão */
+.rule-brass { background: var(--brass); }
+
+/* Selo OAB — sombra estática discreta, sem animação */
+.oab-seal {
+  border-radius: 50%;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.28);
 }
 
-.swipe-chevron {
-  display: inline-block;
-  animation: chevron-pulse 1.6s ease-in-out infinite;
+/* Reveal on scroll — sóbrio, respeitando reduced-motion */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity 0.6s ease, transform 0.6s cubic-bezier(0.2,0.7,0.2,1);
+}
+.reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
 }
 
-/* WhatsApp CTA pulse */
-@keyframes whatsapp-pulse {
-  0%, 100% { box-shadow: 0 4px 20px rgba(37,211,102,0.35); }
-  50%       { box-shadow: 0 4px 32px rgba(37,211,102,0.6), 0 0 0 6px rgba(37,211,102,0.08); }
+/* Navbar */
+.nav-link {
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--text-soft);
+  text-decoration: none;
+  padding: 6px 2px;
+  transition: color 0.15s ease;
 }
+.nav-link:hover { color: var(--ink); }
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0; bottom: 0;
+  width: 0; height: 1.5px;
+  background: var(--brass);
+  transition: width 0.2s ease;
+}
+.nav-link:hover::after { width: 100%; }
+
+/* Botão-marca (verde) */
+.btn-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  padding: 12px 22px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+.btn-brand:hover { background: var(--green-soft); transform: translateY(-1px); }
+
+/* Botão-fantasma (contorno) */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 11px 21px;
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+}
+.btn-ghost:hover { border-color: var(--ink); }
+
+/* Eyebrow padrão */
+.eyebrow {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--brass);
+}
+
+/* Foco visível consistente */
+a:focus-visible, button:focus-visible, summary:focus-visible {
+  outline: 2px solid var(--green-soft);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* FAQ — remove o triângulo padrão do <details> */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+details > summary::after {
+  content: "+";
+  float: right;
+  font-weight: 400;
+  color: var(--brass-soft);
+  transition: transform 0.2s ease;
+}
+details[open] > summary::after { content: "–"; }
