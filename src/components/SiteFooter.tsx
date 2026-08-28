@@ -1,4 +1,4 @@
-import { SITE } from "../lib/site";
+import { SITE, DEV } from "../lib/site";
 
 export function SiteFooter() {
   const year = new Date().getFullYear();
@@ -7,7 +7,7 @@ export function SiteFooter() {
       style={{
         background: "var(--ink)",
         color: "rgba(255,255,255,0.6)",
-        padding: "40px clamp(1rem, 5vw, 3rem)",
+        padding: "40px clamp(1rem, 5vw, 3rem) 28px",
         fontFamily: "'Inter', sans-serif",
       }}
     >
@@ -49,6 +49,37 @@ export function SiteFooter() {
             Conteúdo informativo — não constitui consulta jurídica.
           </div>
         </div>
+      </div>
+
+      {/* Assinatura de desenvolvimento */}
+      <div
+        style={{
+          maxWidth: "1000px",
+          margin: "26px auto 0",
+          paddingTop: "16px",
+          borderTop: "1px solid rgba(255,255,255,0.08)",
+          fontSize: "0.68rem",
+          color: "rgba(255,255,255,0.38)",
+          letterSpacing: "0.02em",
+        }}
+      >
+        Construído por{" "}
+        <a
+          href={DEV.github}
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "var(--brass-soft)", textDecoration: "none", fontWeight: 500 }}
+        >
+          {DEV.name}
+        </a>{" "}
+        · <a
+          href={DEV.github}
+          target="_blank"
+          rel="noreferrer"
+          style={{ color: "rgba(255,255,255,0.5)", textDecoration: "none" }}
+        >
+          github.com/luc118i
+        </a>
       </div>
     </footer>
   );

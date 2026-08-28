@@ -23,6 +23,13 @@ export const SITE = {
   cnaUrl: "https://cna.oab.org.br/",
 } as const;
 
+/** Crédito de desenvolvimento. */
+export const DEV = {
+  name: "Lucas Inácio",
+  github: "https://github.com/luc118i",
+  githubHandle: "@luc118i",
+} as const;
+
 /** Monta um link de WhatsApp com mensagem pré-preenchida. */
 export function wa(message: string): string {
   return `https://wa.me/${SITE.whatsappNumber}?text=${encodeURIComponent(message)}`;
