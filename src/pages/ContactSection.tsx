@@ -1,4 +1,4 @@
-import { Mail, Instagram, Linkedin, Clock, MapPin } from "lucide-react";
+import { Mail, Instagram, Linkedin, Clock, MapPin, MessageCircle } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 import { SITE, wa } from "../lib/site";
 
@@ -73,15 +73,21 @@ export function ContactSection() {
           e retorno o quanto antes.
         </p>
 
-        <a
-          href={wa("Olá, Dr. Marlon! Gostaria de agendar uma conversa inicial sobre um caso.")}
-          target="_blank"
-          rel="noreferrer"
-          className="btn-brand"
-          style={{ padding: "15px 28px", fontSize: "0.95rem" }}
-        >
-          Falar pelo WhatsApp — {SITE.phoneDisplay}
-        </a>
+        <div className="contact-cta">
+          <a
+            href={wa("Olá, Dr. Marlon! Gostaria de agendar uma conversa inicial sobre um caso.")}
+            target="_blank"
+            rel="noreferrer"
+            className="btn-brand"
+            style={{ padding: "15px 28px", fontSize: "0.95rem" }}
+          >
+            <MessageCircle size={17} />
+            Falar pelo WhatsApp
+          </a>
+          <span className="phone">
+            {SITE.phoneDisplay} · seg a sex, 9h–18h
+          </span>
+        </div>
 
         <div
           style={{

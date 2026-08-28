@@ -521,10 +521,11 @@ export function PublicationsSection() {
           {(["slides", "artigos"] as const).map((mode) => (
             <button
               key={mode}
+              className="pub-toggle-btn"
               onClick={() => setViewMode(mode)}
               style={{
                 borderRadius: 100,
-                padding: "6px 18px",
+                padding: "8px 18px",
                 background: viewMode === mode ? "var(--green)" : "transparent",
                 color: viewMode === mode ? "#fff" : "var(--text-soft)",
                 border: "none",

@@ -152,6 +152,7 @@ export function PracticeAreasSection() {
                 </p>
 
                 <a
+                  className="area-cta"
                   href={wa(`Olá, Dr. Marlon! Gostaria de conversar sobre uma questão de ${area.name}.`)}
                   target="_blank"
                   rel="noreferrer"

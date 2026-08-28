@@ -70,6 +70,7 @@ export function AboutSection() {
                 {SITE.oab} · {SITE.oabSubsecao}
               </div>
               <a
+                className="cna-link"
                 href={SITE.cnaUrl}
                 target="_blank"
                 rel="noreferrer"

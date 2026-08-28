@@ -2401,3 +2401,51 @@ details > summary::after {
   transition: transform 0.2s ease;
 }
 details[open] > summary::after { content: "–"; }
+
+/* ── Ajustes de responsividade / mobile ───────────────────────── */
+
+/* CTA principal do contato: nome curto + telefone em legenda */
+.contact-cta {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: flex-start;
+}
+.contact-cta .phone {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+@media (max-width: 560px) {
+  /* CTAs viram blocos de largura total e centralizados */
+  .contact-cta { display: flex; width: 100%; }
+  .contact-cta .btn-brand { width: 100%; justify-content: center; }
+  .contact-cta .phone { align-self: center; text-align: center; }
+
+  .hero-cta { width: 100%; }
+  .hero-cta .btn-brand,
+  .hero-cta .btn-ghost { flex: 1 1 100%; justify-content: center; }
+}
+
+/* Rodapé empilha e alinha à esquerda no mobile */
+@media (max-width: 620px) {
+  .footer-top { flex-direction: column; gap: 20px !important; }
+  .footer-meta { text-align: left !important; }
+}
+
+/* Alvos de toque mais confortáveis no mobile (>= ~40px) */
+@media (max-width: 560px) {
+  .area-cta {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin-top: 0 !important;
+  }
+  .cna-link {
+    min-height: 40px;
+    align-items: center;
+  }
+  .pub-toggle-btn { padding-top: 10px !important; padding-bottom: 10px !important; }
+  #contato details > summary { padding-top: 16px; padding-bottom: 16px; }
+}

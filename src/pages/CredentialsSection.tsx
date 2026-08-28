@@ -143,6 +143,7 @@ export function CredentialsSection() {
                 {SITE.oab} · {SITE.oabSubsecao}
               </p>
               <a
+                className="cna-link"
                 href={SITE.cnaUrl}
                 target="_blank"
                 rel="noreferrer"
@@ -159,7 +160,7 @@ export function CredentialsSection() {
                   textDecoration: "none",
                   border: "1px solid rgba(127,183,156,0.4)",
                   borderRadius: "100px",
-                  padding: "6px 14px",
+                  padding: "8px 14px",
                 }}
               >
                 Verificar no Cadastro Nacional (CNA)

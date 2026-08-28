@@ -65,6 +65,7 @@ export function HeroSection() {
         </p>
 
         <div
+          className="hero-cta"
           style={{
             display: "flex",
             flexWrap: "wrap",

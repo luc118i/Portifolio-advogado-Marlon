@@ -7,16 +7,34 @@ const WA_ICON = (
   </svg>
 );
 
-/** Botão flutuante discreto — sem pulsar, aparece só depois da dobra. */
+/**
+ * Botão flutuante discreto — sem pulsar.
+ * Aparece depois da primeira dobra e some quando a seção de contato entra em cena
+ * (lá já existe um CTA de WhatsApp, e assim não cobre o rodapé no mobile).
+ */
 export function FloatingWhatsApp() {
-  const [show, setShow] = useState(false);
+  const [pastFold, setPastFold] = useState(false);
+  const [nearContact, setNearContact] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setShow(window.scrollY > window.innerHeight * 0.8);
+    const onScroll = () => setPastFold(window.scrollY > window.innerHeight * 0.8);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    const el = document.getElementById("contato");
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const obs = new IntersectionObserver(
+      ([e]) => setNearContact(e.isIntersecting),
+      { rootMargin: "0px 0px -20% 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const show = pastFold && !nearContact;
 
   return (
     <a

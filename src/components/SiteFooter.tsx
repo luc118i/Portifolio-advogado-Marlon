@@ -12,6 +12,7 @@ export function SiteFooter() {
       }}
     >
       <div
+        className="footer-top"
         style={{
           maxWidth: "1000px",
           margin: "0 auto",
@@ -40,7 +41,7 @@ export function SiteFooter() {
           <div style={{ fontSize: "0.78rem", marginTop: "2px" }}>{SITE.city}</div>
         </div>
 
-        <div style={{ fontSize: "0.72rem", textAlign: "right", lineHeight: 1.7 }}>
+        <div className="footer-meta" style={{ fontSize: "0.72rem", textAlign: "right", lineHeight: 1.7 }}>
           <div>
             © {year} {SITE.name}
           </div>
