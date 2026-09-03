@@ -1,4 +1,4 @@
-import { Gavel, Landmark, Scale, FileText } from "lucide-react";
+import { Gavel, Landmark, Scale, FileText, ArrowRight } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 import { wa } from "../lib/site";
 
@@ -157,6 +157,9 @@ export function PracticeAreasSection() {
                   target="_blank"
                   rel="noreferrer"
                   style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "5px",
                     fontFamily: "'Inter', sans-serif",
                     fontSize: "0.8rem",
                     fontWeight: 600,
@@ -165,7 +168,8 @@ export function PracticeAreasSection() {
                     marginTop: "2px",
                   }}
                 >
-                  Conversar sobre {area.name} →
+                  Conversar sobre {area.name}
+                  <ArrowRight size={13} />
                 </a>
               </div>
             );

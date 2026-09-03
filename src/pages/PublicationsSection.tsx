@@ -5,7 +5,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 import { useState, useEffect, useCallback, useRef } from "react";
-import { ChevronLeft, ChevronRight, X, Share2, MessageCircle, Check } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, X, Share2, MessageCircle, Check, ExternalLink } from "lucide-react";
 import { SITE, wa } from "../lib/site";
 import { useReveal } from "../hooks/useReveal";
 
@@ -282,8 +282,9 @@ function FullscreenModal({ post, startIdx, onClose }: { post: Post; startIdx: nu
         </div>
       )}
       {post.ig_permalink && (
-        <a onClick={(e) => e.stopPropagation()} href={post.ig_permalink} target="_blank" rel="noreferrer" style={{ fontFamily: "Inter, sans-serif", fontSize: "0.62rem", color: "rgba(255,255,255,0.32)", textDecoration: "none", letterSpacing: "0.12em", fontWeight: 600 }}>
-          VER NO INSTAGRAM ↗
+        <a onClick={(e) => e.stopPropagation()} href={post.ig_permalink} target="_blank" rel="noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: "5px", fontFamily: "Inter, sans-serif", fontSize: "0.62rem", color: "rgba(255,255,255,0.32)", textDecoration: "none", letterSpacing: "0.12em", fontWeight: 600 }}>
+          VER NO INSTAGRAM
+          <ExternalLink size={11} />
         </a>
       )}
     </div>
@@ -383,8 +384,9 @@ function FeedPost({ post }: { post: Post }) {
                     </p>
                   ))}
                   {!expanded && contentParagraphs.length > 3 && (
-                    <button onClick={() => setExpanded(true)} style={{ background: "none", border: "none", color: "var(--green-soft)", cursor: "pointer", fontFamily: "Inter, sans-serif", fontSize: "0.78rem", fontWeight: 600, padding: "0 0 14px" }}>
-                      Ler artigo completo ↓
+                    <button onClick={() => setExpanded(true)} style={{ display: "inline-flex", alignItems: "center", gap: "5px", background: "none", border: "none", color: "var(--green-soft)", cursor: "pointer", fontFamily: "Inter, sans-serif", fontSize: "0.78rem", fontWeight: 600, padding: "0 0 14px" }}>
+                      Ler artigo completo
+                      <ChevronDown size={14} />
                     </button>
                   )}
                 </div>

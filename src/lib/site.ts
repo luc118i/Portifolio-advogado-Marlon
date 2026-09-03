@@ -11,7 +11,7 @@ export const SITE = {
   oabSubsecao: "Subseção São Sebastião",
   city: "Brasília, DF",
   graduation: "Bacharel em Direito · Universidade Católica de Brasília · 2025",
-  oabYear: "2025",
+  oabYear: "2026",
 
   whatsappNumber: "5561999138905",
   phoneDisplay: "(61) 9 9913-8905",

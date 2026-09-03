@@ -1,3 +1,4 @@
+import { ExternalLink } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 import { SITE } from "../lib/site";
 
@@ -75,7 +76,9 @@ export function AboutSection() {
                 target="_blank"
                 rel="noreferrer"
                 style={{
-                  display: "inline-block",
+                  display: "inline-flex",
+                  alignItems: "center",
+                  gap: "4px",
                   marginTop: "8px",
                   fontSize: "0.7rem",
                   fontWeight: 600,
@@ -83,7 +86,8 @@ export function AboutSection() {
                   color: "var(--green-soft)",
                 }}
               >
-                Verificar inscrição no CNA ↗
+                Verificar inscrição no CNA
+                <ExternalLink size={11} />
               </a>
             </div>
           </div>
@@ -118,7 +122,7 @@ export function AboutSection() {
             >
               <p style={{ margin: 0 }}>
                 Concluí o Bacharelado em Direito na Universidade Católica de Brasília em 2025 e me
-                inscrevi na Ordem no mesmo ano. Durante a graduação, estagiei em órgãos públicos —
+                inscrevi na Ordem dos Advogados do Brasil em 2026. Durante a graduação, estagiei em órgãos públicos —
                 onde acompanhei processos administrativos, análise de licitações e a rotina de defesa
                 em procedimentos internos — e em atividade de prática jurídica.
               </p>

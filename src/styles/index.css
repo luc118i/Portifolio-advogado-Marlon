@@ -2293,10 +2293,14 @@ html { scroll-behavior: smooth; }
 /* Fios / divisórias padrão */
 .rule-brass { background: var(--brass); }
 
-/* Selo OAB — sombra estática discreta, sem animação */
-.oab-seal {
-  border-radius: 50%;
-  overflow: hidden;
+/* Logo OAB/DF — plaquinha clara para legibilidade sobre o fundo escuro */
+.oab-df-logo {
+  height: 52px;
+  width: auto;
+  flex-shrink: 0;
+  background: #fff;
+  border-radius: 8px;
+  padding: 10px 14px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.28);
 }
 

@@ -2,9 +2,9 @@ import { CheckCircle, ExternalLink } from "lucide-react";
 import { useReveal } from "../hooks/useReveal";
 import { SITE } from "../lib/site";
 
-// ⚙️  AJUSTE OS PERÍODOS E DESCRIÇÕES REAIS DOS ESTÁGIOS ANTES DE PUBLICAR.
-//    Estão rotulados como "Estágio" de propósito — não devem ser descritos
-//    como atuação de advogado (ver diagnóstico, mudança nº 1).
+// AJUSTE OS PERÍODOS E DESCRIÇÕES REAIS DOS ESTÁGIOS ANTES DE PUBLICAR.
+// Estão rotulados como "Estágio" de propósito — não devem ser descritos
+// como atuação de advogado (ver diagnóstico, mudança nº 1).
 const TRAJETORIA = [
   {
     period: "2024 – 2025",
@@ -76,10 +76,9 @@ export function CredentialsSection() {
               }}
             >
               <img
-                src="/oab-seal.png"
-                alt="Selo da Ordem dos Advogados do Brasil"
-                className="oab-seal"
-                style={{ width: "64px", height: "64px", objectFit: "cover", flexShrink: 0 }}
+                src="/oab-df-logo.svg"
+                alt="OAB Distrito Federal"
+                className="oab-df-logo"
               />
               <div
                 className="badge-ativa"
